@@ -1,0 +1,260 @@
+[
+  {
+    "id": 1,
+    "slug": "austria",
+    "target": "Austria",
+    "targetCode": "AUT",
+    "neighbors": [
+      "Switzerland",
+      "Slovakia",
+      "Slovenia",
+      "Liechtenstein",
+      "Italy",
+      "Hungary",
+      "Germany",
+      "Czechia"
+    ],
+    "enclosure": 1.0,
+    "viewBox": [
+      0,
+      0,
+      820,
+      820
+    ],
+    "map": "maps/austria.svg"
+  },
+  {
+    "id": 2,
+    "slug": "mali",
+    "target": "Mali",
+    "targetCode": "MLI",
+    "neighbors": [
+      "Senegal",
+      "Niger",
+      "Mauritania",
+      "Guinea",
+      "Ivory Coast",
+      "Burkina Faso",
+      "Algeria"
+    ],
+    "enclosure": 1.0,
+    "viewBox": [
+      0,
+      0,
+      820,
+      820
+    ],
+    "map": "maps/mali.svg"
+  },
+  {
+    "id": 3,
+    "slug": "hungary",
+    "target": "Hungary",
+    "targetCode": "HUN",
+    "neighbors": [
+      "Ukraine",
+      "Slovakia",
+      "Slovenia",
+      "Republic of Serbia",
+      "Romania",
+      "Croatia",
+      "Austria"
+    ],
+    "enclosure": 1.0,
+    "viewBox": [
+      0,
+      0,
+      820,
+      820
+    ],
+    "map": "maps/hungary.svg"
+  },
+  {
+    "id": 4,
+    "slug": "south-sudan",
+    "target": "South Sudan",
+    "targetCode": "SDS",
+    "neighbors": [
+      "Uganda",
+      "Sudan",
+      "Kenya",
+      "Ethiopia",
+      "Democratic Republic of the Congo",
+      "Central African Republic"
+    ],
+    "enclosure": 1.0,
+    "viewBox": [
+      0,
+      0,
+      820,
+      820
+    ],
+    "map": "maps/south-sudan.svg"
+  },
+  {
+    "id": 5,
+    "slug": "central-african-republic",
+    "target": "Central African Republic",
+    "targetCode": "CAF",
+    "neighbors": [
+      "South Sudan",
+      "Sudan",
+      "Democratic Republic of the Congo",
+      "Republic of the Congo",
+      "Chad",
+      "Cameroon"
+    ],
+    "enclosure": 1.0,
+    "viewBox": [
+      0,
+      0,
+      820,
+      820
+    ],
+    "map": "maps/central-african-republic.svg"
+  },
+  {
+    "id": 6,
+    "slug": "afghanistan",
+    "target": "Afghanistan",
+    "targetCode": "AFG",
+    "neighbors": [
+      "Uzbekistan",
+      "Turkmenistan",
+      "Tajikistan",
+      "Pakistan",
+      "Iran",
+      "China"
+    ],
+    "enclosure": 1.0,
+    "viewBox": [
+      0,
+      0,
+      820,
+      820
+    ],
+    "map": "maps/afghanistan.svg"
+  },
+  {
+    "id": 7,
+    "slug": "switzerland",
+    "target": "Switzerland",
+    "targetCode": "CHE",
+    "neighbors": [
+      "Liechtenstein",
+      "Italy",
+      "Germany",
+      "France",
+      "Austria"
+    ],
+    "enclosure": 1.0,
+    "viewBox": [
+      0,
+      0,
+      820,
+      820
+    ],
+    "map": "maps/switzerland.svg"
+  },
+  {
+    "id": 8,
+    "slug": "laos",
+    "target": "Laos",
+    "targetCode": "LAO",
+    "neighbors": [
+      "Vietnam",
+      "Thailand",
+      "China",
+      "Cambodia",
+      "Myanmar"
+    ],
+    "enclosure": 1.0,
+    "viewBox": [
+      0,
+      0,
+      820,
+      820
+    ],
+    "map": "maps/laos.svg"
+  },
+  {
+    "id": 9,
+    "slug": "tajikistan",
+    "target": "Tajikistan",
+    "targetCode": "TJK",
+    "neighbors": [
+      "Uzbekistan",
+      "Kyrgyzstan",
+      "China",
+      "Afghanistan"
+    ],
+    "enclosure": 1.0,
+    "viewBox": [
+      0,
+      0,
+      820,
+      820
+    ],
+    "map": "maps/tajikistan.svg"
+  },
+  {
+    "id": 10,
+    "slug": "kyrgyzstan",
+    "target": "Kyrgyzstan",
+    "targetCode": "KGZ",
+    "neighbors": [
+      "Uzbekistan",
+      "Tajikistan",
+      "Kazakhstan",
+      "China"
+    ],
+    "enclosure": 1.0,
+    "viewBox": [
+      0,
+      0,
+      820,
+      820
+    ],
+    "map": "maps/kyrgyzstan.svg"
+  },
+  {
+    "id": 11,
+    "slug": "kosovo",
+    "target": "Kosovo",
+    "targetCode": "KOS",
+    "neighbors": [
+      "Republic of Serbia",
+      "Montenegro",
+      "North Macedonia",
+      "Albania"
+    ],
+    "enclosure": 1.0,
+    "viewBox": [
+      0,
+      0,
+      820,
+      820
+    ],
+    "map": "maps/kosovo.svg"
+  },
+  {
+    "id": 12,
+    "slug": "czechia",
+    "target": "Czechia",
+    "targetCode": "CZE",
+    "neighbors": [
+      "Slovakia",
+      "Poland",
+      "Germany",
+      "Austria"
+    ],
+    "enclosure": 1.0,
+    "viewBox": [
+      0,
+      0,
+      820,
+      820
+    ],
+    "map": "maps/czechia.svg"
+  }
+]
