@@ -25,11 +25,13 @@ Design notes
 Usage
 -----
     python missing_country.py candidates          # score countries for puzzle quality
+    python missing_country.py adjacency           # dump full neighbor graph + areas
     python missing_country.py build "Nepal" ...   # build specific puzzles
     python missing_country.py build-auto 30       # auto-pick 30 good puzzles
     python missing_country.py preview "Nepal"     # write a PNG to eyeball it
 
 Outputs land in ./out/ :
+    out/adjacency.json         every country's neighbors + geodesic area (km^2)
     out/countries.json         all guessable countries + centroids (lat/lng)
     out/puzzles.json           ordered puzzle list (target, neighbors, viewBox, svg file)
     out/maps/<slug>.svg        one map per puzzle
@@ -39,7 +41,7 @@ import json, math, os, sys, re
 from shapely.geometry import shape, Point, MultiPoint, Polygon, MultiPolygon, box
 from shapely.ops import unary_union, voronoi_diagram, transform
 from shapely.strtree import STRtree
-from pyproj import Transformer
+from pyproj import Transformer, Geod
 
 DATA = "ne_50m_admin0.geojson"
 OUT = "out"
@@ -245,6 +247,22 @@ def main_centroid(geom):
     rp = big.representative_point()
     return rp.y, rp.x
 
+_GEOD = Geod(ellps="WGS84")
+
+def geodesic_area_km2(geom, main_only=True):
+    """True (geodesic) area in km^2. main_only restricts to the LARGEST
+    polygon, same rationale as main_centroid: an overseas territory
+    shouldn't inflate a country's footprint for the puzzle-size heuristic."""
+    g = geom
+    if main_only:
+        ps = polys_of(geom)
+        if ps:
+            g = max(ps, key=lambda p: p.area)
+    if g.is_empty:
+        return 0.0
+    area, _ = _GEOD.geometry_area_perimeter(g)
+    return abs(area) / 1e6
+
 def slug(name):
     return re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
 
@@ -274,6 +292,27 @@ def cmd_candidates(geoms, codes):
         else:
             q = "coastal — skip"
         print(f"{name:22} {nn:>4} {enc:>8.2f}  {q}")
+
+# ---------------------------------------------------------------- CLI: adjacency
+def cmd_adjacency(geoms, codes):
+    """Full country adjacency graph -> out/adjacency.json:
+        { name: { code, neighbors: [name, ...], area_km2 } }
+    Consumed by puzzle_selector.py to decide which countries are fair
+    daily-puzzle targets, independent of which puzzles get their SVG built."""
+    os.makedirs(OUT, exist_ok=True)
+    adjacency = {}
+    for name, g in geoms.items():
+        if name == "Antarctica":
+            continue
+        nbrs = find_neighbors(geoms, name)
+        adjacency[name] = {
+            "code": codes.get(name, ""),
+            "neighbors": nbrs,
+            "area_km2": round(geodesic_area_km2(g), 1),
+        }
+    with open(f"{OUT}/adjacency.json", "w") as fh:
+        json.dump(adjacency, fh, indent=2, ensure_ascii=False)
+    print(f"wrote {len(adjacency)} countries -> {OUT}/adjacency.json")
 
 # ------------------------------------------------------------------- CLI: build
 def build_puzzles(geoms, codes, targets, preview=False):
@@ -370,6 +409,8 @@ if __name__ == "__main__":
     cmd = sys.argv[1] if len(sys.argv) > 1 else "candidates"
     if cmd == "candidates":
         cmd_candidates(geoms, codes)
+    elif cmd == "adjacency":
+        cmd_adjacency(geoms, codes)
     elif cmd == "build":
         build_puzzles(geoms, codes, sys.argv[2:])
     elif cmd == "build-auto":
