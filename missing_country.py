@@ -28,6 +28,7 @@ Usage
     python missing_country.py adjacency           # dump full neighbor graph + areas
     python missing_country.py build "Nepal" ...   # build specific puzzles
     python missing_country.py build-auto 30       # auto-pick 30 good puzzles
+    python missing_country.py build-daily [DATE]  # build today's (or DATE's) deterministic puzzle
     python missing_country.py preview "Nepal"     # write a PNG to eyeball it
 
 Outputs land in ./out/ :
@@ -42,6 +43,7 @@ from shapely.geometry import shape, Point, MultiPoint, Polygon, MultiPolygon, bo
 from shapely.ops import unary_union, voronoi_diagram, transform
 from shapely.strtree import STRtree
 from pyproj import Transformer, Geod
+import puzzle_selector
 
 DATA = "ne_50m_admin0.geojson"
 OUT = "out"
@@ -294,12 +296,14 @@ def cmd_candidates(geoms, codes):
         print(f"{name:22} {nn:>4} {enc:>8.2f}  {q}")
 
 # ---------------------------------------------------------------- CLI: adjacency
-def cmd_adjacency(geoms, codes):
-    """Full country adjacency graph -> out/adjacency.json:
-        { name: { code, neighbors: [name, ...], area_km2 } }
+def build_adjacency(geoms, codes):
+    """Full country adjacency graph:
+        { name: { code, neighbors: [name, ...], area_km2, enclosure } }
     Consumed by puzzle_selector.py to decide which countries are fair
-    daily-puzzle targets, independent of which puzzles get their SVG built."""
-    os.makedirs(OUT, exist_ok=True)
+    daily-puzzle targets, independent of which puzzles get their SVG built.
+    `enclosure` is included (not just neighbors/area) because puzzle_selector's
+    single-neighbor carve-out (Lesotho/San Marino) needs it to distinguish
+    "fully enclosed" from "coastal with one land neighbor"."""
     adjacency = {}
     for name, g in geoms.items():
         if name == "Antarctica":
@@ -309,7 +313,13 @@ def cmd_adjacency(geoms, codes):
             "code": codes.get(name, ""),
             "neighbors": nbrs,
             "area_km2": round(geodesic_area_km2(g), 1),
+            "enclosure": round(enclosure(geoms, name, nbrs), 3),
         }
+    return adjacency
+
+def cmd_adjacency(geoms, codes):
+    os.makedirs(OUT, exist_ok=True)
+    adjacency = build_adjacency(geoms, codes)
     with open(f"{OUT}/adjacency.json", "w") as fh:
         json.dump(adjacency, fh, indent=2, ensure_ascii=False)
     print(f"wrote {len(adjacency)} countries -> {OUT}/adjacency.json")
@@ -359,23 +369,42 @@ def build_puzzles(geoms, codes, targets, preview=False):
     print(f"\nwrote {len(puzzles)} puzzles -> {OUT}/puzzles.json")
     print(f"wrote {len(countries)} countries -> {OUT}/countries.json")
 
+def eligible_pool(geoms, codes):
+    """Adjacency graph + the subset of countries fair to use as puzzle
+    targets: puzzle_selector's neighbor-count/size-ratio checks (with its
+    Lesotho/San Marino carve-out), plus the pipeline's own enclosure >= 0.9
+    "clean, landlocked-ish swallow" floor for everything else. Shared by
+    build-auto and build-daily so both draw from the same eligible set."""
+    adjacency = build_adjacency(geoms, codes)
+    pool = [
+        name for name in puzzle_selector.eligible_targets(adjacency)
+        if adjacency[name]["enclosure"] >= 0.9
+    ]
+    return adjacency, pool
+
 def cmd_build_auto(geoms, codes, n):
-    scored = []
-    for name in geoms:
-        if name == "Antarctica":
-            continue
-        nbrs = find_neighbors(geoms, name)
-        if len(nbrs) < 1:
-            continue
-        enc = enclosure(geoms, name, nbrs)
-        if enc < 0.9:  # only clean, landlocked-ish swallows
-            continue
-        # prefer 2+ neighbors (single-neighbor shapes are dead giveaways)
-        scored.append((name, len(nbrs), enc))
+    adjacency, pool = eligible_pool(geoms, codes)
+    # prefer 2+ neighbors (single-neighbor shapes are dead giveaways, save
+    # for eligible_pool's own fully-enclosed carve-out)
+    scored = [
+        (name, len(adjacency[name]["neighbors"]), adjacency[name]["enclosure"])
+        for name in pool
+    ]
     scored.sort(key=lambda r: (-(r[1] >= 2), -r[2], -r[1]))
     targets = [s[0] for s in scored[:n]]
     print(f"auto-selected {len(targets)} puzzles:\n  " + ", ".join(targets) + "\n")
     build_puzzles(geoms, codes, targets)
+
+def cmd_build_daily(geoms, codes, date_str=None):
+    """Build the single deterministic puzzle for a given date (default:
+    today, UTC), for wiring into the daily rotation. Same date -> same
+    target for every player and every run."""
+    from datetime import date as _date, datetime as _datetime, timezone as _timezone
+    d = _date.fromisoformat(date_str) if date_str else _datetime.now(_timezone.utc).date()
+    adjacency, pool = eligible_pool(geoms, codes)
+    target = puzzle_selector.pick_for_date(d, pool)
+    print(f"daily target for {d}: {target}  ({len(pool)} eligible countries)")
+    build_puzzles(geoms, codes, [target])
 
 # ------------------------------------------------------------------- CLI: preview
 def cmd_preview(geoms, name):
@@ -415,6 +444,8 @@ if __name__ == "__main__":
         build_puzzles(geoms, codes, sys.argv[2:])
     elif cmd == "build-auto":
         cmd_build_auto(geoms, codes, int(sys.argv[2]) if len(sys.argv) > 2 else 30)
+    elif cmd == "build-daily":
+        cmd_build_daily(geoms, codes, sys.argv[2] if len(sys.argv) > 2 else None)
     elif cmd == "preview":
         cmd_preview(geoms, sys.argv[2])
     else:

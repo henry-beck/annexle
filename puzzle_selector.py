@@ -8,9 +8,10 @@ an SVG for it. This module answers two separate questions:
   1. eligibility  — is this country a FAIR target at all? (see is_eligible)
   2. daily pick   — of the eligible pool, which one does today's date map to?
 
-This file is a draft for review. Nothing in the game or the build pipeline
-imports it yet — see the bottom of the file for open questions on the
-heuristic before wiring it into build_puzzles / the React app.
+Wired into missing_country.py's `build-auto` and `build-daily` commands as
+the eligibility filter. Not yet wired into the React app (missing-country-game.jsx
+still resets its daily index by simple modulo, per README's note on the
+days-since-launch-epoch change still needed there).
 
 Usage
 -----
@@ -38,36 +39,40 @@ def load_adjacency(path=ADJACENCY_PATH):
 
 # --------------------------------------------------------------- eligibility
 def is_eligible(name, adjacency, min_neighbors=2, max_target_ratio=15.0,
-                min_neighbor_area_km2=25.0):
+                min_neighbor_area_km2=25.0, enclosure_carveout=0.999):
     """
     A country is a fair "missing" target if:
 
-      - it has at least `min_neighbors` land neighbors. One neighbor means
-        the erased territory becomes a single blob added to a single
-        country — an unmistakable shape change, not a puzzle (mirrors
-        missing_country.py's own build-auto bias against 1-neighbor
-        targets, minus its carve-out for fully-enclosed countries like
-        Lesotho, which we deliberately do NOT replicate here — that's a
-        real open question, see notes below).
+      - it has at least `min_neighbors` REAL land neighbors, where "real"
+        means area >= min_neighbor_area_km2. A country bordering one real
+        neighbor plus a sliver enclave is treated as a 1-neighbor case —
+        the enclave doesn't help the illusion, render_svg drops it as a
+        sub-pixel speck anyway.
 
-      - at least ONE real (>= min_neighbor_area_km2) neighbor is large
-        enough to plausibly anchor the swallow: target_area / (that
-        neighbor's area) <= max_target_ratio. This is a weak "does a
-        plausible absorber exist at all" check against the target's
-        BIGGEST real neighbor, not every neighbor — a target can have
-        several small neighbors alongside one big one (Austria's 8
-        neighbors range from Liechtenstein to Germany) and still be a
-        clean puzzle, because the actual swallow (missing_country.py's
-        Voronoi partition) gives each neighbor a slice sized by shared
-        border length, not an equal split. A first version of this check
-        required EVERY neighbor to pass and wrongly excluded France for
-        merely bordering Belgium alongside three bigger neighbors — caught
-        by the fixture test below.
+      - EXCEPTION: a target with exactly one real neighbor is still
+        eligible if it's (near) fully enclosed by that neighbor
+        (info["enclosure"] >= enclosure_carveout, same 0.999 threshold
+        `candidates` uses for "PERFECT (fully enclosed)") — Lesotho,
+        San Marino. There the whole hole just fills in solid with no
+        ambiguity. This is an explicit exception path, checked only when
+        real-neighbor count is exactly 1, NOT a general relaxation of
+        min_neighbors — a coastal single-neighbor country (most of its
+        border is sea, enclosure well under 0.999) still gets excluded,
+        since the swallow is ambiguous there (does the neighbor cross the
+        coast, or the sea?), same reasoning as the pipeline's existing
+        `enclosure` filter in missing_country.py.
 
-        Neighbors smaller than `min_neighbor_area_km2` don't count as
-        "real" here — render_svg already drops sub-pixel specks, so a
-        micro-enclave (Monaco bordering France) shouldn't factor in at
-        all.
+      - at least ONE real neighbor is large enough to plausibly anchor the
+        swallow: target_area / (that neighbor's area) <= max_target_ratio.
+        Checked against the target's BIGGEST real neighbor, not every
+        neighbor — a target can have several small neighbors alongside one
+        big one (Austria's 8 neighbors range from Liechtenstein to
+        Germany) and still be a clean puzzle, because the actual swallow
+        (missing_country.py's Voronoi partition) gives each neighbor a
+        slice sized by shared border length, not an equal split. A first
+        version of this check required EVERY neighbor to pass and wrongly
+        excluded France for merely bordering Belgium alongside three
+        bigger neighbors.
 
         This is intentionally ONE-DIRECTIONAL: a neighbor much BIGGER than
         the target (India next to Nepal, ratio ~22x) is NOT penalized —
@@ -77,40 +82,40 @@ def is_eligible(name, adjacency, min_neighbors=2, max_target_ratio=15.0,
         not a defect. A first symmetric version of this check wrongly
         excluded Nepal for exactly that reason.
 
-    Both thresholds are exposed as kwargs so they're easy to tune once we
+    All thresholds are exposed as kwargs so they're easy to tune once we
     have real adjacency.json data to eyeball against (see __main__ below).
 
     NOT handled here on purpose: massive countries with genuine ocean
     coastline (e.g. Russia) are expected to already fail the pipeline's
-    existing `enclosure` filter in missing_country.py (lots of border is
-    coastline, not land-neighbor boundary) — that's a separate, existing
-    check this module doesn't duplicate.
-
-    OPEN QUESTION for review: should min_neighbors count only "real"
-    (>= min_neighbor_area_km2) neighbors, so a country bordering one big
-    neighbor + one micro-enclave doesn't count as having 2? Currently it
-    does NOT — min_neighbors is checked against the raw neighbor list
-    before the area floor is applied. Flagging rather than deciding.
+    existing `enclosure` filter (lots of border is coastline, not
+    land-neighbor boundary) — that's a separate, existing check this
+    module doesn't duplicate outside of the single-neighbor carve-out
+    above, where enclosure is the deciding signal anyway.
     """
     info = adjacency.get(name)
     if info is None:
-        return False
-
-    neighbors = info["neighbors"]
-    if len(neighbors) < min_neighbors:
         return False
 
     target_area = info["area_km2"]
     if target_area <= 0:
         return False
 
-    real_neighbor_areas = [
-        n_info["area_km2"]
-        for n in neighbors
+    real_neighbors = [
+        n for n in info["neighbors"]
         if (n_info := adjacency.get(n)) and n_info["area_km2"] >= min_neighbor_area_km2
     ]
-    if not real_neighbor_areas:
+
+    if len(real_neighbors) < min_neighbors:
+        fully_enclosed = (
+            len(real_neighbors) == 1
+            and info.get("enclosure", 0.0) >= enclosure_carveout
+        )
+        if not fully_enclosed:
+            return False
+
+    if not real_neighbors:
         return False
+    real_neighbor_areas = [adjacency[n]["area_km2"] for n in real_neighbors]
     if target_area / max(real_neighbor_areas) > max_target_ratio:
         return False
 
