@@ -374,11 +374,17 @@ def eligible_pool(geoms, codes):
     targets: puzzle_selector's neighbor-count/size-ratio checks (with its
     Lesotho/San Marino carve-out), plus the pipeline's own enclosure >= 0.9
     "clean, landlocked-ish swallow" floor for everything else. Shared by
-    build-auto and build-daily so both draw from the same eligible set."""
+    build-auto and build-daily so both draw from the same eligible set.
+
+    The enclosure floor is skipped for puzzle_selector.SINGLE_NEIGHBOR_ALLOWLIST
+    countries (Canada, Portugal, ...) -- they were added specifically to
+    bypass the enclosure requirement, so re-applying a blanket floor here
+    would silently exclude them again."""
     adjacency = build_adjacency(geoms, codes)
     pool = [
         name for name in puzzle_selector.eligible_targets(adjacency)
         if adjacency[name]["enclosure"] >= 0.9
+        or name in puzzle_selector.SINGLE_NEIGHBOR_ALLOWLIST
     ]
     return adjacency, pool
 

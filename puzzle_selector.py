@@ -37,9 +37,33 @@ def load_adjacency(path=ADJACENCY_PATH):
         return json.load(fh)
 
 
+# --------------------------------------------------------- manual overrides
+# Real countries with exactly one land neighbor, added by explicit request
+# after manual review, bypassing the fully-enclosed carve-out's enclosure
+# requirement below. Worth being precise about what this actually bypasses:
+# `enclosure_carveout` is the single-neighbor case's OWN gate (it doesn't
+# apply to multi-neighbor targets at all — those are gated separately, by
+# missing_country.py's build-auto enclosure floor). What it checks is how
+# much of the target's border is real coastline vs its one land neighbor;
+# low enclosure here means most of the "hole" left behind used to be
+# coastline, so the neighbor absorbing it needs a large fake coastal bulge
+# to look natural. All ten of these ARE exactly that case (enclosure
+# 0.04-0.71, i.e. mostly-to-entirely coastal) — this allowlist accepts that
+# tradeoff deliberately for these specific countries rather than changing
+# the general rule, since some coastal single-neighbor swallows read fine
+# in practice even when the enclosure number is low (a plausible-looking
+# coastal bulge doesn't require zero coastline, it requires a not-too-weird
+# one) and that's a per-country visual judgment call, not a formula.
+SINGLE_NEIGHBOR_ALLOWLIST = frozenset({
+    "Canada", "South Korea", "Portugal", "Ireland", "Denmark",
+    "Haiti", "Gambia", "Monaco", "Brunei", "Qatar",
+})
+
+
 # --------------------------------------------------------------- eligibility
 def is_eligible(name, adjacency, min_neighbors=2, max_target_ratio=15.0,
-                min_neighbor_area_km2=25.0, enclosure_carveout=0.999):
+                min_neighbor_area_km2=25.0, enclosure_carveout=0.999,
+                single_neighbor_allowlist=SINGLE_NEIGHBOR_ALLOWLIST):
     """
     A country is a fair "missing" target if:
 
@@ -50,17 +74,17 @@ def is_eligible(name, adjacency, min_neighbors=2, max_target_ratio=15.0,
         sub-pixel speck anyway.
 
       - EXCEPTION: a target with exactly one real neighbor is still
-        eligible if it's (near) fully enclosed by that neighbor
+        eligible if EITHER it's (near) fully enclosed by that neighbor
         (info["enclosure"] >= enclosure_carveout, same 0.999 threshold
         `candidates` uses for "PERFECT (fully enclosed)") — Lesotho,
-        San Marino. There the whole hole just fills in solid with no
-        ambiguity. This is an explicit exception path, checked only when
-        real-neighbor count is exactly 1, NOT a general relaxation of
-        min_neighbors — a coastal single-neighbor country (most of its
-        border is sea, enclosure well under 0.999) still gets excluded,
-        since the swallow is ambiguous there (does the neighbor cross the
-        coast, or the sea?), same reasoning as the pipeline's existing
-        `enclosure` filter in missing_country.py.
+        San Marino — OR it's in `single_neighbor_allowlist`, a manually
+        curated set of real coastal single-neighbor countries (Canada,
+        Portugal, Ireland, ...) accepted after visual review despite low
+        enclosure — see the allowlist's own comment above for what that
+        tradeoff actually means. Both paths are explicit exceptions,
+        checked only when real-neighbor count is exactly 1, NOT a general
+        relaxation of min_neighbors — a coastal single-neighbor country
+        that's neither fully enclosed nor allowlisted still gets excluded.
 
       - at least ONE real neighbor is large enough to plausibly anchor the
         swallow: target_area / (that neighbor's area) <= max_target_ratio.
@@ -106,11 +130,11 @@ def is_eligible(name, adjacency, min_neighbors=2, max_target_ratio=15.0,
     ]
 
     if len(real_neighbors) < min_neighbors:
-        fully_enclosed = (
-            len(real_neighbors) == 1
-            and info.get("enclosure", 0.0) >= enclosure_carveout
+        single_neighbor_exception = len(real_neighbors) == 1 and (
+            info.get("enclosure", 0.0) >= enclosure_carveout
+            or name in single_neighbor_allowlist
         )
-        if not fully_enclosed:
+        if not single_neighbor_exception:
             return False
 
     if not real_neighbors:
