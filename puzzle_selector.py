@@ -37,84 +37,40 @@ def load_adjacency(path=ADJACENCY_PATH):
         return json.load(fh)
 
 
-# --------------------------------------------------------- manual overrides
-# Real countries with exactly one land neighbor, added by explicit request
-# after manual review, bypassing the fully-enclosed carve-out's enclosure
-# requirement below. Worth being precise about what this actually bypasses:
-# `enclosure_carveout` is the single-neighbor case's OWN gate (it doesn't
-# apply to multi-neighbor targets at all — those are gated separately, by
-# missing_country.py's build-auto enclosure floor). What it checks is how
-# much of the target's border is real coastline vs its one land neighbor;
-# low enclosure here means most of the "hole" left behind used to be
-# coastline, so the neighbor absorbing it needs a large fake coastal bulge
-# to look natural. All ten of these ARE exactly that case (enclosure
-# 0.04-0.71, i.e. mostly-to-entirely coastal) — this allowlist accepts that
-# tradeoff deliberately for these specific countries rather than changing
-# the general rule, since some coastal single-neighbor swallows read fine
-# in practice even when the enclosure number is low (a plausible-looking
-# coastal bulge doesn't require zero coastline, it requires a not-too-weird
-# one) and that's a per-country visual judgment call, not a formula.
-SINGLE_NEIGHBOR_ALLOWLIST = frozenset({
-    "Canada", "South Korea", "Portugal", "Ireland", "Denmark",
-    "Haiti", "Gambia", "Monaco", "Brunei", "Qatar",
-})
-
-
 # --------------------------------------------------------------- eligibility
-def is_eligible(name, adjacency, min_neighbors=2, max_target_ratio=15.0,
-                min_neighbor_area_km2=25.0, enclosure_carveout=0.999,
-                single_neighbor_allowlist=SINGLE_NEIGHBOR_ALLOWLIST):
+def is_eligible(name, adjacency, min_neighbor_area_km2=25.0):
     """
-    A country is a fair "missing" target if:
+    Widest rule: a country is an eligible target if it has AT LEAST ONE
+    real (area >= min_neighbor_area_km2) land-border neighbor from
+    find_neighbors(). Neighbors below that floor don't count — a
+    micro-enclave (Monaco-in-France) can't be what a neighbor "expands
+    into," render_svg drops it as a sub-pixel speck anyway.
 
-      - it has at least `min_neighbors` REAL land neighbors, where "real"
-        means area >= min_neighbor_area_km2. A country bordering one real
-        neighbor plus a sliver enclave is treated as a 1-neighbor case —
-        the enclave doesn't help the illusion, render_svg drops it as a
-        sub-pixel speck anyway.
+    That's the entire rule. No enclosure floor, no neighbor-count minimum
+    above one, no size-ratio check — earlier versions of this function had
+    all three (a >=2-real-neighbor minimum with a fully-enclosed carve-out
+    for exactly one, a target/neighbor size-ratio cap, and a manually
+    curated allowlist of real coastal single-neighbor countries), each
+    added to patch a specific bad case. All three are now subsumed by this
+    one rule and deliberately removed rather than kept as dead code —
+    quality concerns those checks used to catch (coastal ambiguity,
+    implausible size mismatches, inflated render viewports) are handled
+    downstream instead: `enclosure` is still computed and attached to each
+    puzzle (see build_adjacency in missing_country.py) as a difficulty
+    label for later ordering/tagging, not a gate here; and specific
+    structural risks (a multi-island target where a neighbor only borders
+    one disconnected part, e.g. UK/Ireland via Northern Ireland; a target
+    whose render viewport is inflated by far-flung islands, e.g.
+    Denmark/Bornholm) are surfaced by manual review/flagging before a
+    country is actually built, not filtered out formulaically.
 
-      - EXCEPTION: a target with exactly one real neighbor is still
-        eligible if EITHER it's (near) fully enclosed by that neighbor
-        (info["enclosure"] >= enclosure_carveout, same 0.999 threshold
-        `candidates` uses for "PERFECT (fully enclosed)") — Lesotho,
-        San Marino — OR it's in `single_neighbor_allowlist`, a manually
-        curated set of real coastal single-neighbor countries (Canada,
-        Portugal, Ireland, ...) accepted after visual review despite low
-        enclosure — see the allowlist's own comment above for what that
-        tradeoff actually means. Both paths are explicit exceptions,
-        checked only when real-neighbor count is exactly 1, NOT a general
-        relaxation of min_neighbors — a coastal single-neighbor country
-        that's neither fully enclosed nor allowlisted still gets excluded.
-
-      - at least ONE real neighbor is large enough to plausibly anchor the
-        swallow: target_area / (that neighbor's area) <= max_target_ratio.
-        Checked against the target's BIGGEST real neighbor, not every
-        neighbor — a target can have several small neighbors alongside one
-        big one (Austria's 8 neighbors range from Liechtenstein to
-        Germany) and still be a clean puzzle, because the actual swallow
-        (missing_country.py's Voronoi partition) gives each neighbor a
-        slice sized by shared border length, not an equal split. A first
-        version of this check required EVERY neighbor to pass and wrongly
-        excluded France for merely bordering Belgium alongside three
-        bigger neighbors.
-
-        This is intentionally ONE-DIRECTIONAL: a neighbor much BIGGER than
-        the target (India next to Nepal, ratio ~22x) is NOT penalized —
-        that's the pipeline's own flagship case (enclosure ~1.0, "PERFECT"
-        in `candidates`). A huge neighbor's silhouette barely changes when
-        it absorbs a small target, which is the illusion the game wants,
-        not a defect. A first symmetric version of this check wrongly
-        excluded Nepal for exactly that reason.
-
-    All thresholds are exposed as kwargs so they're easy to tune once we
-    have real adjacency.json data to eyeball against (see __main__ below).
-
-    NOT handled here on purpose: massive countries with genuine ocean
-    coastline (e.g. Russia) are expected to already fail the pipeline's
-    existing `enclosure` filter (lots of border is coastline, not
-    land-neighbor boundary) — that's a separate, existing check this
-    module doesn't duplicate outside of the single-neighbor carve-out
-    above, where enclosure is the deciding signal anyway.
+    Zero real neighbors means the target is excluded — pure islands (Sri
+    Lanka, Iceland, Japan, Cuba, ...) and bridge/causeway-only "neighbors"
+    (Bahrain, Singapore: the causeway isn't a shared polygon boundary, so
+    find_neighbors already reports these as having none). There's no
+    adjacent land for any neighbor to expand into, so there's no swallow
+    to construct. These countries stay in the countries.json guess pool;
+    they just can't be the hidden target.
     """
     info = adjacency.get(name)
     if info is None:
@@ -128,22 +84,7 @@ def is_eligible(name, adjacency, min_neighbors=2, max_target_ratio=15.0,
         n for n in info["neighbors"]
         if (n_info := adjacency.get(n)) and n_info["area_km2"] >= min_neighbor_area_km2
     ]
-
-    if len(real_neighbors) < min_neighbors:
-        single_neighbor_exception = len(real_neighbors) == 1 and (
-            info.get("enclosure", 0.0) >= enclosure_carveout
-            or name in single_neighbor_allowlist
-        )
-        if not single_neighbor_exception:
-            return False
-
-    if not real_neighbors:
-        return False
-    real_neighbor_areas = [adjacency[n]["area_km2"] for n in real_neighbors]
-    if target_area / max(real_neighbor_areas) > max_target_ratio:
-        return False
-
-    return True
+    return len(real_neighbors) >= 1
 
 
 def eligible_targets(adjacency, **kwargs):

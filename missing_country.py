@@ -371,32 +371,21 @@ def build_puzzles(geoms, codes, targets, preview=False):
 
 def eligible_pool(geoms, codes):
     """Adjacency graph + the subset of countries fair to use as puzzle
-    targets: puzzle_selector's neighbor-count/size-ratio checks (with its
-    Lesotho/San Marino carve-out), plus the pipeline's own enclosure >= 0.9
-    "clean, landlocked-ish swallow" floor for everything else. Shared by
-    build-auto and build-daily so both draw from the same eligible set.
-
-    The enclosure floor is skipped for puzzle_selector.SINGLE_NEIGHBOR_ALLOWLIST
-    countries (Canada, Portugal, ...) -- they were added specifically to
-    bypass the enclosure requirement, so re-applying a blanket floor here
-    would silently exclude them again."""
+    targets: puzzle_selector's widest rule (>=1 real land-border neighbor),
+    nothing else. `enclosure` is still computed in the adjacency graph but
+    is no longer a gate here -- it's carried through to each built puzzle
+    as a difficulty label (see build_puzzles). Shared by build-auto and
+    build-daily so both draw from the same eligible set."""
     adjacency = build_adjacency(geoms, codes)
-    pool = [
-        name for name in puzzle_selector.eligible_targets(adjacency)
-        if adjacency[name]["enclosure"] >= 0.9
-        or name in puzzle_selector.SINGLE_NEIGHBOR_ALLOWLIST
-    ]
+    pool = puzzle_selector.eligible_targets(adjacency)
     return adjacency, pool
 
 def cmd_build_auto(geoms, codes, n):
     adjacency, pool = eligible_pool(geoms, codes)
-    # prefer 2+ neighbors (single-neighbor shapes are dead giveaways, save
-    # for eligible_pool's own fully-enclosed carve-out)
-    scored = [
-        (name, len(adjacency[name]["neighbors"]), adjacency[name]["enclosure"])
-        for name in pool
-    ]
-    scored.sort(key=lambda r: (-(r[1] >= 2), -r[2], -r[1]))
+    # order by enclosure descending -- highest first as the "cleanest
+    # swallow" difficulty signal; not a filter, just a build/pick order
+    scored = [(name, adjacency[name]["enclosure"]) for name in pool]
+    scored.sort(key=lambda r: (-r[1], r[0]))
     targets = [s[0] for s in scored[:n]]
     print(f"auto-selected {len(targets)} puzzles:\n  " + ", ".join(targets) + "\n")
     build_puzzles(geoms, codes, targets)
