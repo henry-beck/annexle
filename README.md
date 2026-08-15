@@ -18,60 +18,59 @@ curl -sL https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/g
 
 ```bash
 python missing_country.py candidates        # rank every country by puzzle quality
+python missing_country.py adjacency         # dump the full neighbor graph + areas
 python missing_country.py build-auto 30     # auto-pick 30 clean puzzles -> out/
 python missing_country.py build "Nepal" "Bolivia" "Laos"   # build specific ones
-python missing_country.py preview "Nepal"   # write a PNG to eyeball the result
+python missing_country.py build-daily        # build today's deterministic puzzle
 ```
 
 ## What it outputs (in `out/`)
 
+Architecture B: the pipeline emits **GeoJSON** for a D3 client to render live
+(flat projection now, `geoOrthographic` globe later — a projection swap, not a
+rewrite). Output geometry is lon/lat, so it's projection-independent.
+
 - **`countries.json`** — every guessable country with a real centroid
-  `{ name, code, lat, lng }`. This replaces the hardcoded `COUNTRIES` array in
-  your demo and drives the distance/direction math for *any* guess.
-- **`puzzles.json`** — ordered puzzle list
-  `{ id, slug, target, targetCode, neighbors, enclosure, viewBox, map }`.
-- **`maps/<slug>.svg`** — one map per puzzle, the target already swallowed.
+  `{ name, code, lat, lng }`. Replaces the hardcoded `COUNTRIES` array and
+  drives the distance/direction math for *any* guess.
+- **`world.geojson`** — the shared base map: every country, unmodified, one
+  `Feature` each with `properties: { name, code }`. Loaded **once** and cached
+  across all puzzles.
+- **`puzzles.json`** — ordered puzzle index
+  `{ id, slug, target, targetCode, neighbors, absorbers, enclosure, diff }`.
+- **`puzzles/<slug>.json`** — the small per-puzzle **diff** against the base:
+  `{ target, removed, changed: [ Feature, … ] }`. `removed` is the target
+  feature to delete; `changed` are the absorbing countries whose geometry grew.
+  Absorbed territory carries the **absorbing** country's name; the target's name
+  appears on no feature.
 
-## Wiring into the React demo
+## Wiring into the React client (D3)
 
-Three swaps:
-
-1. **Countries** — replace the inline `COUNTRIES` array with `countries.json`
-   (the centroids are exact now, so distances/bearings are correct).
+1. **Countries** — replace the inline `COUNTRIES` array with `countries.json`.
 2. **Puzzles** — replace `PUZZLES` with `puzzles.json`.
-3. **The map** — drop the SVG into your map placeholder. Fetch it and inject:
+3. **The map** — load `world.geojson` once; per puzzle, fetch its `diff`, delete
+   the `removed` feature, replace each `changed` feature by name, and render the
+   resulting `FeatureCollection` with `d3.geoPath`. Uniform fill/stroke on every
+   country (so absorbers are indistinguishable — the puzzle); country name on
+   hover from `feature.properties.name`. Switching `d3.geoNaturalEarth1()` →
+   `d3.geoOrthographic()` turns the flat map into a rotatable globe on the same
+   data.
 
-   ```jsx
-   const [svg, setSvg] = useState("");
-   useEffect(() => {
-     fetch(`/${puzzle.map}`).then(r => r.text()).then(setSvg);
-   }, [puzzle.map]);
-   // ...
-   <div className="..." dangerouslySetInnerHTML={{ __html: svg }} />
-   ```
-
-Your daily selection (`Math.floor(Date.now()/8.64e7) % PUZZLES.length`) is already
-deterministic and UTC-day based, so everyone sees the same puzzle each day. For a
-fixed launch order, index into `puzzles.json` by *days since a launch epoch*
-instead of modulo, so puzzle N always lands on a known date.
-
-## Theming
-
-`render_svg(..., style=...)` takes `{land, stroke, sea, stroke_w}`. Example dark
-theme matching your `slate-950` UI is in `example_dark_switzerland.svg`:
-
-```python
-dark = {"land": "#334155", "stroke": "#0f172a", "sea": "#1e293b", "stroke_w": 1.3}
-```
+For a fixed launch order, index into the eligible pool by *days since a launch
+epoch* (see `puzzle_selector.pick_for_date`) so puzzle N always lands on a known
+date.
 
 ## How the "swallow" works
 
-For a puzzle, everything is reprojected to a local azimuthal-equidistant frame
-centered on the target (so distances/areas are locally accurate). The target's
-polygon is partitioned by a Voronoi diagram built from densified neighbor
-boundary points — every point in the gap is assigned to the nearest neighbor —
-and each slice is merged into that neighbor. Only *internal* borders are redrawn;
-the coastline and outer shape are untouched.
+Each puzzle's target is first split into its disconnected landmass **pieces**.
+Each piece is swallowed independently, in a local azimuthal-equidistant frame
+centered on *that piece*: the piece is partitioned by a Voronoi diagram built
+from densified boundary points of the countries that border **that piece**
+(nearest-country fallback if none border it), and each slice is merged into the
+bordering country. Far-flung territory therefore routes to *local* absorbers
+(French Guiana → Suriname/Brazil, not France's European neighbors), and no
+single projection ever spans a target's extremes. Only *internal* borders are
+redrawn; the coastline and outer shape are untouched.
 
 ## Choosing puzzles / difficulty
 
