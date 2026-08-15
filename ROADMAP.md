@@ -36,3 +36,23 @@ seeded deterministically per date.
   distorted regions still report true names, hovering trivializes the puzzle;
   the mode may need to suppress or fuzz hover names, which interacts with the
   base game's hover behavior and needs a deliberate decision.
+
+## Border naturalness (polish)
+
+**Status:** parked, not built. Not needed for a playable v1 — the output is
+correct, just stylized.
+
+The per-piece Voronoi swallow produces geometrically clean partition seams —
+straight-ish lines meeting at sharp vertices — which read as artificial
+compared to real borders. France is the clearest example: radiating straight
+lines plus a thin sliver toward the Mediterranean. Two separate issues:
+
+1. **Inherent Voronoi seam straightness.** Future options: jitter/perturb the
+   boundaries, snap them to real geographic features (rivers/ridgelines), or use
+   a different partition method entirely.
+2. **Occasional thin slivers** from a point-contact or micro-neighbor grabbing a
+   narrow wedge. Investigate specific cases (France's Med-ward sliver)
+   separately.
+
+Best tackled alongside the xkcd distributed-distortion mode above, since both
+rewrite the border-drawing path.
