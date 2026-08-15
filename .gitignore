@@ -2,4 +2,3 @@ out/
 ne_50m_admin0.geojson
 __pycache__/
 *.pyc
-preview_*.png

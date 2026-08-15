@@ -35,9 +35,10 @@ curl -sL https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/g
 
 # pipeline
 python missing_country.py candidates        # rank every country by puzzle quality (enclosure score)
+python missing_country.py adjacency         # dump full neighbor graph + areas -> out/adjacency.json
 python missing_country.py build-auto 30     # auto-pick 30 clean puzzles -> out/
 python missing_country.py build "Nepal" "Bolivia" "Laos"   # build specific puzzles
-python missing_country.py preview "Nepal"   # write a PNG to eyeball a puzzle (needs matplotlib)
+python missing_country.py build-daily        # build today's deterministic puzzle
 ```
 
 There is no build/lint/test tooling in this repo (no package.json, no test
@@ -50,41 +51,44 @@ Input is Natural Earth's 50m admin-0 countries GeoJSON (`ne_50m_admin0.geojson`,
 fetched locally, not committed). `load()` reads it into `{name: shapely geometry}`
 and `{name: ISO code}` dicts keyed by country name (`ADMIN`/`ADM0_A3` fields).
 
-Per-puzzle flow (`build_puzzles` → `swallow` → `render_svg`):
+**Architecture B**: the pipeline emits **GeoJSON** (a shared world base + a small
+per-puzzle diff) for a D3 client to render live; it does *not* pre-render images.
+Output geometry is lon/lat (projection-independent), so the client renders flat
+now and a `geoOrthographic` globe later from the same data.
+
+Per-puzzle flow (`build_puzzles` → `swallow` → GeoJSON diff):
 
 1. **`find_neighbors`** — land-adjacency by buffered intersection + shared
    boundary length (catches near-touching borders/river gaps).
 2. **`enclosure`** — fraction of the target's border shared with land
-   neighbors. `1.0` = fully landlocked (cleanest swallow, e.g. Nepal,
-   Bolivia, Czechia); `<0.9` = coastal, gets skipped by `build-auto` since
-   the swallow becomes ambiguous (does a neighbor cross the coast, or the
-   sea?).
-3. **`swallow`** — the core trick. Everything is reprojected into a local
-   azimuthal-equidistant frame centered on the target (via `local_proj`, so
-   distances/areas are locally accurate). The target polygon is partitioned
-   by a Voronoi diagram (`voronoi_diagram`) built from densified neighbor
-   boundary points; every point in the gap is assigned to its nearest
-   neighbor via `STRtree`, and each slice is merged into that neighbor's
-   geometry. Only internal borders move — the outer coastline/silhouette is
-   untouched.
-4. **`render_svg`** — draws the region with **uniform styling** on purpose
-   (same fill/stroke for every country) so expanded neighbors can't be
-   visually distinguished from their original shape — that's the whole
-   puzzle. Clips to a viewport around the target (which also drops
-   far-flung overseas territories like French Guiana under France).
-   `style={land, stroke, sea, stroke_w}` is overridable for theming (see
-   `example_dark_switzerland.svg` for a dark-theme sample matching a
-   `slate-950` UI).
+   neighbors. `1.0` = fully landlocked; low = coastal. Now a difficulty
+   *label* carried on each puzzle, no longer an eligibility gate.
+3. **`split_pieces`** — splits the target into disconnected landmass pieces
+   by single-linkage clustering polygons within ~150 km (tight archipelagos
+   collapse into one piece; true exclaves like French Guiana stay separate).
+4. **`swallow`** — the core trick, run **per piece**. For each piece the
+   candidate absorbers are the countries that border *that piece*
+   (`piece_borderers`, over all countries — not the target's global neighbor
+   set), with a nearest-country fallback (`nearest_country`, with a
+   sibling-piece tie-break) if none border it. The piece is partitioned by a
+   Voronoi diagram (`_voronoi_slices`) in a projection centered on *that
+   piece*, and each slice is inverse-projected to lon/lat and merged into the
+   bordering country. Returns `{country → new lon/lat geometry}` for changed
+   countries only; the target's name is never a key. Per-piece scoping is what
+   routes far-flung territory locally (French Guiana → Suriname/Brazil) and
+   fixes the cross-ocean crashes (Canada/France/US/Peru) the old whole-target
+   single-projection swallow hit.
 
-`build_puzzles` writes `out/puzzles.json` (ordered puzzle list: `id`, `slug`,
-`target`, `targetCode`, `neighbors`, `enclosure`, `viewBox`, `map`) and
-`out/countries.json` (every guessable country's real centroid — via
-`main_centroid`, representative point of the *largest* polygon of a country
-to avoid overseas territories skewing it — as `{name, code, lat, lng}`),
-plus `out/maps/<slug>.svg` per puzzle. `cmd_build_auto` selects targets by
-sorting on enclosure ≥ 0.9 and preferring 2+ neighbors (single-neighbor
-countries are a dead giveaway, except fully-enclosed ones like Lesotho/San
-Marino, which stay clean).
+`build_puzzles` writes: `out/world.geojson` (shared base — every country
+unmodified, `properties:{name,code}`, coordinates rounded via `round_coords` so
+diff features stay border-aligned with the base); `out/puzzles/<slug>.json` per
+puzzle (`{target, removed, changed:[Feature…]}` — delete `removed`, replace
+`changed` by name); `out/puzzles.json` (ordered index: `id`, `slug`, `target`,
+`targetCode`, `neighbors`, `absorbers`, `enclosure`, `diff`); and
+`out/countries.json` (every guessable country's centroid via `main_centroid`,
+representative point of the *largest* polygon, as `{name, code, lat, lng}`).
+`cmd_build_auto` draws from `eligible_pool` (puzzle_selector's ≥1-real-neighbor
+rule) ordered by enclosure descending.
 
 Note: root-level `countries.json` / `puzzles.json` in this repo are sample
 outputs of a prior pipeline run, not `out/` (which is gitignored/generated).
@@ -111,10 +115,13 @@ Wordle-style emoji share string is built by `shareText()` (🟩/⬜ blocks +
 directional arrows per guess, 🎯 on the correct one) and copied via
 `navigator.clipboard`.
 
-The map area is currently a placeholder `div` with pulsing "?" — the
-integration point noted in README.md is to `fetch` the puzzle's `map` SVG
-path and inject it via `dangerouslySetInnerHTML` once `puzzles.json` is
-wired in.
+The map area is currently a placeholder `div` with pulsing "?" — not yet
+wired to the pipeline. Under architecture B the integration point is a D3
+component (not SVG injection): load `out/world.geojson` once, apply the
+puzzle's `out/puzzles/<slug>.json` diff (delete `removed`, replace `changed`
+by name), and render the resulting FeatureCollection with `d3.geoPath`
+(uniform fill, hover name from `feature.properties.name`). See README.md
+"Wiring into the React client (D3)".
 
 ## Known refinements (from README)
 
