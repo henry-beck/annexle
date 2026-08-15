@@ -1,0 +1,13 @@
+node_modules/
+dist/
+*.local
+.vite/
+
+# Generated map data: commit only the shared base + the demo puzzle diffs so the
+# app runs on a fresh clone without the Python pipeline. The full synced set
+# (npm run sync-data, from ../out/) is ignored.
+public/data/puzzles/*.json
+!public/data/puzzles/switzerland.json
+!public/data/puzzles/haiti.json
+public/data/puzzles.json
+public/data/countries.json
