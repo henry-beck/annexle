@@ -80,8 +80,9 @@ Per-puzzle flow (`build_puzzles` → `swallow` → GeoJSON diff):
    single-projection swallow hit.
 
 `build_puzzles` writes: `out/world.geojson` (shared base — every country
-unmodified, `properties:{name,code}`, coordinates rounded via `round_coords` so
-diff features stay border-aligned with the base); `out/puzzles/<slug>.json` per
+unmodified, `properties:{name,code}`, coordinates snapped to a grid via
+`quantize`/`set_precision` — guarantees valid topology and keeps diff features
+border-aligned with the base, no phantom seams); `out/puzzles/<slug>.json` per
 puzzle (`{target, removed, changed:[Feature…]}` — delete `removed`, replace
 `changed` by name); `out/puzzles.json` (ordered index: `id`, `slug`, `target`,
 `targetCode`, `neighbors`, `absorbers`, `enclosure`, `diff`); and

@@ -42,9 +42,9 @@ Outputs land in ./out/ :
 """
 
 import json, math, os, sys, re
-from shapely.geometry import shape, mapping, MultiPoint
+from shapely.geometry import shape, mapping, MultiPoint, Polygon
 from shapely.ops import unary_union, voronoi_diagram, transform
-from shapely import make_valid
+from shapely import make_valid, set_precision
 from pyproj import Transformer, Geod
 import puzzle_selector
 
@@ -285,7 +285,40 @@ def swallow(geoms, target_name):
     for name, adds in absorbed.items():
         add = unary_union([make_valid(a) for a in adds])
         expanded[name] = make_valid(unary_union([geoms[name], add])).buffer(0)
-    return expanded
+    return _heal_target_footprint(expanded, geoms[target_name])
+
+def _heal_target_footprint(expanded, target):
+    """The absorbers should tile the vanished target's footprint EXACTLY.
+    Independent per-absorber unions plus projection round-trips can leave
+    hairline GAPS between adjacent absorbers (sea shows through) and tiny
+    HOLES inside an absorber -- both render as phantom seam strokes right
+    where the target used to be, outlining the answer. Close them:
+      1. reassign any uncovered leftover within the target to the absorber
+         it shares the most boundary with (fills gaps), and
+      2. drop interior rings that fall inside the target footprint (fills
+         holes). Real enclaves like San Marino lie OUTSIDE the footprint,
+         so they're untouched.
+    Without this, set_precision alone fixes validity but leaves ~0.1 km^2
+    of sliver gaps/holes visible at high zoom."""
+    names = list(expanded)
+    out = dict(expanded)
+    leftover = target.difference(unary_union(list(out.values())))
+    for frag in (polys_of(leftover) if not leftover.is_empty else []):
+        best, best_len = None, -1.0
+        for n in names:
+            shared = out[n].boundary.intersection(frag.boundary).length
+            if shared > best_len:
+                best_len, best = shared, n
+        if best is not None:
+            out[best] = make_valid(unary_union([out[best], frag]))
+    for n in names:
+        rebuilt = [Polygon(p.exterior,
+                           [r for r in p.interiors
+                            if not target.contains(Polygon(r).representative_point())])
+                   for p in polys_of(out[n])]
+        if rebuilt:
+            out[n] = unary_union(rebuilt)
+    return out
 
 # ------------------------------------------------------------- geometry util
 def polys_of(geom):
@@ -381,23 +414,27 @@ def cmd_adjacency(geoms, codes):
     print(f"wrote {len(adjacency)} countries -> {OUT}/adjacency.json")
 
 # --------------------------------------------------------- GeoJSON emission
-def round_coords(geom, ndigits=4):
-    """Round every coordinate to `ndigits` decimals (~11m at 4dp). Shrinks
-    the JSON, and because every feature is rounded identically, borders
-    shared between a diff feature and an unchanged base feature stay
-    bit-for-bit aligned (no sea slivers) -- which is why we round rather
-    than topologically simplify per-feature for the diff pipeline."""
-    def _rnd(xs, ys):
-        return ([round(float(x), ndigits) for x in xs],
-                [round(float(y), ndigits) for y in ys])
-    return transform(_rnd, geom)
+GRID = 1e-4  # coordinate quantization, ~11m — the client renders a world map,
+             # not a cadastre, so 11m is plenty and it keeps the JSON small.
 
-def feature(name, code, geom, ndigits=4):
+def quantize(geom):
+    """Snap coordinates to a fixed `GRID` via shapely.set_precision, which —
+    unlike naive per-coordinate rounding — guarantees VALID output topology
+    and snaps every feature to the SAME global grid. That matters twice over:
+    (1) a swallowed absorber stays a clean single polygon instead of a
+    self-intersecting one (naive rounding made every absorber invalid, and
+    geoPath then stroked the self-intersection artifacts as phantom seam
+    lines exactly where the target used to be); (2) an edge shared between a
+    diff feature and an unchanged base feature snaps identically in both, so
+    no sea-coloured slivers open up between them."""
+    return set_precision(geom, GRID)
+
+def feature(name, code, geom):
     return {"type": "Feature",
             "properties": {"name": name, "code": code},
-            "geometry": mapping(round_coords(geom, ndigits))}
+            "geometry": mapping(quantize(geom))}
 
-def write_world_base(geoms, codes, ndigits=4):
+def write_world_base(geoms, codes):
     """The shared, unmodified world -- written once, cached by the client
     across every puzzle. Each puzzle ships only a small diff against this."""
     feats = [feature(name, codes.get(name, ""), g)
