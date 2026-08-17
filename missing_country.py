@@ -531,6 +531,27 @@ def cmd_build_daily(geoms, codes, date_str=None):
     print(f"daily target for {d}: {target}  ({len(pool)} eligible countries)")
     build_puzzles(geoms, codes, [target])
 
+def cmd_manifest(geoms, codes, days=1100):
+    """Precompute the deterministic date -> puzzle lookup the JS client uses.
+    pick_for_date lives in Python (puzzle_selector), so rather than reproduce
+    its seeded shuffle in JS we emit the whole sequence: entries[i] is the
+    puzzle for LAUNCH_DATE + i days, and the client just array-indexes by
+    days-since-launch. Writes out/manifest.json; sync-data copies it to the
+    app. Covers `days` days from LAUNCH_DATE (~3 years by default)."""
+    from datetime import timedelta
+    adjacency, pool = eligible_pool(geoms, codes)
+    launch = puzzle_selector.LAUNCH_DATE
+    entries = []
+    for i in range(days):
+        target = puzzle_selector.pick_for_date(launch + timedelta(days=i), pool)
+        entries.append({"slug": slug(target), "target": target})
+    os.makedirs(OUT, exist_ok=True)
+    manifest = {"launchDate": launch.isoformat(), "days": days, "entries": entries}
+    with open(f"{OUT}/manifest.json", "w") as fh:
+        json.dump(manifest, fh, separators=(",", ":"), ensure_ascii=False)
+    print(f"wrote manifest: launch {launch}, {days} days, "
+          f"{len(pool)} eligible -> {OUT}/manifest.json")
+
 # ------------------------------------------------------------------------- main
 if __name__ == "__main__":
     geoms, codes = load()
@@ -545,5 +566,7 @@ if __name__ == "__main__":
         cmd_build_auto(geoms, codes, int(sys.argv[2]) if len(sys.argv) > 2 else 30)
     elif cmd == "build-daily":
         cmd_build_daily(geoms, codes, sys.argv[2] if len(sys.argv) > 2 else None)
+    elif cmd == "manifest":
+        cmd_manifest(geoms, codes, int(sys.argv[2]) if len(sys.argv) > 2 else 1100)
     else:
         print(__doc__)

@@ -26,7 +26,7 @@ if (!existsSync(OUT)) {
 mkdirSync(join(DEST, "puzzles"), { recursive: true });
 
 let copied = 0;
-for (const name of ["world.geojson", "puzzles.json", "countries.json"]) {
+for (const name of ["world.geojson", "puzzles.json", "countries.json", "manifest.json"]) {
   const src = join(OUT, name);
   if (existsSync(src)) {
     copyFileSync(src, join(DEST, name));
