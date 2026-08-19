@@ -45,6 +45,7 @@ import json, math, os, sys, re
 from shapely.geometry import shape, mapping, MultiPoint, Polygon
 from shapely.ops import unary_union, voronoi_diagram, transform
 from shapely import make_valid, set_precision
+from shapely.errors import GEOSException
 from pyproj import Transformer, Geod
 import puzzle_selector
 
@@ -217,6 +218,42 @@ def nearest_country(piece, geoms, exclude, prefer=None, tie_km=150):
                 return name
     return best
 
+def _dedup_points(pts, tags, grid):
+    """Drop generator points that collide on a `grid`-metre lattice, keeping
+    the first tag at each cell. Exact/near-duplicate sites -- produced where two
+    neighbours' boundaries meet at a tripoint and both get sampled at the same
+    coordinate -- are the classic trigger for GEOS voronoi_diagram 'side
+    location conflict' crashes, and whether a given GEOS build tolerates them
+    varies (which is why the same data builds on GEOS 3.11/3.13 but crashed on
+    another build). Removing the degenerate sites makes the diagram robust
+    across GEOS versions; duplicate sites are redundant, so the partition is
+    unchanged."""
+    seen, op, ot = set(), [], []
+    for p, t in zip(pts, tags):
+        key = (round(p.x / grid), round(p.y / grid))
+        if key in seen:
+            continue
+        seen.add(key)
+        op.append(p)
+        ot.append(t)
+    return op, ot
+
+def _voronoi_cells(pts, tags, holeP, step):
+    """Build the Voronoi diagram robustly: dedupe coincident generator points
+    first, and if GEOS still fails on this build, retry once with coarser
+    snapping. Returns (cells, pts, tags) with the points actually used, or None
+    if even the coarse retry fails (caller then falls back)."""
+    env = make_valid(holeP.buffer(step * 2))
+    for grid in (1.0, step / 20):
+        dp, dt = _dedup_points(pts, tags, grid)
+        if len(dp) < 2:
+            continue
+        try:
+            return voronoi_diagram(MultiPoint(dp), envelope=env), dp, dt
+        except (GEOSException, ValueError):
+            continue
+    return None
+
 def _voronoi_slices(holeP, candP, step=6000, reach=70000):
     """Partition projected piece `holeP` among projected candidate geoms
     `candP` (name -> geom) by a Voronoi diagram of densified candidate
@@ -232,7 +269,13 @@ def _voronoi_slices(holeP, candP, step=6000, reach=70000):
             tags.append(name)
     if not pts:
         return {}
-    cells = voronoi_diagram(MultiPoint(pts), envelope=holeP.buffer(step * 2))
+
+    result = _voronoi_cells(pts, tags, holeP, step)
+    if result is None:  # voronoi unrecoverable on this GEOS build: whole-piece fallback
+        best = max(candP, key=lambda n: holeP.boundary.intersection(candP[n].boundary).length)
+        print(f"    !! voronoi failed; assigning whole piece to {best}")
+        return {best: holeP}
+    cells, pts, tags = result
     slices = {name: [] for name in candP}
     for cell in cells.geoms:
         sl = cell.intersection(holeP)
