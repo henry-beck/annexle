@@ -50,6 +50,7 @@ export default function App() {
         <div style={{ display: "flex", gap: 20, alignItems: "flex-start", flexWrap: "wrap" }}>
           <MissingCountryMap slug={puzzle.slug} width={840} height={560} />
           <GuessPanel
+            date={puzzle.date}
             countries={puzzle.countries}
             target={puzzle.target}
             targetCentroid={puzzle.targetCentroid}
