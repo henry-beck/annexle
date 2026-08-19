@@ -21,7 +21,7 @@ export default function App() {
       }}
     >
       <div style={{ textAlign: "center" }}>
-        <h1 style={{ margin: "0 0 4px", fontSize: 22 }}>Missing Country</h1>
+        <h1 style={{ margin: "0 0 4px", fontSize: 22 }}>Annexle</h1>
         <p style={{ margin: 0, fontSize: 13, color: "#94a3b8" }}>
           {puzzle.status === "ready" ? (
             <>

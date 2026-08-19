@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { haversine, bearing } from "./geo.js";
 import { MAX_GUESSES, proximityPct } from "./constants.js";
-import { loadProgress, saveProgress, loadStreak, recordResult } from "./storage.js";
+import { loadProgress, saveProgress, currentStreak, recordResult } from "./storage.js";
 
 // The game brain for one daily puzzle. Owns the guesses + win/lose status,
 // persists them under the puzzle's date, restores on reload, and maintains the
@@ -9,15 +9,17 @@ import { loadProgress, saveProgress, loadStreak, recordResult } from "./storage.
 export function useGameState({ date, target, targetCentroid, countries }) {
   const [guesses, setGuesses] = useState([]);
   const [status, setStatus] = useState("playing");
-  const [streak, setStreak] = useState(() => loadStreak().count);
+  const [streak, setStreak] = useState(() => currentStreak(date));
 
   // Restore saved progress whenever the puzzle date changes — this is also the
-  // day-rollover path: a new date has no (or its own) saved progress.
+  // day-rollover path: a new date has no (or its own) saved progress. The
+  // displayed streak is the gap-aware effective value (broken if a day was
+  // missed), not the raw stored count.
   useEffect(() => {
     const saved = loadProgress(date);
     setGuesses(saved?.guesses ?? []);
     setStatus(saved?.status ?? "playing");
-    setStreak(loadStreak().count);
+    setStreak(currentStreak(date));
   }, [date]);
 
   function submitGuess(name) {
