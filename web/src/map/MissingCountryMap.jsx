@@ -1,18 +1,24 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { geoPath, geoArea } from "d3-geo";
+import { geoPath, geoArea, geoGraticule10 } from "d3-geo";
 import { select } from "d3-selection";
+import { drag as d3drag } from "d3-drag";
 import { zoom as d3zoom, zoomIdentity } from "d3-zoom";
 import { createProjection } from "./projection.js";
 import { useSwallowedWorld } from "./useSwallowedWorld.js";
 import Tooltip from "./Tooltip.jsx";
 
-// Renders the swallowed world for one puzzle. Uniform fill/stroke on every
-// country so absorbers are visually indistinguishable — the whole point of the
-// game; the only way to tell what's gone is to hover and read the name.
+const SPHERE = { type: "Sphere" };
+
+// Renders the swallowed world for one puzzle, flat (geoNaturalEarth1) or as a
+// rotatable globe (geoOrthographic) — same GeoJSON, projection chosen in
+// projection.js. Uniform fill on every country so absorbers are indistinguishable;
+// the only tell is hovering to read a name.
 //
-// Pattern: React owns the DOM (it renders every <path>), D3 only does the math
-// — projection + path generation, and the zoom *behaviour* (which reports a
-// transform we apply to the <g> via state).
+// Interaction differs by mode so the gestures don't fight:
+//   flat  — d3.zoom: drag pans, wheel zooms, applied as a <g> transform.
+//   globe — d3.drag rotates the projection (re-paths), while d3.zoom filtered to
+//           WHEEL ONLY scales the <g> about centre. Drag and wheel are handled by
+//           separate behaviours, so they coexist cleanly.
 export default function MissingCountryMap({
   slug,
   projectionType = "naturalEarth1",
@@ -20,22 +26,33 @@ export default function MissingCountryMap({
   height = 600,
 }) {
   const { fc, loading, error } = useSwallowedWorld(slug);
+  const isGlobe = projectionType === "orthographic";
   const svgRef = useRef(null);
-  const [transform, setTransform] = useState(zoomIdentity);
+
+  const [transform, setTransform] = useState(zoomIdentity); // flat pan/zoom
+  const [rotation, setRotation] = useState([0, -15]); // globe [lambda, phi]
+  const [globeK, setGlobeK] = useState(1); // globe wheel scale
   const [hover, setHover] = useState({ name: null, x: 0, y: 0 });
 
-  // Projection + path generator, refit whenever the data or projection changes.
-  const pathGen = useMemo(() => {
-    if (!fc) return null;
-    const projection = createProjection(projectionType, width, height, fc);
-    return geoPath(projection);
-  }, [fc, projectionType, width, height]);
+  // Refs so the d3 drag/zoom handlers read live values without re-binding.
+  const rotRef = useRef(rotation);
+  rotRef.current = rotation;
+  const kRef = useRef(globeK);
+  kRef.current = globeK;
 
-  // Precompute each feature's path string once (not per render/hover).
-  // Sort LARGEST-area first so small enclaves and micro-states (Vatican,
-  // San Marino, Monaco, Liechtenstein) paint LAST and sit on top — otherwise
-  // a surrounding country drawn later wins the hover hit-test and the enclave
-  // is unreachable at any zoom. Uniform fill means the reorder is invisible.
+  // Projection re-fits on data/size/mode change, and on rotation while on the
+  // globe (rotation only changes in globe mode).
+  const projection = useMemo(() => {
+    if (!fc) return null;
+    return createProjection(projectionType, width, height, fc, { rotate: rotation });
+  }, [fc, projectionType, width, height, rotation]);
+
+  const pathGen = useMemo(() => (projection ? geoPath(projection) : null), [projection]);
+
+  // Country path strings, largest-area first so enclaves/micro-states paint on
+  // top and win the hover hit-test (unchanged from stage 1/2). On the globe,
+  // far-side countries produce empty `d` and are filtered out — not drawn, not
+  // hoverable. Re-runs when the projection (incl. rotation) changes.
   const shapes = useMemo(() => {
     if (!fc || !pathGen) return [];
     return fc.features
@@ -45,24 +62,70 @@ export default function MissingCountryMap({
       .filter((s) => s.d);
   }, [fc, pathGen]);
 
-  // Attach the d3.zoom behaviour to the svg; it reports transforms we store in
-  // state and apply to the <g>. Depends on `fc` so it (re)attaches once the
-  // data has loaded and the <svg> is actually in the DOM — during loading the
-  // component renders a placeholder frame and svgRef is null.
+  // Globe backdrop: ocean disk + graticule. pointer-events disabled so hover
+  // only ever hits countries.
+  const backdrop = useMemo(() => {
+    if (!isGlobe || !pathGen) return null;
+    return { sphere: pathGen(SPHERE), graticule: pathGen(geoGraticule10()) };
+  }, [isGlobe, pathGen]);
+
+  // Wire interaction, rebound when the mode (or size/data) changes.
   useEffect(() => {
     if (!fc || !svgRef.current) return;
-    const behaviour = d3zoom()
-      // High max zoom so players can get in close enough to hover micro-states
-      // (Vatican, San Marino, Monaco, Liechtenstein) accurately. Hit-testing
-      // stays exact because zoom is a transform on the <g>, not a re-render —
-      // the paths keep their real geometry, so the DOM hit-test is unaffected.
-      .scaleExtent([1, 2000])
-      .on("zoom", (event) => setTransform(event.transform));
     const sel = select(svgRef.current);
-    sel.call(behaviour);
-    sel.call(behaviour.transform, zoomIdentity);
-    return () => sel.on(".zoom", null);
-  }, [fc, projectionType, width, height]);
+
+    if (!isGlobe) {
+      const z = d3zoom()
+        .scaleExtent([1, 2000])
+        .on("zoom", (e) => setTransform(e.transform));
+      sel.call(z);
+      sel.call(z.transform, zoomIdentity);
+      return () => sel.on(".zoom", null);
+    }
+
+    // Entering globe mode: reset to a neutral, unzoomed view.
+    setTransform(zoomIdentity);
+    setGlobeK(1);
+    setRotation([0, -15]);
+
+    // Wheel-only zoom -> scale the <g> about centre.
+    const z = d3zoom()
+      .scaleExtent([1, 12])
+      .filter((e) => e.type === "wheel")
+      .on("zoom", (e) => setGlobeK(e.transform.k));
+    sel.call(z);
+    sel.call(z.transform, zoomIdentity);
+
+    // Drag -> rotate. Throttle to one update per frame so a fast drag stays 60fps.
+    let start = null;
+    let startRot = null;
+    let raf = null;
+    let pending = null;
+    const dragBehaviour = d3drag()
+      .on("start", (e) => {
+        start = [e.x, e.y];
+        startRot = rotRef.current;
+      })
+      .on("drag", (e) => {
+        const sens = 0.4 / kRef.current; // finer when zoomed in
+        const lambda = startRot[0] + (e.x - start[0]) * sens;
+        const phi = Math.max(-90, Math.min(90, startRot[1] - (e.y - start[1]) * sens));
+        pending = [lambda, phi];
+        if (!raf) {
+          raf = requestAnimationFrame(() => {
+            raf = null;
+            if (pending) setRotation(pending);
+          });
+        }
+      });
+    sel.call(dragBehaviour);
+
+    return () => {
+      sel.on(".zoom", null);
+      sel.on(".drag", null);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, [fc, isGlobe, width, height]);
 
   if (loading) return <MapFrame width={width} height={height} note="loading map…" />;
   if (error)
@@ -70,18 +133,46 @@ export default function MissingCountryMap({
       <MapFrame width={width} height={height} note={`failed to load: ${error.message}`} />
     );
 
+  const cx = width / 2;
+  const cy = height / 2;
+  const gTransform = isGlobe
+    ? `translate(${cx},${cy}) scale(${globeK}) translate(${-cx},${-cy})`
+    : `translate(${transform.x},${transform.y}) scale(${transform.k})`;
+
   return (
     <div style={{ position: "relative", width, height }}>
       <svg
         ref={svgRef}
         width={width}
         height={height}
-        style={{ display: "block", background: "var(--sea)", cursor: "grab", borderRadius: 12 }}
+        style={{
+          display: "block",
+          background: isGlobe ? "#0b1220" : "var(--sea)",
+          cursor: "grab",
+          borderRadius: 12,
+        }}
         onMouseLeave={() => setHover((h) => ({ ...h, name: null }))}
       >
-        <g
-          transform={`translate(${transform.x},${transform.y}) scale(${transform.k})`}
-        >
+        <g transform={gTransform}>
+          {backdrop && (
+            <>
+              <path
+                d={backdrop.sphere}
+                fill="var(--sea)"
+                stroke="#1e3a5f"
+                strokeWidth={1}
+                style={{ pointerEvents: "none", vectorEffect: "non-scaling-stroke" }}
+              />
+              <path
+                d={backdrop.graticule}
+                fill="none"
+                stroke="#ffffff"
+                strokeOpacity={0.18}
+                strokeWidth={0.5}
+                style={{ pointerEvents: "none", vectorEffect: "non-scaling-stroke" }}
+              />
+            </>
+          )}
           {shapes.map((s) => (
             <path
               key={s.name}
@@ -93,10 +184,6 @@ export default function MissingCountryMap({
                 const r = svgRef.current.getBoundingClientRect();
                 setHover({ name: s.name, x: e.clientX - r.left, y: e.clientY - r.top });
               }}
-              // Clear when leaving a country onto sea (still inside the svg, so
-              // the svg-level onMouseLeave wouldn't fire). Moving directly to an
-              // adjacent country fires this leave then that country's enter, so
-              // the name still updates correctly.
               onMouseLeave={() =>
                 setHover((h) => (h.name === s.name ? { ...h, name: null } : h))
               }
