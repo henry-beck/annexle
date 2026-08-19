@@ -42,9 +42,10 @@ Outputs land in ./out/ :
 """
 
 import json, math, os, sys, re
-from shapely.geometry import shape, mapping, MultiPoint
+from shapely.geometry import shape, mapping, MultiPoint, Polygon
 from shapely.ops import unary_union, voronoi_diagram, transform
-from shapely import make_valid
+from shapely import make_valid, set_precision
+from shapely.errors import GEOSException
 from pyproj import Transformer, Geod
 import puzzle_selector
 
@@ -217,6 +218,42 @@ def nearest_country(piece, geoms, exclude, prefer=None, tie_km=150):
                 return name
     return best
 
+def _dedup_points(pts, tags, grid):
+    """Drop generator points that collide on a `grid`-metre lattice, keeping
+    the first tag at each cell. Exact/near-duplicate sites -- produced where two
+    neighbours' boundaries meet at a tripoint and both get sampled at the same
+    coordinate -- are the classic trigger for GEOS voronoi_diagram 'side
+    location conflict' crashes, and whether a given GEOS build tolerates them
+    varies (which is why the same data builds on GEOS 3.11/3.13 but crashed on
+    another build). Removing the degenerate sites makes the diagram robust
+    across GEOS versions; duplicate sites are redundant, so the partition is
+    unchanged."""
+    seen, op, ot = set(), [], []
+    for p, t in zip(pts, tags):
+        key = (round(p.x / grid), round(p.y / grid))
+        if key in seen:
+            continue
+        seen.add(key)
+        op.append(p)
+        ot.append(t)
+    return op, ot
+
+def _voronoi_cells(pts, tags, holeP, step):
+    """Build the Voronoi diagram robustly: dedupe coincident generator points
+    first, and if GEOS still fails on this build, retry once with coarser
+    snapping. Returns (cells, pts, tags) with the points actually used, or None
+    if even the coarse retry fails (caller then falls back)."""
+    env = make_valid(holeP.buffer(step * 2))
+    for grid in (1.0, step / 20):
+        dp, dt = _dedup_points(pts, tags, grid)
+        if len(dp) < 2:
+            continue
+        try:
+            return voronoi_diagram(MultiPoint(dp), envelope=env), dp, dt
+        except (GEOSException, ValueError):
+            continue
+    return None
+
 def _voronoi_slices(holeP, candP, step=6000, reach=70000):
     """Partition projected piece `holeP` among projected candidate geoms
     `candP` (name -> geom) by a Voronoi diagram of densified candidate
@@ -232,7 +269,13 @@ def _voronoi_slices(holeP, candP, step=6000, reach=70000):
             tags.append(name)
     if not pts:
         return {}
-    cells = voronoi_diagram(MultiPoint(pts), envelope=holeP.buffer(step * 2))
+
+    result = _voronoi_cells(pts, tags, holeP, step)
+    if result is None:  # voronoi unrecoverable on this GEOS build: whole-piece fallback
+        best = max(candP, key=lambda n: holeP.boundary.intersection(candP[n].boundary).length)
+        print(f"    !! voronoi failed; assigning whole piece to {best}")
+        return {best: holeP}
+    cells, pts, tags = result
     slices = {name: [] for name in candP}
     for cell in cells.geoms:
         sl = cell.intersection(holeP)
@@ -285,7 +328,40 @@ def swallow(geoms, target_name):
     for name, adds in absorbed.items():
         add = unary_union([make_valid(a) for a in adds])
         expanded[name] = make_valid(unary_union([geoms[name], add])).buffer(0)
-    return expanded
+    return _heal_target_footprint(expanded, geoms[target_name])
+
+def _heal_target_footprint(expanded, target):
+    """The absorbers should tile the vanished target's footprint EXACTLY.
+    Independent per-absorber unions plus projection round-trips can leave
+    hairline GAPS between adjacent absorbers (sea shows through) and tiny
+    HOLES inside an absorber -- both render as phantom seam strokes right
+    where the target used to be, outlining the answer. Close them:
+      1. reassign any uncovered leftover within the target to the absorber
+         it shares the most boundary with (fills gaps), and
+      2. drop interior rings that fall inside the target footprint (fills
+         holes). Real enclaves like San Marino lie OUTSIDE the footprint,
+         so they're untouched.
+    Without this, set_precision alone fixes validity but leaves ~0.1 km^2
+    of sliver gaps/holes visible at high zoom."""
+    names = list(expanded)
+    out = dict(expanded)
+    leftover = target.difference(unary_union(list(out.values())))
+    for frag in (polys_of(leftover) if not leftover.is_empty else []):
+        best, best_len = None, -1.0
+        for n in names:
+            shared = out[n].boundary.intersection(frag.boundary).length
+            if shared > best_len:
+                best_len, best = shared, n
+        if best is not None:
+            out[best] = make_valid(unary_union([out[best], frag]))
+    for n in names:
+        rebuilt = [Polygon(p.exterior,
+                           [r for r in p.interiors
+                            if not target.contains(Polygon(r).representative_point())])
+                   for p in polys_of(out[n])]
+        if rebuilt:
+            out[n] = unary_union(rebuilt)
+    return out
 
 # ------------------------------------------------------------- geometry util
 def polys_of(geom):
@@ -381,23 +457,27 @@ def cmd_adjacency(geoms, codes):
     print(f"wrote {len(adjacency)} countries -> {OUT}/adjacency.json")
 
 # --------------------------------------------------------- GeoJSON emission
-def round_coords(geom, ndigits=4):
-    """Round every coordinate to `ndigits` decimals (~11m at 4dp). Shrinks
-    the JSON, and because every feature is rounded identically, borders
-    shared between a diff feature and an unchanged base feature stay
-    bit-for-bit aligned (no sea slivers) -- which is why we round rather
-    than topologically simplify per-feature for the diff pipeline."""
-    def _rnd(xs, ys):
-        return ([round(float(x), ndigits) for x in xs],
-                [round(float(y), ndigits) for y in ys])
-    return transform(_rnd, geom)
+GRID = 1e-4  # coordinate quantization, ~11m — the client renders a world map,
+             # not a cadastre, so 11m is plenty and it keeps the JSON small.
 
-def feature(name, code, geom, ndigits=4):
+def quantize(geom):
+    """Snap coordinates to a fixed `GRID` via shapely.set_precision, which —
+    unlike naive per-coordinate rounding — guarantees VALID output topology
+    and snaps every feature to the SAME global grid. That matters twice over:
+    (1) a swallowed absorber stays a clean single polygon instead of a
+    self-intersecting one (naive rounding made every absorber invalid, and
+    geoPath then stroked the self-intersection artifacts as phantom seam
+    lines exactly where the target used to be); (2) an edge shared between a
+    diff feature and an unchanged base feature snaps identically in both, so
+    no sea-coloured slivers open up between them."""
+    return set_precision(geom, GRID)
+
+def feature(name, code, geom):
     return {"type": "Feature",
             "properties": {"name": name, "code": code},
-            "geometry": mapping(round_coords(geom, ndigits))}
+            "geometry": mapping(quantize(geom))}
 
-def write_world_base(geoms, codes, ndigits=4):
+def write_world_base(geoms, codes):
     """The shared, unmodified world -- written once, cached by the client
     across every puzzle. Each puzzle ships only a small diff against this."""
     feats = [feature(name, codes.get(name, ""), g)
@@ -494,6 +574,27 @@ def cmd_build_daily(geoms, codes, date_str=None):
     print(f"daily target for {d}: {target}  ({len(pool)} eligible countries)")
     build_puzzles(geoms, codes, [target])
 
+def cmd_manifest(geoms, codes, days=1100):
+    """Precompute the deterministic date -> puzzle lookup the JS client uses.
+    pick_for_date lives in Python (puzzle_selector), so rather than reproduce
+    its seeded shuffle in JS we emit the whole sequence: entries[i] is the
+    puzzle for LAUNCH_DATE + i days, and the client just array-indexes by
+    days-since-launch. Writes out/manifest.json; sync-data copies it to the
+    app. Covers `days` days from LAUNCH_DATE (~3 years by default)."""
+    from datetime import timedelta
+    adjacency, pool = eligible_pool(geoms, codes)
+    launch = puzzle_selector.LAUNCH_DATE
+    entries = []
+    for i in range(days):
+        target = puzzle_selector.pick_for_date(launch + timedelta(days=i), pool)
+        entries.append({"slug": slug(target), "target": target})
+    os.makedirs(OUT, exist_ok=True)
+    manifest = {"launchDate": launch.isoformat(), "days": days, "entries": entries}
+    with open(f"{OUT}/manifest.json", "w") as fh:
+        json.dump(manifest, fh, separators=(",", ":"), ensure_ascii=False)
+    print(f"wrote manifest: launch {launch}, {days} days, "
+          f"{len(pool)} eligible -> {OUT}/manifest.json")
+
 # ------------------------------------------------------------------------- main
 if __name__ == "__main__":
     geoms, codes = load()
@@ -508,5 +609,7 @@ if __name__ == "__main__":
         cmd_build_auto(geoms, codes, int(sys.argv[2]) if len(sys.argv) > 2 else 30)
     elif cmd == "build-daily":
         cmd_build_daily(geoms, codes, sys.argv[2] if len(sys.argv) > 2 else None)
+    elif cmd == "manifest":
+        cmd_manifest(geoms, codes, int(sys.argv[2]) if len(sys.argv) > 2 else 1100)
     else:
         print(__doc__)

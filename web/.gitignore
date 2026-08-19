@@ -1,0 +1,13 @@
+node_modules/
+dist/
+*.local
+.vite/
+
+# Generated map data. Commit the shared base, the daily manifest, the guess
+# pool (countries.json), and the demo puzzle diffs so the app runs on a fresh
+# clone without the Python pipeline. The full per-puzzle diff set (npm run
+# sync-data, from ../out/) is ignored — pull it in for real daily play.
+public/data/puzzles/*.json
+!public/data/puzzles/switzerland.json
+!public/data/puzzles/haiti.json
+public/data/puzzles.json

@@ -26,10 +26,10 @@ from datetime import date, datetime, timezone
 
 ADJACENCY_PATH = "out/adjacency.json"
 
-# Placeholder — should be set to the game's real launch date once fixed, so
-# puzzle N always lands on the same calendar date (per README's daily-index
-# note). Until then this just anchors the cycle for local testing.
-LAUNCH_DATE = date(2026, 1, 1)
+# The game's launch date (day 0 of the daily rotation): puzzle N always lands
+# on LAUNCH_DATE + N days. The manifest is generated from this, so regenerate
+# it (missing_country.py manifest) after any change.
+LAUNCH_DATE = date(2026, 8, 18)
 
 
 def load_adjacency(path=ADJACENCY_PATH):

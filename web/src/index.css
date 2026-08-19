@@ -1,0 +1,27 @@
+:root {
+  --sea: #a8c4d4;
+  --land: #e8e4da;
+  --land-hover: #d7d0c0;
+  --stroke: #ffffff;
+}
+
+* { box-sizing: border-box; }
+
+html, body, #root {
+  margin: 0;
+  height: 100%;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+}
+
+body { background: #0f172a; }
+
+/* Uniform fill/stroke on EVERY country — absorbers must be indistinguishable.
+   The hover tint only affects the single country under the cursor (interaction
+   feedback), it does not statically distinguish expanded neighbours. */
+.country {
+  fill: var(--land);
+  stroke: var(--stroke);
+  stroke-width: 0.5;
+  vector-effect: non-scaling-stroke; /* keep borders thin at any zoom */
+}
+.country:hover { fill: var(--land-hover); }
