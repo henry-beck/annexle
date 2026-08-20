@@ -10,4 +10,16 @@ dist/
 public/data/puzzles/*.json
 !public/data/puzzles/switzerland.json
 !public/data/puzzles/haiti.json
-public/data/puzzles.json
+# Distributed-distortion pilot: commit the 4 pilot puzzles in BOTH variants
+# (swallow + distorted) so the dev-mode A/B toggle works on a fresh pull without
+# regenerating. The other 162 distorted diffs are still pulled via sync-data.
+!public/data/puzzles/nepal.json
+!public/data/puzzles/belgium.json
+!public/data/puzzles/luxembourg.json
+!public/data/puzzles/switzerland-distorted.json
+!public/data/puzzles/nepal-distorted.json
+!public/data/puzzles/belgium-distorted.json
+!public/data/puzzles/luxembourg-distorted.json
+# The puzzle index is committed now too — the dev picker lists every puzzle from
+# it, and it carries the diffDistorted pointers for the pilot four.
+!public/data/puzzles.json
