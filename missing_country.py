@@ -41,7 +41,9 @@ Outputs land in ./out/ :
     out/puzzles/<slug>.json    per-puzzle diff (removed target + changed absorbers)
 """
 
-import json, math, os, sys, re
+import json, math, os, sys, re, hashlib
+import numpy as np
+import shapely
 from shapely.geometry import shape, mapping, MultiPoint, Polygon
 from shapely.ops import unary_union, voronoi_diagram, transform
 from shapely import make_valid, set_precision
@@ -595,6 +597,234 @@ def cmd_manifest(geoms, codes, days=1100):
     print(f"wrote manifest: launch {launch}, {days} days, "
           f"{len(pool)} eligible -> {OUT}/manifest.json")
 
+# ============================================================================
+# Distributed distortion (xkcd-style) difficulty mode  — SEPARATE path.
+# ----------------------------------------------------------------------------
+# A selectable variant, NOT the default. On top of the ordinary per-piece
+# swallow it also perturbs the borders BETWEEN the target's surrounding
+# non-target countries, so the whole neighbourhood wobbles and there is no
+# single clean patch that reveals where the target was (the "Contiguous 41
+# States" effect, https://xkcd.com/1902/).
+#
+# Method: one deterministic, smooth vector displacement field applied
+# IDENTICALLY to every polygon in a local region. A single-valued continuous
+# warp is a homeomorphism of the plane — it bends shared borders but cannot
+# open gaps, create overlaps, or move a name off its land — so the client's
+# by-name hover/tiling keeps working unchanged. See ROADMAP.md.
+#
+# It writes an ALTERNATE diff (out/puzzles/<slug>-distorted.json) alongside the
+# ordinary one and patches only diffDistorted in the puzzle index. The swallow
+# output and every other command are untouched.
+
+# defaults (all overridable on the CLI)
+DIST_PROP_DEPTH = 2       # BFS hops out from the target that may be perturbed
+DIST_RADIUS_KM = 700.0    # metric window: nothing past this from the target moves
+DIST_AMP_KM = 3.5         # peak border excursion (bounded vs wavelength: no fold)
+DIST_TAPER_KM = 60.0      # ramp width from the pinned region boundary inward
+DIST_WAVES = 6            # sinusoidal components in the noise field
+DIST_LAM_KM = (40.0, 160.0)  # wavelength range of those components
+DIST_STEP_KM = 4.0        # densify step so straight borders can bend
+
+def _region_members(geoms, target, depth, radius_m):
+    """Countries eligible to be perturbed: within `depth` land-adjacency hops
+    of the target AND whose polygon comes within `radius_m` of the target's
+    principal piece. The metric window is essential, not cosmetic: depth alone
+    pulls in far exclave-neighbours (France borders Brazil/Suriname via French
+    Guiana) and continent-sized neighbours, which a single local projection
+    can't warp sanely. The window keeps the region local and the projection
+    accurate."""
+    # BFS to `depth` over the neighbour graph.
+    frontier, seen = {target}, {target}
+    for _ in range(depth):
+        nxt = set()
+        for name in frontier:
+            for nb in find_neighbors(geoms, name):
+                if nb not in seen:
+                    nxt.add(nb)
+        seen |= nxt
+        frontier = nxt
+    seen.discard(target)
+    # metric gate against the target's principal (largest) piece
+    tps = polys_of(geoms[target])
+    tmain = max(tps, key=lambda p: p.area) if tps else geoms[target]
+    fwd, _ = local_proj(tmain)
+    tmainP = fwd(tmain)
+    members = []
+    for name in seen:
+        try:
+            if fwd(geoms[name]).distance(tmainP) <= radius_m:
+                members.append(name)
+        except Exception:
+            continue
+    return members, fwd, _region_inverse(tmain)
+
+def _region_inverse(center_geom):
+    _, inv = local_proj(center_geom)
+    return inv
+
+def _seeded_waves(slug, k, lam_min_m, lam_max_m):
+    """Deterministic band-limited noise basis for a slug. Seeded from a SHA-256
+    of the slug (NOT Python's per-process-salted hash()), so the field — and
+    thus the whole distorted puzzle — is byte-identical on every run and for
+    every player. Returns a list of (unit push direction, wave vector, phase,
+    weight); the field is a weighted sum of sinusoids of those wave vectors."""
+    seed = int.from_bytes(hashlib.sha256(slug.encode()).digest()[:8], "big")
+    rng = np.random.default_rng(seed)
+    waves = []
+    for _ in range(k):
+        ang_dir = rng.uniform(0, 2 * np.pi)       # push direction
+        ang_k = rng.uniform(0, 2 * np.pi)         # wavefront orientation
+        lam = rng.uniform(lam_min_m, lam_max_m)   # wavelength (m)
+        phase = rng.uniform(0, 2 * np.pi)
+        weight = rng.uniform(0.5, 1.0)
+        d = np.array([np.cos(ang_dir), np.sin(ang_dir)])
+        kvec = np.array([np.cos(ang_k), np.sin(ang_k)]) * (2 * np.pi / lam)
+        waves.append((d, kvec, phase, weight))
+    return waves
+
+def _field(pts, waves):
+    """Raw (untapered, unit-ish) displacement vectors for Nx2 array `pts`,
+    the weighted sum of the sinusoidal components, normalised so the peak
+    magnitude is ~1. Vectorised over all points at once."""
+    disp = np.zeros_like(pts, dtype=float)
+    wsum = 0.0
+    for d, kvec, phase, weight in waves:
+        s = np.sin(pts @ kvec + phase)            # (N,)
+        disp += weight * np.outer(s, d)           # (N,2)
+        wsum += weight
+    disp /= max(wsum, 1e-9)
+    return disp
+
+def _smoothstep(t):
+    t = np.clip(t, 0.0, 1.0)
+    return t * t * (3.0 - 2.0 * t)
+
+def _warp_fn(regionP_union, boundaryP, waves, amp_m, taper_m):
+    """Build the point warp used for the whole region. taper(p) is per-POINT:
+    0 outside the region union and on its boundary, ramping (smoothstep) to 1
+    once you're `taper_m` inside. Because it's distance-to-boundary evaluated
+    at each vertex, one country's extent tapers smoothly across itself, shared
+    internal borders (far from the boundary) move fully and identically on both
+    sides, and everything on the region's outer edge — coast, the border with
+    the untouched exterior, the metric-window rim — is pinned, so the warped
+    region stitches back onto the base with no seam."""
+    prep = shapely.prepare(regionP_union) or regionP_union  # prepare() returns None
+    def warp(coords):
+        pts = np.asarray(coords, dtype=float)
+        if pts.ndim != 2 or len(pts) == 0:
+            return coords
+        P = shapely.points(pts)
+        inside = shapely.contains(regionP_union, P)
+        dist = shapely.distance(P, boundaryP)
+        taper = np.where(inside, _smoothstep(dist / taper_m), 0.0)
+        disp = _field(pts, waves) * amp_m * taper[:, None]
+        return pts + disp
+    return warp
+
+def _warp_geom(geomP, warp, step_m):
+    """Densify (so straight borders bend) then apply `warp` to every vertex of a
+    projected polygon/multipolygon, rebuilding valid geometry."""
+    dens = shapely.segmentize(geomP, max_segment_length=step_m)
+    out = []
+    for poly in polys_of(dens):
+        ext = warp(list(poly.exterior.coords))
+        ints = [warp(list(r.coords)) for r in poly.interiors]
+        try:
+            p = Polygon(ext, ints)
+            out.append(p if p.is_valid else make_valid(p).buffer(0))
+        except Exception:
+            out.append(make_valid(poly))
+    return unary_union(out) if out else geomP
+
+def distort(geoms, target_name, depth=DIST_PROP_DEPTH, radius_km=DIST_RADIUS_KM,
+            amp_km=DIST_AMP_KM, taper_km=DIST_TAPER_KM, step_km=DIST_STEP_KM,
+            waves_k=DIST_WAVES, lam_km=DIST_LAM_KM):
+    """Distorted variant of a puzzle. Returns {country -> warped lon/lat geom}
+    for every REGION country whose shape actually changed (absorbers, warped
+    from their swallowed shape; plus surrounding non-absorber neighbours). The
+    target is not a key. The ordinary swallow runs first and is unmodified."""
+    # enforce the no-fold bound: a warp only stays gap/overlap-free while it
+    # doesn't fold, i.e. 2*pi*amp/lambda_min < 1. Clamp amplitude if needed.
+    amp_cap_km = lam_km[0] / (2 * np.pi) * 0.95
+    amp_km = min(amp_km, amp_cap_km)
+
+    radius_m, amp_m, taper_m, step_m = (radius_km * 1000, amp_km * 1000,
+                                        taper_km * 1000, step_km * 1000)
+    members, fwd, inv = _region_members(geoms, target_name, depth, radius_m)
+
+    # post-swallow geometry for the region: absorbers take their swallowed
+    # shape, everyone else their base shape. Force EVERY absorber into the
+    # region even if the metric gate/BFS missed one (a nearest-country fallback
+    # absorber can sit just outside): otherwise the target footprint isn't fully
+    # covered and its old outline would resurface in the pinned boundary.
+    expanded = swallow(geoms, target_name)
+    members = list(set(members) | set(expanded))
+    if not members:
+        return {}
+    region_geom = {n: expanded.get(n, geoms[n]) for n in members}
+
+    # project region; clip its union to the metric window; that clipped
+    # boundary is the pin set for the taper.
+    window = shapely.Point(0, 0).buffer(radius_m)   # AEQD centres target at origin
+    regionP = {n: fwd(g) for n, g in region_geom.items()}
+    unionP = unary_union(list(regionP.values())).intersection(window)
+    unionP = make_valid(unionP)
+    boundaryP = unionP.boundary
+
+    waves = _seeded_waves(slug(target_name), waves_k, lam_km[0] * 1000, lam_km[1] * 1000)
+    warp = _warp_fn(unionP, boundaryP, waves, amp_m, taper_m)
+
+    out = {}
+    for name, gP in regionP.items():
+        warpedP = _warp_geom(gP, warp, step_m)
+        # skip non-absorber members the warp never actually moved (>1 m), so the
+        # diff only carries genuinely changed features and untouched neighbours
+        # keep their pristine base feature (perfect stitch). Absorbers always
+        # changed via the swallow, so they always ship.
+        if name not in expanded and gP.hausdorff_distance(warpedP) < 1.0:
+            continue
+        out[name] = make_valid(inv(warpedP)).buffer(0)
+    return out
+
+def build_distorted_puzzles(geoms, codes, targets, **kw):
+    """Emit the distorted variant diff for each target and register it in the
+    puzzle index (diffDistorted). Requires out/puzzles.json + out/world.geojson
+    to already exist (run an ordinary build first); does NOT rewrite them or the
+    ordinary per-puzzle diffs."""
+    os.makedirs(f"{OUT}/puzzles", exist_ok=True)
+    idx_path = f"{OUT}/puzzles.json"
+    index = json.load(open(idx_path)) if os.path.exists(idx_path) else []
+    by_slug = {e["slug"]: e for e in index}
+
+    for name in targets:
+        if name not in geoms:
+            print(f"  !! '{name}' not found, skipping")
+            continue
+        changed = distort(geoms, name, **kw)
+        assert name not in changed, f"target {name!r} present in distorted output"
+        s = slug(name)
+        absorbers = sorted(changed)
+        diff = {
+            "target": name,
+            "removed": name,
+            "changed": [feature(a, codes.get(a, ""), changed[a]) for a in absorbers],
+        }
+        with open(f"{OUT}/puzzles/{s}-distorted.json", "w") as fh:
+            json.dump(diff, fh, separators=(",", ":"), ensure_ascii=False)
+        if s in by_slug:
+            by_slug[s]["diffDistorted"] = f"puzzles/{s}-distorted.json"
+        print(f"  ok  {name:16} region={len(changed):2} -> puzzles/{s}-distorted.json")
+
+    with open(idx_path, "w") as fh:
+        json.dump(index, fh, indent=2, ensure_ascii=False)
+    print(f"patched diffDistorted in {idx_path}")
+
+def cmd_build_distorted(geoms, codes, targets):
+    if not targets:
+        print("usage: build-distorted <country> [<country> ...]")
+        return
+    build_distorted_puzzles(geoms, codes, targets)
+
 # ------------------------------------------------------------------------- main
 if __name__ == "__main__":
     geoms, codes = load()
@@ -611,5 +841,7 @@ if __name__ == "__main__":
         cmd_build_daily(geoms, codes, sys.argv[2] if len(sys.argv) > 2 else None)
     elif cmd == "manifest":
         cmd_manifest(geoms, codes, int(sys.argv[2]) if len(sys.argv) > 2 else 1100)
+    elif cmd == "build-distorted":
+        cmd_build_distorted(geoms, codes, sys.argv[2:])
     else:
         print(__doc__)
