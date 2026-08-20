@@ -1,11 +1,32 @@
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import MissingCountryMap from "./map/MissingCountryMap.jsx";
 import GuessPanel from "./game/GuessPanel.jsx";
 import { useDailyPuzzle } from "./game/useDailyPuzzle.js";
 
+// Dev-only QC surface. Gated by TWO locks: (1) import.meta.env.DEV, which Vite
+// hard-replaces with `false` in `vite build` so this whole branch is dead code,
+// and (2) it's pulled in by a dynamic import() living INSIDE that dead branch,
+// so the src/dev/* module tree is never emitted into a production chunk. A
+// `?dev` query trigger then decides whether to show it during development, so
+// plain localhost still plays the normal daily game.
+const DEV_ENABLED =
+  import.meta.env.DEV && new URLSearchParams(window.location.search).has("dev");
+const DevApp = DEV_ENABLED ? lazy(() => import("./dev/DevApp.jsx")) : null;
+
 // The daily puzzle (deterministic via the manifest), the map (flat or globe),
 // and the guessing game.
 export default function App() {
+  if (DevApp) {
+    return (
+      <Suspense fallback={<Note>Loading dev mode…</Note>}>
+        <DevApp />
+      </Suspense>
+    );
+  }
+  return <DailyGame />;
+}
+
+function DailyGame() {
   const puzzle = useDailyPuzzle();
   const [view, setView] = useState("flat"); // "flat" | "globe"
   const globe = view === "globe";

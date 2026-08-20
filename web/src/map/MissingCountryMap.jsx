@@ -8,11 +8,12 @@ import GlobeMap from "./GlobeMap.jsx";
 // with a cheap transform (SVG). See FlatMap / GlobeMap.
 export default function MissingCountryMap({
   slug,
+  diffUrl,
   projectionType = "naturalEarth1",
   width = 960,
   height = 600,
 }) {
-  const { fc, loading, error } = useSwallowedWorld(slug);
+  const { fc, loading, error } = useSwallowedWorld(slug, diffUrl);
 
   if (loading) return <MapFrame width={width} height={height} note="loading map…" />;
   if (error)
