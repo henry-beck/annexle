@@ -26,18 +26,26 @@ export function applyDiff(base, diff) {
   return { type: "FeatureCollection", features: [...byName.values()] };
 }
 
-// Returns { fc, loading, error } for the swallowed world of a given puzzle slug.
-export function useSwallowedWorld(slug) {
+// Returns { fc, loading, error } for the swallowed world of a puzzle.
+//
+// By default a slug maps to exactly one diff at `puzzles/<slug>.json` (the
+// current per-piece swallow). `diffUrl` overrides that, which is the seam for
+// puzzle GEOMETRY VARIANTS: later each puzzle will also have a distorted-mode
+// diff, and comparing the current swallow vs. the distorted version is just two
+// calls with two diff URLs for the same slug — no assumption that a slug owns a
+// single diff file is baked in here.
+export function useSwallowedWorld(slug, diffUrl) {
   const [state, setState] = useState({ fc: null, loading: true, error: null });
 
+  const url = diffUrl || `${DATA_ROOT}/puzzles/${slug}.json`;
   useEffect(() => {
     let cancelled = false;
     setState({ fc: null, loading: true, error: null });
 
     Promise.all([
       loadBase(),
-      fetch(`${DATA_ROOT}/puzzles/${slug}.json`).then((r) => {
-        if (!r.ok) throw new Error(`${slug}.json: HTTP ${r.status}`);
+      fetch(url).then((r) => {
+        if (!r.ok) throw new Error(`${url.split("/").pop()}: HTTP ${r.status}`);
         return r.json();
       }),
     ])
@@ -52,7 +60,7 @@ export function useSwallowedWorld(slug) {
     return () => {
       cancelled = true;
     };
-  }, [slug]);
+  }, [url]);
 
   return state;
 }

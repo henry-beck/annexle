@@ -1,12 +1,17 @@
 import { useEffect, useState } from "react";
 import { haversine, bearing } from "./geo.js";
 import { MAX_GUESSES, proximityPct } from "./constants.js";
-import { loadProgress, saveProgress, currentStreak, recordResult } from "./storage.js";
+import { defaultStorage } from "./storage.js";
 
 // The game brain for one daily puzzle. Owns the guesses + win/lose status,
 // persists them under the puzzle's date, restores on reload, and maintains the
 // streak. Status is "playing" | "won" | "lost".
-export function useGameState({ date, target, targetCentroid, countries }) {
+//
+// `storage` is injectable (a createStorage() instance) so dev/QC play can run
+// against an isolated namespace without ever touching real daily-play keys; it
+// defaults to the real store, so normal callers pass nothing.
+export function useGameState({ date, target, targetCentroid, countries, storage = defaultStorage }) {
+  const { loadProgress, saveProgress, currentStreak, recordResult } = storage;
   const [guesses, setGuesses] = useState([]);
   const [status, setStatus] = useState("playing");
   const [streak, setStreak] = useState(() => currentStreak(date));

@@ -5,12 +5,13 @@ import { useGameState } from "./useGameState.js";
 // The guess column: input + per-guess feedback (distance, direction, proximity),
 // win/lose end state (always revealing the target), remaining count, and streak.
 // Game logic + persistence live in useGameState; this is presentation.
-export default function GuessPanel({ date, target, targetCentroid, countries }) {
+export default function GuessPanel({ date, target, targetCentroid, countries, storage }) {
   const { guesses, status, remaining, streak, submitGuess } = useGameState({
     date,
     target,
     targetCentroid,
     countries,
+    storage,
   });
   const used = useMemo(() => new Set(guesses.map((g) => g.name)), [guesses]);
   const over = status !== "playing";
