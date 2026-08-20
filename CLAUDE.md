@@ -133,3 +133,26 @@ by name), and render the resulting FeatureCollection with `d3.geoPath`
   pass on merged neighbor geometry cleans it up.
 - Swap `DATA` to `ne_10m_admin_0_countries.geojson` for higher border detail
   (bigger files) if the 50m data looks too blocky at high zoom.
+
+## Git / PR workflow rules
+
+- **Never claim a commit is part of, updates, or "adds to" a specific PR
+  number without first verifying that PR is still OPEN.** Check its state
+  (e.g. `mcp__github__pull_request_read` / `list_pull_requests`, or `git log
+  origin/main` for a "Merge pull request #N" commit) *before* reporting the
+  commit as attached. This has gone wrong repeatedly: work on
+  `claude/keen-euler-mzn7ef` was pushed and reported as landing on an open PR
+  when that PR had already been merged, leaving the commit orphaned with no
+  open PR.
+- **If the PR is merged/closed, treat the new work as a fresh change:** rebase
+  the branch onto the latest `origin/main` (`git fetch origin main &&
+  git rebase origin/main`), force-with-lease push, and open a NEW PR against
+  `main` immediately — do not report the commit as attached to the old PR.
+  A merged PR cannot pick up new commits; pushing to the branch does not
+  reopen it.
+- Concretely, before any "this is on PR #N" / "PR #N now includes…" statement:
+  1. confirm the branch tip is pushed (`git ls-remote origin <branch>` ==
+     local `HEAD`), then
+  2. confirm PR #N is still open, then
+  3. only then reference PR #N — otherwise open a fresh PR and reference that
+     one instead.
