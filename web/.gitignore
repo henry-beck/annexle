@@ -20,6 +20,9 @@ public/data/puzzles/*.json
 !public/data/puzzles/nepal-distorted.json
 !public/data/puzzles/belgium-distorted.json
 !public/data/puzzles/luxembourg-distorted.json
+# Chile: a previously-smeared case (Pitcairn) kept as a demo of the declutter fix.
+!public/data/puzzles/chile.json
+!public/data/puzzles/chile-distorted.json
 # The puzzle index is committed now too — the dev picker lists every puzzle from
 # it, and it carries the diffDistorted pointers for the pilot four.
 !public/data/puzzles.json

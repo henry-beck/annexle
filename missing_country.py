@@ -330,7 +330,55 @@ def swallow(geoms, target_name):
     for name, adds in absorbed.items():
         add = unary_union([make_valid(a) for a in adds])
         expanded[name] = make_valid(unary_union([geoms[name], add])).buffer(0)
-    return _heal_target_footprint(expanded, geoms[target_name])
+    healed = _heal_target_footprint(expanded, geoms[target_name])
+    return _declutter_absorbers(healed, geoms)
+
+# tiny fragments of the target, detached from an absorber's real body and far
+# from it, are Voronoi/heal artifacts that get mis-tagged to a distant country
+# (e.g. slivers of Chile's coast landing on Pitcairn 5000 km away), which renders
+# as that country "swallowing the ocean". Distinguish them from LEGITIMATE
+# far-flung fallback territory (Easter Island -> Pitcairn, Socotra -> Somalia):
+# the artifacts are microscopic, the real islands are not — so a size gate keeps
+# the real ones and only reassigns the noise.
+DECLUTTER_MAX_KM2 = 2.0    # a fragment bigger than this is real territory, kept
+DECLUTTER_MIN_DEG = 1.5    # ...and one nearer than this to its absorber is kept
+
+def _declutter_absorbers(expanded, geoms):
+    """Reassign orphaned micro-slivers to the absorber they actually belong to.
+    A part is an orphan if it's detached from its absorber's OWN base geometry,
+    smaller than DECLUTTER_MAX_KM2, and more than DECLUTTER_MIN_DEG from that
+    base. Each orphan is moved to the other absorber it shares the most boundary
+    with (nearest by centroid if it touches none), so the target footprint stays
+    fully tiled — nothing is dropped, only re-tagged. Legit far-flung fallback
+    islands are above the size gate and stay put."""
+    kept, orphans = {}, []
+    for name, g in expanded.items():
+        b = geoms.get(name)
+        keep = []
+        for p in polys_of(g):
+            detached = b is None or not p.intersects(b)
+            if (detached and geodesic_area_km2(p, main_only=False) < DECLUTTER_MAX_KM2
+                    and (b is None or p.distance(b) > DECLUTTER_MIN_DEG)):
+                orphans.append(p)
+            else:
+                keep.append(p)
+        kept[name] = unary_union(keep) if keep else None
+    live = [n for n, g in kept.items() if g is not None and not g.is_empty]
+    for frag in orphans:
+        best, best_len = None, -1.0
+        for n in live:
+            shared = kept[n].boundary.intersection(frag.boundary).length
+            if shared > best_len:
+                best_len, best = shared, n
+        if best_len <= 0:
+            # touches no absorber's boundary (an isolated speck): give it to the
+            # absorber whose TERRITORY is physically nearest — the one it visually
+            # sits amongst — not the nearest centroid (which mispicks big far
+            # countries). This routes a stray Chilean-coast speck to Argentina's
+            # expanded coast, not to Pitcairn 5000 km away.
+            best = min(live, key=lambda n: frag.distance(kept[n]))
+        kept[best] = make_valid(unary_union([kept[best], frag]))
+    return {n: g for n, g in kept.items() if g is not None and not g.is_empty}
 
 def _heal_target_footprint(expanded, target):
     """The absorbers should tile the vanished target's footprint EXACTLY.
@@ -763,12 +811,30 @@ def distort(geoms, target_name, depth=DIST_PROP_DEPTH, radius_km=DIST_RADIUS_KM,
         return {}
     region_geom = {n: expanded.get(n, geoms[n]) for n in members}
 
-    # project region; clip its union to the metric window; that clipped
-    # boundary is the pin set for the taper.
+    # Everything past `work` (the window plus a couple of taper widths) has
+    # taper 0 — distortion is the identity there — so it need not be projected,
+    # unioned or warped. Excluding it is both an optimisation and a robustness
+    # fix: a huge absorber (Russia's neighbours span ~4000 km and cross the
+    # antimeridian) projects to far-flung, near-degenerate geometry that made the
+    # region union throw a GEOS non-noded-intersection. We only ever touch the
+    # near neighbourhood; the far remainder ships unchanged.
     window = shapely.Point(0, 0).buffer(radius_m)   # AEQD centres target at origin
-    regionP = {n: fwd(g) for n, g in region_geom.items()}
-    unionP = unary_union(list(regionP.values())).intersection(window)
-    unionP = make_valid(unionP)
+    work = shapely.Point(0, 0).buffer(radius_m + 2 * taper_m)
+    regionP = {n: make_valid(fwd(g)) for n, g in region_geom.items()}
+
+    # Taper boundary from the near geometry only, snapped to a 1 m grid so the
+    # union is noded (kills the non-noded-intersection crash) then clipped to the
+    # window.
+    near_clips = []
+    for gP in regionP.values():
+        c = make_valid(gP).intersection(work)
+        if not c.is_empty:
+            near_clips.append(set_precision(c, 1.0))
+    try:
+        unionP = unary_union(near_clips)
+    except GEOSException:
+        unionP = unary_union([g.buffer(0) for g in near_clips])
+    unionP = make_valid(unionP.intersection(window))
     boundaryP = unionP.boundary
 
     waves = _seeded_waves(slug(target_name), waves_k, lam_km[0] * 1000, lam_km[1] * 1000)
@@ -776,14 +842,24 @@ def distort(geoms, target_name, depth=DIST_PROP_DEPTH, radius_km=DIST_RADIUS_KM,
 
     out = {}
     for name, gP in regionP.items():
-        warpedP = _warp_geom(gP, warp, step_m)
+        inside = make_valid(gP).intersection(work)
+        if inside.is_empty:
+            # entirely beyond taper reach: warp is the identity here. Far
+            # absorbers still must ship their swallowed shape (it differs from
+            # base, and dropping it would reopen the target's footprint); far
+            # non-absorbers are unchanged, so the client keeps their base.
+            if name in expanded:
+                out[name] = region_geom[name]
+            continue
+        outside = make_valid(gP).difference(work)
+        warped_inside = _warp_geom(inside, warp, step_m)
         # skip non-absorber members the warp never actually moved (>1 m), so the
         # diff only carries genuinely changed features and untouched neighbours
-        # keep their pristine base feature (perfect stitch). Absorbers always
-        # changed via the swallow, so they always ship.
-        if name not in expanded and gP.hausdorff_distance(warpedP) < 1.0:
+        # keep their pristine base feature. Absorbers always changed via swallow.
+        if name not in expanded and inside.hausdorff_distance(warped_inside) < 1.0:
             continue
-        out[name] = make_valid(inv(warpedP)).buffer(0)
+        combinedP = warped_inside if outside.is_empty else unary_union([warped_inside, outside])
+        out[name] = make_valid(inv(combinedP)).buffer(0)
     return out
 
 def build_distorted_puzzles(geoms, codes, targets, **kw):
