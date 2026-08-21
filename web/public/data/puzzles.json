@@ -1,0 +1,3323 @@
+[
+  {
+    "id": 1,
+    "slug": "afghanistan",
+    "target": "Afghanistan",
+    "targetCode": "AFG",
+    "neighbors": [
+      "Uzbekistan",
+      "Turkmenistan",
+      "Tajikistan",
+      "Pakistan",
+      "Iran",
+      "China"
+    ],
+    "absorbers": [
+      "China",
+      "Iran",
+      "Pakistan",
+      "Tajikistan",
+      "Turkmenistan",
+      "Uzbekistan"
+    ],
+    "enclosure": 1,
+    "diff": "puzzles/afghanistan.json"
+  },
+  {
+    "id": 2,
+    "slug": "andorra",
+    "target": "Andorra",
+    "targetCode": "AND",
+    "neighbors": [
+      "Spain",
+      "France"
+    ],
+    "absorbers": [
+      "France",
+      "Spain"
+    ],
+    "enclosure": 1,
+    "diff": "puzzles/andorra.json"
+  },
+  {
+    "id": 3,
+    "slug": "armenia",
+    "target": "Armenia",
+    "targetCode": "ARM",
+    "neighbors": [
+      "Turkey",
+      "Iran",
+      "Georgia",
+      "Azerbaijan"
+    ],
+    "absorbers": [
+      "Azerbaijan",
+      "Georgia",
+      "Iran",
+      "Turkey"
+    ],
+    "enclosure": 1,
+    "diff": "puzzles/armenia.json"
+  },
+  {
+    "id": 4,
+    "slug": "austria",
+    "target": "Austria",
+    "targetCode": "AUT",
+    "neighbors": [
+      "Switzerland",
+      "Slovakia",
+      "Slovenia",
+      "Liechtenstein",
+      "Italy",
+      "Hungary",
+      "Germany",
+      "Czechia"
+    ],
+    "absorbers": [
+      "Czechia",
+      "Germany",
+      "Hungary",
+      "Italy",
+      "Liechtenstein",
+      "Slovakia",
+      "Slovenia",
+      "Switzerland"
+    ],
+    "enclosure": 1,
+    "diff": "puzzles/austria.json"
+  },
+  {
+    "id": 5,
+    "slug": "belarus",
+    "target": "Belarus",
+    "targetCode": "BLR",
+    "neighbors": [
+      "Ukraine",
+      "Russia",
+      "Poland",
+      "Lithuania",
+      "Latvia"
+    ],
+    "absorbers": [
+      "Latvia",
+      "Lithuania",
+      "Poland",
+      "Russia",
+      "Ukraine"
+    ],
+    "enclosure": 1,
+    "diff": "puzzles/belarus.json"
+  },
+  {
+    "id": 6,
+    "slug": "bhutan",
+    "target": "Bhutan",
+    "targetCode": "BTN",
+    "neighbors": [
+      "India",
+      "China"
+    ],
+    "absorbers": [
+      "China",
+      "India"
+    ],
+    "enclosure": 1,
+    "diff": "puzzles/bhutan.json"
+  },
+  {
+    "id": 7,
+    "slug": "bolivia",
+    "target": "Bolivia",
+    "targetCode": "BOL",
+    "neighbors": [
+      "Peru",
+      "Paraguay",
+      "Chile",
+      "Brazil",
+      "Argentina"
+    ],
+    "absorbers": [
+      "Argentina",
+      "Brazil",
+      "Chile",
+      "Paraguay",
+      "Peru"
+    ],
+    "enclosure": 1,
+    "diff": "puzzles/bolivia.json"
+  },
+  {
+    "id": 8,
+    "slug": "botswana",
+    "target": "Botswana",
+    "targetCode": "BWA",
+    "neighbors": [
+      "Zimbabwe",
+      "Zambia",
+      "South Africa",
+      "Namibia"
+    ],
+    "absorbers": [
+      "Namibia",
+      "South Africa",
+      "Zimbabwe"
+    ],
+    "enclosure": 1,
+    "diff": "puzzles/botswana.json"
+  },
+  {
+    "id": 9,
+    "slug": "burkina-faso",
+    "target": "Burkina Faso",
+    "targetCode": "BFA",
+    "neighbors": [
+      "Togo",
+      "Niger",
+      "Mali",
+      "Ghana",
+      "Ivory Coast",
+      "Benin"
+    ],
+    "absorbers": [
+      "Benin",
+      "Ghana",
+      "Ivory Coast",
+      "Mali",
+      "Niger",
+      "Togo"
+    ],
+    "enclosure": 1,
+    "diff": "puzzles/burkina-faso.json"
+  },
+  {
+    "id": 10,
+    "slug": "burundi",
+    "target": "Burundi",
+    "targetCode": "BDI",
+    "neighbors": [
+      "United Republic of Tanzania",
+      "Rwanda",
+      "Democratic Republic of the Congo"
+    ],
+    "absorbers": [
+      "Democratic Republic of the Congo",
+      "Rwanda",
+      "United Republic of Tanzania"
+    ],
+    "enclosure": 1,
+    "diff": "puzzles/burundi.json"
+  },
+  {
+    "id": 11,
+    "slug": "central-african-republic",
+    "target": "Central African Republic",
+    "targetCode": "CAF",
+    "neighbors": [
+      "South Sudan",
+      "Sudan",
+      "Democratic Republic of the Congo",
+      "Republic of the Congo",
+      "Chad",
+      "Cameroon"
+    ],
+    "absorbers": [
+      "Cameroon",
+      "Chad",
+      "Democratic Republic of the Congo",
+      "Republic of the Congo",
+      "South Sudan",
+      "Sudan"
+    ],
+    "enclosure": 1,
+    "diff": "puzzles/central-african-republic.json"
+  },
+  {
+    "id": 12,
+    "slug": "chad",
+    "target": "Chad",
+    "targetCode": "TCD",
+    "neighbors": [
+      "Sudan",
+      "Nigeria",
+      "Niger",
+      "Libya",
+      "Central African Republic",
+      "Cameroon"
+    ],
+    "absorbers": [
+      "Cameroon",
+      "Central African Republic",
+      "Libya",
+      "Niger",
+      "Nigeria",
+      "Sudan"
+    ],
+    "enclosure": 1,
+    "diff": "puzzles/chad.json"
+  },
+  {
+    "id": 13,
+    "slug": "czechia",
+    "target": "Czechia",
+    "targetCode": "CZE",
+    "neighbors": [
+      "Slovakia",
+      "Poland",
+      "Germany",
+      "Austria"
+    ],
+    "absorbers": [
+      "Austria",
+      "Germany",
+      "Poland",
+      "Slovakia"
+    ],
+    "enclosure": 1,
+    "diff": "puzzles/czechia.json"
+  },
+  {
+    "id": 14,
+    "slug": "ethiopia",
+    "target": "Ethiopia",
+    "targetCode": "ETH",
+    "neighbors": [
+      "South Sudan",
+      "Sudan",
+      "Somalia",
+      "Somaliland",
+      "Kenya",
+      "Eritrea",
+      "Djibouti"
+    ],
+    "absorbers": [
+      "Djibouti",
+      "Eritrea",
+      "Kenya",
+      "Somalia",
+      "Somaliland",
+      "South Sudan",
+      "Sudan"
+    ],
+    "enclosure": 1,
+    "diff": "puzzles/ethiopia.json"
+  },
+  {
+    "id": 15,
+    "slug": "hungary",
+    "target": "Hungary",
+    "targetCode": "HUN",
+    "neighbors": [
+      "Ukraine",
+      "Slovakia",
+      "Slovenia",
+      "Republic of Serbia",
+      "Romania",
+      "Croatia",
+      "Austria"
+    ],
+    "absorbers": [
+      "Austria",
+      "Croatia",
+      "Republic of Serbia",
+      "Romania",
+      "Slovakia",
+      "Slovenia",
+      "Ukraine"
+    ],
+    "enclosure": 1,
+    "diff": "puzzles/hungary.json"
+  },
+  {
+    "id": 16,
+    "slug": "kosovo",
+    "target": "Kosovo",
+    "targetCode": "KOS",
+    "neighbors": [
+      "Republic of Serbia",
+      "Montenegro",
+      "North Macedonia",
+      "Albania"
+    ],
+    "absorbers": [
+      "Albania",
+      "Montenegro",
+      "North Macedonia",
+      "Republic of Serbia"
+    ],
+    "enclosure": 1,
+    "diff": "puzzles/kosovo.json"
+  },
+  {
+    "id": 17,
+    "slug": "kyrgyzstan",
+    "target": "Kyrgyzstan",
+    "targetCode": "KGZ",
+    "neighbors": [
+      "Uzbekistan",
+      "Tajikistan",
+      "Kazakhstan",
+      "China"
+    ],
+    "absorbers": [
+      "China",
+      "Kazakhstan",
+      "Tajikistan",
+      "Uzbekistan"
+    ],
+    "enclosure": 1,
+    "diff": "puzzles/kyrgyzstan.json"
+  },
+  {
+    "id": 18,
+    "slug": "laos",
+    "target": "Laos",
+    "targetCode": "LAO",
+    "neighbors": [
+      "Vietnam",
+      "Thailand",
+      "China",
+      "Cambodia",
+      "Myanmar"
+    ],
+    "absorbers": [
+      "Cambodia",
+      "China",
+      "Myanmar",
+      "Thailand",
+      "Vietnam"
+    ],
+    "enclosure": 1,
+    "diff": "puzzles/laos.json"
+  },
+  {
+    "id": 19,
+    "slug": "lesotho",
+    "target": "Lesotho",
+    "targetCode": "LSO",
+    "neighbors": [
+      "South Africa"
+    ],
+    "absorbers": [
+      "South Africa"
+    ],
+    "enclosure": 1,
+    "diff": "puzzles/lesotho.json"
+  },
+  {
+    "id": 20,
+    "slug": "liechtenstein",
+    "target": "Liechtenstein",
+    "targetCode": "LIE",
+    "neighbors": [
+      "Switzerland",
+      "Austria"
+    ],
+    "absorbers": [
+      "Austria",
+      "Switzerland"
+    ],
+    "enclosure": 1,
+    "diff": "puzzles/liechtenstein.json"
+  },
+  {
+    "id": 21,
+    "slug": "luxembourg",
+    "target": "Luxembourg",
+    "targetCode": "LUX",
+    "neighbors": [
+      "Germany",
+      "France",
+      "Belgium"
+    ],
+    "absorbers": [
+      "Belgium",
+      "France",
+      "Germany"
+    ],
+    "enclosure": 1,
+    "diff": "puzzles/luxembourg.json",
+    "diffDistorted": "puzzles/luxembourg-distorted.json"
+  },
+  {
+    "id": 22,
+    "slug": "malawi",
+    "target": "Malawi",
+    "targetCode": "MWI",
+    "neighbors": [
+      "Zambia",
+      "United Republic of Tanzania",
+      "Mozambique"
+    ],
+    "absorbers": [
+      "Mozambique",
+      "United Republic of Tanzania",
+      "Zambia"
+    ],
+    "enclosure": 1,
+    "diff": "puzzles/malawi.json"
+  },
+  {
+    "id": 23,
+    "slug": "mali",
+    "target": "Mali",
+    "targetCode": "MLI",
+    "neighbors": [
+      "Senegal",
+      "Niger",
+      "Mauritania",
+      "Guinea",
+      "Ivory Coast",
+      "Burkina Faso",
+      "Algeria"
+    ],
+    "absorbers": [
+      "Algeria",
+      "Burkina Faso",
+      "Guinea",
+      "Ivory Coast",
+      "Mauritania",
+      "Niger",
+      "Senegal"
+    ],
+    "enclosure": 1,
+    "diff": "puzzles/mali.json"
+  },
+  {
+    "id": 24,
+    "slug": "moldova",
+    "target": "Moldova",
+    "targetCode": "MDA",
+    "neighbors": [
+      "Ukraine",
+      "Romania"
+    ],
+    "absorbers": [
+      "Romania",
+      "Ukraine"
+    ],
+    "enclosure": 1,
+    "diff": "puzzles/moldova.json"
+  },
+  {
+    "id": 25,
+    "slug": "mongolia",
+    "target": "Mongolia",
+    "targetCode": "MNG",
+    "neighbors": [
+      "Russia",
+      "China"
+    ],
+    "absorbers": [
+      "China",
+      "Russia"
+    ],
+    "enclosure": 1,
+    "diff": "puzzles/mongolia.json"
+  },
+  {
+    "id": 26,
+    "slug": "nepal",
+    "target": "Nepal",
+    "targetCode": "NPL",
+    "neighbors": [
+      "India",
+      "China"
+    ],
+    "absorbers": [
+      "China",
+      "India"
+    ],
+    "enclosure": 1,
+    "diff": "puzzles/nepal.json",
+    "diffDistorted": "puzzles/nepal-distorted.json"
+  },
+  {
+    "id": 27,
+    "slug": "niger",
+    "target": "Niger",
+    "targetCode": "NER",
+    "neighbors": [
+      "Nigeria",
+      "Mali",
+      "Libya",
+      "Chad",
+      "Burkina Faso",
+      "Benin",
+      "Algeria"
+    ],
+    "absorbers": [
+      "Algeria",
+      "Benin",
+      "Burkina Faso",
+      "Chad",
+      "Libya",
+      "Mali",
+      "Nigeria"
+    ],
+    "enclosure": 1,
+    "diff": "puzzles/niger.json"
+  },
+  {
+    "id": 28,
+    "slug": "north-macedonia",
+    "target": "North Macedonia",
+    "targetCode": "MKD",
+    "neighbors": [
+      "Republic of Serbia",
+      "Kosovo",
+      "Greece",
+      "Bulgaria",
+      "Albania"
+    ],
+    "absorbers": [
+      "Albania",
+      "Bulgaria",
+      "Greece",
+      "Kosovo",
+      "Republic of Serbia"
+    ],
+    "enclosure": 1,
+    "diff": "puzzles/north-macedonia.json"
+  },
+  {
+    "id": 29,
+    "slug": "paraguay",
+    "target": "Paraguay",
+    "targetCode": "PRY",
+    "neighbors": [
+      "Brazil",
+      "Bolivia",
+      "Argentina"
+    ],
+    "absorbers": [
+      "Argentina",
+      "Bolivia",
+      "Brazil"
+    ],
+    "enclosure": 1,
+    "diff": "puzzles/paraguay.json"
+  },
+  {
+    "id": 30,
+    "slug": "republic-of-serbia",
+    "target": "Republic of Serbia",
+    "targetCode": "SRB",
+    "neighbors": [
+      "Romania",
+      "Montenegro",
+      "North Macedonia",
+      "Kosovo",
+      "Hungary",
+      "Croatia",
+      "Bulgaria",
+      "Bosnia and Herzegovina"
+    ],
+    "absorbers": [
+      "Bosnia and Herzegovina",
+      "Bulgaria",
+      "Croatia",
+      "Hungary",
+      "Kosovo",
+      "Montenegro",
+      "North Macedonia",
+      "Romania"
+    ],
+    "enclosure": 1,
+    "diff": "puzzles/republic-of-serbia.json"
+  },
+  {
+    "id": 31,
+    "slug": "rwanda",
+    "target": "Rwanda",
+    "targetCode": "RWA",
+    "neighbors": [
+      "Uganda",
+      "United Republic of Tanzania",
+      "Democratic Republic of the Congo",
+      "Burundi"
+    ],
+    "absorbers": [
+      "Burundi",
+      "Democratic Republic of the Congo",
+      "Uganda",
+      "United Republic of Tanzania"
+    ],
+    "enclosure": 1,
+    "diff": "puzzles/rwanda.json"
+  },
+  {
+    "id": 32,
+    "slug": "san-marino",
+    "target": "San Marino",
+    "targetCode": "SMR",
+    "neighbors": [
+      "Italy"
+    ],
+    "absorbers": [
+      "Italy"
+    ],
+    "enclosure": 1,
+    "diff": "puzzles/san-marino.json"
+  },
+  {
+    "id": 33,
+    "slug": "siachen-glacier",
+    "target": "Siachen Glacier",
+    "targetCode": "KAS",
+    "neighbors": [
+      "Pakistan",
+      "India",
+      "China"
+    ],
+    "absorbers": [
+      "China",
+      "India",
+      "Pakistan"
+    ],
+    "enclosure": 1,
+    "diff": "puzzles/siachen-glacier.json"
+  },
+  {
+    "id": 34,
+    "slug": "slovakia",
+    "target": "Slovakia",
+    "targetCode": "SVK",
+    "neighbors": [
+      "Ukraine",
+      "Poland",
+      "Hungary",
+      "Czechia",
+      "Austria"
+    ],
+    "absorbers": [
+      "Austria",
+      "Czechia",
+      "Hungary",
+      "Poland",
+      "Ukraine"
+    ],
+    "enclosure": 1,
+    "diff": "puzzles/slovakia.json"
+  },
+  {
+    "id": 35,
+    "slug": "south-sudan",
+    "target": "South Sudan",
+    "targetCode": "SDS",
+    "neighbors": [
+      "Uganda",
+      "Sudan",
+      "Kenya",
+      "Ethiopia",
+      "Democratic Republic of the Congo",
+      "Central African Republic"
+    ],
+    "absorbers": [
+      "Central African Republic",
+      "Democratic Republic of the Congo",
+      "Ethiopia",
+      "Kenya",
+      "Sudan",
+      "Uganda"
+    ],
+    "enclosure": 1,
+    "diff": "puzzles/south-sudan.json"
+  },
+  {
+    "id": 36,
+    "slug": "switzerland",
+    "target": "Switzerland",
+    "targetCode": "CHE",
+    "neighbors": [
+      "Liechtenstein",
+      "Italy",
+      "Germany",
+      "France",
+      "Austria"
+    ],
+    "absorbers": [
+      "Austria",
+      "France",
+      "Germany",
+      "Italy",
+      "Liechtenstein"
+    ],
+    "enclosure": 1,
+    "diff": "puzzles/switzerland.json",
+    "diffDistorted": "puzzles/switzerland-distorted.json"
+  },
+  {
+    "id": 37,
+    "slug": "tajikistan",
+    "target": "Tajikistan",
+    "targetCode": "TJK",
+    "neighbors": [
+      "Uzbekistan",
+      "Kyrgyzstan",
+      "China",
+      "Afghanistan"
+    ],
+    "absorbers": [
+      "Afghanistan",
+      "China",
+      "Kyrgyzstan",
+      "Uzbekistan"
+    ],
+    "enclosure": 1,
+    "diff": "puzzles/tajikistan.json"
+  },
+  {
+    "id": 38,
+    "slug": "uganda",
+    "target": "Uganda",
+    "targetCode": "UGA",
+    "neighbors": [
+      "United Republic of Tanzania",
+      "South Sudan",
+      "Rwanda",
+      "Kenya",
+      "Democratic Republic of the Congo"
+    ],
+    "absorbers": [
+      "Democratic Republic of the Congo",
+      "Kenya",
+      "Rwanda",
+      "South Sudan",
+      "United Republic of Tanzania"
+    ],
+    "enclosure": 1,
+    "diff": "puzzles/uganda.json"
+  },
+  {
+    "id": 39,
+    "slug": "uzbekistan",
+    "target": "Uzbekistan",
+    "targetCode": "UZB",
+    "neighbors": [
+      "Turkmenistan",
+      "Tajikistan",
+      "Kyrgyzstan",
+      "Kazakhstan",
+      "Afghanistan"
+    ],
+    "absorbers": [
+      "Afghanistan",
+      "Kazakhstan",
+      "Kyrgyzstan",
+      "Tajikistan",
+      "Turkmenistan"
+    ],
+    "enclosure": 1,
+    "diff": "puzzles/uzbekistan.json"
+  },
+  {
+    "id": 40,
+    "slug": "vatican",
+    "target": "Vatican",
+    "targetCode": "VAT",
+    "neighbors": [
+      "Italy"
+    ],
+    "absorbers": [
+      "Italy"
+    ],
+    "enclosure": 1,
+    "diff": "puzzles/vatican.json"
+  },
+  {
+    "id": 41,
+    "slug": "zambia",
+    "target": "Zambia",
+    "targetCode": "ZMB",
+    "neighbors": [
+      "Zimbabwe",
+      "United Republic of Tanzania",
+      "Namibia",
+      "Mozambique",
+      "Malawi",
+      "Democratic Republic of the Congo",
+      "Angola"
+    ],
+    "absorbers": [
+      "Angola",
+      "Democratic Republic of the Congo",
+      "Malawi",
+      "Mozambique",
+      "Namibia",
+      "United Republic of Tanzania",
+      "Zimbabwe"
+    ],
+    "enclosure": 1,
+    "diff": "puzzles/zambia.json"
+  },
+  {
+    "id": 42,
+    "slug": "zimbabwe",
+    "target": "Zimbabwe",
+    "targetCode": "ZWE",
+    "neighbors": [
+      "Zambia",
+      "South Africa",
+      "Mozambique",
+      "Botswana"
+    ],
+    "absorbers": [
+      "Botswana",
+      "Mozambique",
+      "South Africa",
+      "Zambia"
+    ],
+    "enclosure": 1,
+    "diff": "puzzles/zimbabwe.json"
+  },
+  {
+    "id": 43,
+    "slug": "eswatini",
+    "target": "eSwatini",
+    "targetCode": "SWZ",
+    "neighbors": [
+      "South Africa",
+      "Mozambique"
+    ],
+    "absorbers": [
+      "Mozambique",
+      "South Africa"
+    ],
+    "enclosure": 1,
+    "diff": "puzzles/eswatini.json"
+  },
+  {
+    "id": 44,
+    "slug": "bosnia-and-herzegovina",
+    "target": "Bosnia and Herzegovina",
+    "targetCode": "BIH",
+    "neighbors": [
+      "Republic of Serbia",
+      "Montenegro",
+      "Croatia"
+    ],
+    "absorbers": [
+      "Croatia",
+      "Montenegro",
+      "Republic of Serbia"
+    ],
+    "enclosure": 0.993,
+    "diff": "puzzles/bosnia-and-herzegovina.json"
+  },
+  {
+    "id": 45,
+    "slug": "democratic-republic-of-the-congo",
+    "target": "Democratic Republic of the Congo",
+    "targetCode": "COD",
+    "neighbors": [
+      "Zambia",
+      "Uganda",
+      "United Republic of Tanzania",
+      "South Sudan",
+      "Rwanda",
+      "Republic of the Congo",
+      "Central African Republic",
+      "Burundi",
+      "Angola"
+    ],
+    "absorbers": [
+      "Angola",
+      "Burundi",
+      "Central African Republic",
+      "Republic of the Congo",
+      "Rwanda",
+      "South Sudan",
+      "Uganda",
+      "United Republic of Tanzania",
+      "Zambia"
+    ],
+    "enclosure": 0.987,
+    "diff": "puzzles/democratic-republic-of-the-congo.json"
+  },
+  {
+    "id": 46,
+    "slug": "jordan",
+    "target": "Jordan",
+    "targetCode": "JOR",
+    "neighbors": [
+      "Syria",
+      "Saudi Arabia",
+      "Israel",
+      "Palestine",
+      "Iraq"
+    ],
+    "absorbers": [
+      "Iraq",
+      "Israel",
+      "Palestine",
+      "Saudi Arabia",
+      "Syria"
+    ],
+    "enclosure": 0.987,
+    "diff": "puzzles/jordan.json"
+  },
+  {
+    "id": 47,
+    "slug": "slovenia",
+    "target": "Slovenia",
+    "targetCode": "SVN",
+    "neighbors": [
+      "Italy",
+      "Hungary",
+      "Croatia",
+      "Austria"
+    ],
+    "absorbers": [
+      "Austria",
+      "Croatia",
+      "Hungary",
+      "Italy"
+    ],
+    "enclosure": 0.983,
+    "diff": "puzzles/slovenia.json"
+  },
+  {
+    "id": 48,
+    "slug": "iraq",
+    "target": "Iraq",
+    "targetCode": "IRQ",
+    "neighbors": [
+      "Turkey",
+      "Syria",
+      "Saudi Arabia",
+      "Kuwait",
+      "Jordan",
+      "Iran"
+    ],
+    "absorbers": [
+      "Iran",
+      "Jordan",
+      "Kuwait",
+      "Saudi Arabia",
+      "Syria",
+      "Turkey"
+    ],
+    "enclosure": 0.981,
+    "diff": "puzzles/iraq.json"
+  },
+  {
+    "id": 49,
+    "slug": "western-sahara",
+    "target": "Western Sahara",
+    "targetCode": "SAH",
+    "neighbors": [
+      "Morocco",
+      "Mauritania",
+      "Algeria"
+    ],
+    "absorbers": [
+      "Algeria",
+      "Mauritania",
+      "Morocco"
+    ],
+    "enclosure": 0.977,
+    "diff": "puzzles/western-sahara.json"
+  },
+  {
+    "id": 50,
+    "slug": "togo",
+    "target": "Togo",
+    "targetCode": "TGO",
+    "neighbors": [
+      "Ghana",
+      "Burkina Faso",
+      "Benin"
+    ],
+    "absorbers": [
+      "Benin",
+      "Burkina Faso",
+      "Ghana"
+    ],
+    "enclosure": 0.966,
+    "diff": "puzzles/togo.json"
+  },
+  {
+    "id": 51,
+    "slug": "republic-of-the-congo",
+    "target": "Republic of the Congo",
+    "targetCode": "COG",
+    "neighbors": [
+      "Gabon",
+      "Democratic Republic of the Congo",
+      "Central African Republic",
+      "Cameroon",
+      "Angola"
+    ],
+    "absorbers": [
+      "Angola",
+      "Cameroon",
+      "Central African Republic",
+      "Democratic Republic of the Congo",
+      "Gabon"
+    ],
+    "enclosure": 0.959,
+    "diff": "puzzles/republic-of-the-congo.json"
+  },
+  {
+    "id": 52,
+    "slug": "benin",
+    "target": "Benin",
+    "targetCode": "BEN",
+    "neighbors": [
+      "Togo",
+      "Nigeria",
+      "Niger",
+      "Burkina Faso"
+    ],
+    "absorbers": [
+      "Burkina Faso",
+      "Niger",
+      "Nigeria",
+      "Togo"
+    ],
+    "enclosure": 0.934,
+    "diff": "puzzles/benin.json"
+  },
+  {
+    "id": 53,
+    "slug": "syria",
+    "target": "Syria",
+    "targetCode": "SYR",
+    "neighbors": [
+      "Turkey",
+      "Lebanon",
+      "Jordan",
+      "Israel",
+      "Iraq"
+    ],
+    "absorbers": [
+      "Iraq",
+      "Israel",
+      "Jordan",
+      "Lebanon",
+      "Turkey"
+    ],
+    "enclosure": 0.931,
+    "diff": "puzzles/syria.json"
+  },
+  {
+    "id": 54,
+    "slug": "belgium",
+    "target": "Belgium",
+    "targetCode": "BEL",
+    "neighbors": [
+      "Netherlands",
+      "Luxembourg",
+      "Germany",
+      "France"
+    ],
+    "absorbers": [
+      "France",
+      "Germany",
+      "Luxembourg",
+      "Netherlands"
+    ],
+    "enclosure": 0.923,
+    "diff": "puzzles/belgium.json",
+    "diffDistorted": "puzzles/belgium-distorted.json"
+  },
+  {
+    "id": 55,
+    "slug": "sudan",
+    "target": "Sudan",
+    "targetCode": "SDN",
+    "neighbors": [
+      "South Sudan",
+      "Libya",
+      "Ethiopia",
+      "Eritrea",
+      "Egypt",
+      "Chad",
+      "Central African Republic"
+    ],
+    "absorbers": [
+      "Central African Republic",
+      "Chad",
+      "Egypt",
+      "Eritrea",
+      "Ethiopia",
+      "Libya",
+      "South Sudan"
+    ],
+    "enclosure": 0.92,
+    "diff": "puzzles/sudan.json"
+  },
+  {
+    "id": 56,
+    "slug": "palestine",
+    "target": "Palestine",
+    "targetCode": "PSX",
+    "neighbors": [
+      "Jordan",
+      "Israel",
+      "Egypt"
+    ],
+    "absorbers": [
+      "Egypt",
+      "Israel",
+      "Jordan"
+    ],
+    "enclosure": 0.917,
+    "diff": "puzzles/palestine.json"
+  },
+  {
+    "id": 57,
+    "slug": "lithuania",
+    "target": "Lithuania",
+    "targetCode": "LTU",
+    "neighbors": [
+      "Russia",
+      "Poland",
+      "Latvia",
+      "Belarus"
+    ],
+    "absorbers": [
+      "Belarus",
+      "Latvia",
+      "Poland",
+      "Russia"
+    ],
+    "enclosure": 0.898,
+    "diff": "puzzles/lithuania.json"
+  },
+  {
+    "id": 58,
+    "slug": "romania",
+    "target": "Romania",
+    "targetCode": "ROU",
+    "neighbors": [
+      "Ukraine",
+      "Republic of Serbia",
+      "Moldova",
+      "Hungary",
+      "Bulgaria"
+    ],
+    "absorbers": [
+      "Bulgaria",
+      "Hungary",
+      "Moldova",
+      "Republic of Serbia",
+      "Ukraine"
+    ],
+    "enclosure": 0.895,
+    "diff": "puzzles/romania.json"
+  },
+  {
+    "id": 59,
+    "slug": "cameroon",
+    "target": "Cameroon",
+    "targetCode": "CMR",
+    "neighbors": [
+      "Nigeria",
+      "Gabon",
+      "Equatorial Guinea",
+      "Republic of the Congo",
+      "Chad",
+      "Central African Republic"
+    ],
+    "absorbers": [
+      "Central African Republic",
+      "Chad",
+      "Equatorial Guinea",
+      "Gabon",
+      "Nigeria",
+      "Republic of the Congo"
+    ],
+    "enclosure": 0.888,
+    "diff": "puzzles/cameroon.json"
+  },
+  {
+    "id": 60,
+    "slug": "guinea",
+    "target": "Guinea",
+    "targetCode": "GIN",
+    "neighbors": [
+      "Sierra Leone",
+      "Senegal",
+      "Mali",
+      "Liberia",
+      "Guinea-Bissau",
+      "Ivory Coast"
+    ],
+    "absorbers": [
+      "Guinea-Bissau",
+      "Ivory Coast",
+      "Liberia",
+      "Mali",
+      "Senegal",
+      "Sierra Leone"
+    ],
+    "enclosure": 0.877,
+    "diff": "puzzles/guinea.json"
+  },
+  {
+    "id": 61,
+    "slug": "kazakhstan",
+    "target": "Kazakhstan",
+    "targetCode": "KAZ",
+    "neighbors": [
+      "Uzbekistan",
+      "Turkmenistan",
+      "Russia",
+      "Kyrgyzstan",
+      "China"
+    ],
+    "absorbers": [
+      "China",
+      "Kyrgyzstan",
+      "Russia",
+      "Turkmenistan",
+      "Uzbekistan"
+    ],
+    "enclosure": 0.877,
+    "diff": "puzzles/kazakhstan.json"
+  },
+  {
+    "id": 62,
+    "slug": "bulgaria",
+    "target": "Bulgaria",
+    "targetCode": "BGR",
+    "neighbors": [
+      "Turkey",
+      "Republic of Serbia",
+      "Romania",
+      "North Macedonia",
+      "Greece"
+    ],
+    "absorbers": [
+      "Greece",
+      "North Macedonia",
+      "Republic of Serbia",
+      "Romania",
+      "Turkey"
+    ],
+    "enclosure": 0.861,
+    "diff": "puzzles/bulgaria.json"
+  },
+  {
+    "id": 63,
+    "slug": "pakistan",
+    "target": "Pakistan",
+    "targetCode": "PAK",
+    "neighbors": [
+      "Iran",
+      "India",
+      "China",
+      "Afghanistan",
+      "Siachen Glacier"
+    ],
+    "absorbers": [
+      "Afghanistan",
+      "China",
+      "India",
+      "Iran",
+      "Siachen Glacier"
+    ],
+    "enclosure": 0.859,
+    "diff": "puzzles/pakistan.json"
+  },
+  {
+    "id": 64,
+    "slug": "kenya",
+    "target": "Kenya",
+    "targetCode": "KEN",
+    "neighbors": [
+      "Uganda",
+      "United Republic of Tanzania",
+      "South Sudan",
+      "Somalia",
+      "Ethiopia"
+    ],
+    "absorbers": [
+      "Ethiopia",
+      "Somalia",
+      "South Sudan",
+      "Uganda",
+      "United Republic of Tanzania"
+    ],
+    "enclosure": 0.858,
+    "diff": "puzzles/kenya.json"
+  },
+  {
+    "id": 65,
+    "slug": "mauritania",
+    "target": "Mauritania",
+    "targetCode": "MRT",
+    "neighbors": [
+      "Senegal",
+      "Western Sahara",
+      "Mali",
+      "Algeria"
+    ],
+    "absorbers": [
+      "Algeria",
+      "Mali",
+      "Senegal",
+      "Western Sahara"
+    ],
+    "enclosure": 0.858,
+    "diff": "puzzles/mauritania.json"
+  },
+  {
+    "id": 66,
+    "slug": "israel",
+    "target": "Israel",
+    "targetCode": "ISR",
+    "neighbors": [
+      "Syria",
+      "Lebanon",
+      "Jordan",
+      "Palestine",
+      "Egypt"
+    ],
+    "absorbers": [
+      "Egypt",
+      "Jordan",
+      "Lebanon",
+      "Palestine",
+      "Syria"
+    ],
+    "enclosure": 0.836,
+    "diff": "puzzles/israel.json"
+  },
+  {
+    "id": 67,
+    "slug": "montenegro",
+    "target": "Montenegro",
+    "targetCode": "MNE",
+    "neighbors": [
+      "Republic of Serbia",
+      "Kosovo",
+      "Croatia",
+      "Bosnia and Herzegovina",
+      "Albania"
+    ],
+    "absorbers": [
+      "Albania",
+      "Bosnia and Herzegovina",
+      "Croatia",
+      "Kosovo",
+      "Republic of Serbia"
+    ],
+    "enclosure": 0.833,
+    "diff": "puzzles/montenegro.json"
+  },
+  {
+    "id": 68,
+    "slug": "algeria",
+    "target": "Algeria",
+    "targetCode": "DZA",
+    "neighbors": [
+      "Tunisia",
+      "Niger",
+      "Morocco",
+      "Western Sahara",
+      "Mauritania",
+      "Mali",
+      "Libya"
+    ],
+    "absorbers": [
+      "Libya",
+      "Mali",
+      "Mauritania",
+      "Morocco",
+      "Niger",
+      "Tunisia",
+      "Western Sahara"
+    ],
+    "enclosure": 0.829,
+    "diff": "puzzles/algeria.json"
+  },
+  {
+    "id": 69,
+    "slug": "georgia",
+    "target": "Georgia",
+    "targetCode": "GEO",
+    "neighbors": [
+      "Turkey",
+      "Russia",
+      "Azerbaijan",
+      "Armenia"
+    ],
+    "absorbers": [
+      "Armenia",
+      "Azerbaijan",
+      "Russia",
+      "Turkey"
+    ],
+    "enclosure": 0.828,
+    "diff": "puzzles/georgia.json"
+  },
+  {
+    "id": 70,
+    "slug": "cambodia",
+    "target": "Cambodia",
+    "targetCode": "KHM",
+    "neighbors": [
+      "Vietnam",
+      "Thailand",
+      "Laos"
+    ],
+    "absorbers": [
+      "Laos",
+      "Thailand",
+      "Vietnam"
+    ],
+    "enclosure": 0.814,
+    "diff": "puzzles/cambodia.json"
+  },
+  {
+    "id": 71,
+    "slug": "senegal",
+    "target": "Senegal",
+    "targetCode": "SEN",
+    "neighbors": [
+      "Mauritania",
+      "Mali",
+      "Guinea-Bissau",
+      "Guinea",
+      "Gambia"
+    ],
+    "absorbers": [
+      "Gambia",
+      "Guinea",
+      "Guinea-Bissau",
+      "Mali",
+      "Mauritania"
+    ],
+    "enclosure": 0.806,
+    "diff": "puzzles/senegal.json"
+  },
+  {
+    "id": 72,
+    "slug": "guatemala",
+    "target": "Guatemala",
+    "targetCode": "GTM",
+    "neighbors": [
+      "Mexico",
+      "Honduras",
+      "El Salvador",
+      "Belize"
+    ],
+    "absorbers": [
+      "Belize",
+      "El Salvador",
+      "Honduras",
+      "Mexico"
+    ],
+    "enclosure": 0.795,
+    "diff": "puzzles/guatemala.json"
+  },
+  {
+    "id": 73,
+    "slug": "poland",
+    "target": "Poland",
+    "targetCode": "POL",
+    "neighbors": [
+      "Ukraine",
+      "Slovakia",
+      "Russia",
+      "Lithuania",
+      "Germany",
+      "Czechia",
+      "Belarus"
+    ],
+    "absorbers": [
+      "Belarus",
+      "Czechia",
+      "Germany",
+      "Lithuania",
+      "Russia",
+      "Slovakia",
+      "Ukraine"
+    ],
+    "enclosure": 0.776,
+    "diff": "puzzles/poland.json"
+  },
+  {
+    "id": 74,
+    "slug": "ghana",
+    "target": "Ghana",
+    "targetCode": "GHA",
+    "neighbors": [
+      "Togo",
+      "Ivory Coast",
+      "Burkina Faso"
+    ],
+    "absorbers": [
+      "Burkina Faso",
+      "Ivory Coast",
+      "Togo"
+    ],
+    "enclosure": 0.771,
+    "diff": "puzzles/ghana.json"
+  },
+  {
+    "id": 75,
+    "slug": "guyana",
+    "target": "Guyana",
+    "targetCode": "GUY",
+    "neighbors": [
+      "Venezuela",
+      "Suriname",
+      "Brazil"
+    ],
+    "absorbers": [
+      "Brazil",
+      "Suriname",
+      "Venezuela"
+    ],
+    "enclosure": 0.771,
+    "diff": "puzzles/guyana.json"
+  },
+  {
+    "id": 76,
+    "slug": "azerbaijan",
+    "target": "Azerbaijan",
+    "targetCode": "AZE",
+    "neighbors": [
+      "Turkey",
+      "Russia",
+      "Iran",
+      "Georgia",
+      "Armenia"
+    ],
+    "absorbers": [
+      "Armenia",
+      "Georgia",
+      "Iran",
+      "Russia",
+      "Turkey"
+    ],
+    "enclosure": 0.769,
+    "diff": "puzzles/azerbaijan.json"
+  },
+  {
+    "id": 77,
+    "slug": "ukraine",
+    "target": "Ukraine",
+    "targetCode": "UKR",
+    "neighbors": [
+      "Slovakia",
+      "Russia",
+      "Romania",
+      "Poland",
+      "Moldova",
+      "Hungary",
+      "Belarus"
+    ],
+    "absorbers": [
+      "Belarus",
+      "Hungary",
+      "Moldova",
+      "Poland",
+      "Romania",
+      "Russia",
+      "Slovakia"
+    ],
+    "enclosure": 0.753,
+    "diff": "puzzles/ukraine.json"
+  },
+  {
+    "id": 78,
+    "slug": "ivory-coast",
+    "target": "Ivory Coast",
+    "targetCode": "CIV",
+    "neighbors": [
+      "Mali",
+      "Liberia",
+      "Guinea",
+      "Ghana",
+      "Burkina Faso"
+    ],
+    "absorbers": [
+      "Burkina Faso",
+      "Ghana",
+      "Guinea",
+      "Liberia",
+      "Mali"
+    ],
+    "enclosure": 0.748,
+    "diff": "puzzles/ivory-coast.json"
+  },
+  {
+    "id": 79,
+    "slug": "angola",
+    "target": "Angola",
+    "targetCode": "AGO",
+    "neighbors": [
+      "Zambia",
+      "Namibia",
+      "Democratic Republic of the Congo",
+      "Republic of the Congo"
+    ],
+    "absorbers": [
+      "Democratic Republic of the Congo",
+      "Namibia",
+      "Republic of the Congo",
+      "Zambia"
+    ],
+    "enclosure": 0.745,
+    "diff": "puzzles/angola.json"
+  },
+  {
+    "id": 80,
+    "slug": "united-republic-of-tanzania",
+    "target": "United Republic of Tanzania",
+    "targetCode": "TZA",
+    "neighbors": [
+      "Zambia",
+      "Uganda",
+      "Rwanda",
+      "Mozambique",
+      "Malawi",
+      "Kenya",
+      "Democratic Republic of the Congo",
+      "Burundi"
+    ],
+    "absorbers": [
+      "Burundi",
+      "Democratic Republic of the Congo",
+      "Kenya",
+      "Malawi",
+      "Mozambique",
+      "Rwanda",
+      "Uganda",
+      "Zambia"
+    ],
+    "enclosure": 0.742,
+    "diff": "puzzles/united-republic-of-tanzania.json"
+  },
+  {
+    "id": 81,
+    "slug": "turkmenistan",
+    "target": "Turkmenistan",
+    "targetCode": "TKM",
+    "neighbors": [
+      "Uzbekistan",
+      "Kazakhstan",
+      "Iran",
+      "Afghanistan"
+    ],
+    "absorbers": [
+      "Afghanistan",
+      "Iran",
+      "Kazakhstan",
+      "Uzbekistan"
+    ],
+    "enclosure": 0.737,
+    "diff": "puzzles/turkmenistan.json"
+  },
+  {
+    "id": 82,
+    "slug": "nigeria",
+    "target": "Nigeria",
+    "targetCode": "NGA",
+    "neighbors": [
+      "Niger",
+      "Chad",
+      "Cameroon",
+      "Benin"
+    ],
+    "absorbers": [
+      "Benin",
+      "Cameroon",
+      "Chad",
+      "Niger"
+    ],
+    "enclosure": 0.736,
+    "diff": "puzzles/nigeria.json"
+  },
+  {
+    "id": 83,
+    "slug": "suriname",
+    "target": "Suriname",
+    "targetCode": "SUR",
+    "neighbors": [
+      "Guyana",
+      "France",
+      "Brazil"
+    ],
+    "absorbers": [
+      "Brazil",
+      "France",
+      "Guyana"
+    ],
+    "enclosure": 0.731,
+    "diff": "puzzles/suriname.json"
+  },
+  {
+    "id": 84,
+    "slug": "namibia",
+    "target": "Namibia",
+    "targetCode": "NAM",
+    "neighbors": [
+      "Zambia",
+      "South Africa",
+      "Botswana",
+      "Angola"
+    ],
+    "absorbers": [
+      "Angola",
+      "Botswana",
+      "South Africa",
+      "Zambia"
+    ],
+    "enclosure": 0.727,
+    "diff": "puzzles/namibia.json"
+  },
+  {
+    "id": 85,
+    "slug": "brunei",
+    "target": "Brunei",
+    "targetCode": "BRN",
+    "neighbors": [
+      "Malaysia"
+    ],
+    "absorbers": [
+      "Malaysia"
+    ],
+    "enclosure": 0.714,
+    "diff": "puzzles/brunei.json"
+  },
+  {
+    "id": 86,
+    "slug": "latvia",
+    "target": "Latvia",
+    "targetCode": "LVA",
+    "neighbors": [
+      "Russia",
+      "Lithuania",
+      "Estonia",
+      "Belarus"
+    ],
+    "absorbers": [
+      "Belarus",
+      "Estonia",
+      "Lithuania",
+      "Russia"
+    ],
+    "enclosure": 0.705,
+    "diff": "puzzles/latvia.json"
+  },
+  {
+    "id": 87,
+    "slug": "libya",
+    "target": "Libya",
+    "targetCode": "LBY",
+    "neighbors": [
+      "Tunisia",
+      "Sudan",
+      "Niger",
+      "Egypt",
+      "Chad",
+      "Algeria"
+    ],
+    "absorbers": [
+      "Algeria",
+      "Chad",
+      "Egypt",
+      "Niger",
+      "Sudan",
+      "Tunisia"
+    ],
+    "enclosure": 0.699,
+    "diff": "puzzles/libya.json"
+  },
+  {
+    "id": 88,
+    "slug": "colombia",
+    "target": "Colombia",
+    "targetCode": "COL",
+    "neighbors": [
+      "Venezuela",
+      "Peru",
+      "Panama",
+      "Ecuador",
+      "Brazil"
+    ],
+    "absorbers": [
+      "Brazil",
+      "Ecuador",
+      "Panama",
+      "Peru",
+      "Venezuela"
+    ],
+    "enclosure": 0.694,
+    "diff": "puzzles/colombia.json"
+  },
+  {
+    "id": 89,
+    "slug": "china",
+    "target": "China",
+    "targetCode": "CHN",
+    "neighbors": [
+      "Vietnam",
+      "Tajikistan",
+      "Russia",
+      "Pakistan",
+      "North Korea",
+      "Nepal",
+      "Mongolia",
+      "Laos",
+      "Kyrgyzstan",
+      "Kazakhstan",
+      "India",
+      "Macao S.A.R",
+      "Hong Kong S.A.R.",
+      "Myanmar",
+      "Bhutan",
+      "Afghanistan",
+      "Siachen Glacier"
+    ],
+    "absorbers": [
+      "Afghanistan",
+      "Bhutan",
+      "Hong Kong S.A.R.",
+      "India",
+      "Kazakhstan",
+      "Kyrgyzstan",
+      "Laos",
+      "Macao S.A.R",
+      "Mongolia",
+      "Myanmar",
+      "Nepal",
+      "North Korea",
+      "Pakistan",
+      "Russia",
+      "Siachen Glacier",
+      "Tajikistan",
+      "Vietnam"
+    ],
+    "enclosure": 0.685,
+    "diff": "puzzles/china.json"
+  },
+  {
+    "id": 90,
+    "slug": "peru",
+    "target": "Peru",
+    "targetCode": "PER",
+    "neighbors": [
+      "Ecuador",
+      "Colombia",
+      "Chile",
+      "Brazil",
+      "Bolivia"
+    ],
+    "absorbers": [
+      "Bolivia",
+      "Brazil",
+      "Chile",
+      "Colombia",
+      "Ecuador"
+    ],
+    "enclosure": 0.681,
+    "diff": "puzzles/peru.json"
+  },
+  {
+    "id": 91,
+    "slug": "liberia",
+    "target": "Liberia",
+    "targetCode": "LBR",
+    "neighbors": [
+      "Sierra Leone",
+      "Guinea",
+      "Ivory Coast"
+    ],
+    "absorbers": [
+      "Guinea",
+      "Ivory Coast",
+      "Sierra Leone"
+    ],
+    "enclosure": 0.669,
+    "diff": "puzzles/liberia.json"
+  },
+  {
+    "id": 92,
+    "slug": "albania",
+    "target": "Albania",
+    "targetCode": "ALB",
+    "neighbors": [
+      "Montenegro",
+      "North Macedonia",
+      "Kosovo",
+      "Greece"
+    ],
+    "absorbers": [
+      "Greece",
+      "Kosovo",
+      "Montenegro",
+      "North Macedonia"
+    ],
+    "enclosure": 0.662,
+    "diff": "puzzles/albania.json"
+  },
+  {
+    "id": 93,
+    "slug": "gambia",
+    "target": "Gambia",
+    "targetCode": "GMB",
+    "neighbors": [
+      "Senegal"
+    ],
+    "absorbers": [
+      "Senegal"
+    ],
+    "enclosure": 0.66,
+    "diff": "puzzles/gambia.json"
+  },
+  {
+    "id": 94,
+    "slug": "lebanon",
+    "target": "Lebanon",
+    "targetCode": "LBN",
+    "neighbors": [
+      "Syria",
+      "Israel"
+    ],
+    "absorbers": [
+      "Israel",
+      "Syria"
+    ],
+    "enclosure": 0.649,
+    "diff": "puzzles/lebanon.json"
+  },
+  {
+    "id": 95,
+    "slug": "djibouti",
+    "target": "Djibouti",
+    "targetCode": "DJI",
+    "neighbors": [
+      "Somaliland",
+      "Ethiopia",
+      "Eritrea"
+    ],
+    "absorbers": [
+      "Eritrea",
+      "Ethiopia",
+      "Somaliland"
+    ],
+    "enclosure": 0.631,
+    "diff": "puzzles/djibouti.json"
+  },
+  {
+    "id": 96,
+    "slug": "somaliland",
+    "target": "Somaliland",
+    "targetCode": "SOL",
+    "neighbors": [
+      "Somalia",
+      "Ethiopia",
+      "Djibouti"
+    ],
+    "absorbers": [
+      "Djibouti",
+      "Ethiopia",
+      "Somalia"
+    ],
+    "enclosure": 0.631,
+    "diff": "puzzles/somaliland.json"
+  },
+  {
+    "id": 97,
+    "slug": "iran",
+    "target": "Iran",
+    "targetCode": "IRN",
+    "neighbors": [
+      "Turkmenistan",
+      "Turkey",
+      "Pakistan",
+      "Iraq",
+      "Azerbaijan",
+      "Armenia",
+      "Afghanistan"
+    ],
+    "absorbers": [
+      "Afghanistan",
+      "Armenia",
+      "Azerbaijan",
+      "Iraq",
+      "Pakistan",
+      "Turkey",
+      "Turkmenistan"
+    ],
+    "enclosure": 0.63,
+    "diff": "puzzles/iran.json"
+  },
+  {
+    "id": 98,
+    "slug": "germany",
+    "target": "Germany",
+    "targetCode": "DEU",
+    "neighbors": [
+      "Switzerland",
+      "Poland",
+      "Netherlands",
+      "Luxembourg",
+      "France",
+      "Denmark",
+      "Czechia",
+      "Belgium",
+      "Austria"
+    ],
+    "absorbers": [
+      "Austria",
+      "Belgium",
+      "Czechia",
+      "Denmark",
+      "France",
+      "Luxembourg",
+      "Netherlands",
+      "Poland",
+      "Switzerland"
+    ],
+    "enclosure": 0.627,
+    "diff": "puzzles/germany.json"
+  },
+  {
+    "id": 99,
+    "slug": "gabon",
+    "target": "Gabon",
+    "targetCode": "GAB",
+    "neighbors": [
+      "Equatorial Guinea",
+      "Republic of the Congo",
+      "Cameroon"
+    ],
+    "absorbers": [
+      "Cameroon",
+      "Equatorial Guinea",
+      "Republic of the Congo"
+    ],
+    "enclosure": 0.625,
+    "diff": "puzzles/gabon.json"
+  },
+  {
+    "id": 100,
+    "slug": "saudi-arabia",
+    "target": "Saudi Arabia",
+    "targetCode": "SAU",
+    "neighbors": [
+      "Yemen",
+      "United Arab Emirates",
+      "Qatar",
+      "Oman",
+      "Kuwait",
+      "Jordan",
+      "Iraq"
+    ],
+    "absorbers": [
+      "Iraq",
+      "Jordan",
+      "Kuwait",
+      "Oman",
+      "Qatar",
+      "United Arab Emirates",
+      "Yemen"
+    ],
+    "enclosure": 0.606,
+    "diff": "puzzles/saudi-arabia.json"
+  },
+  {
+    "id": 101,
+    "slug": "mozambique",
+    "target": "Mozambique",
+    "targetCode": "MOZ",
+    "neighbors": [
+      "Zimbabwe",
+      "Zambia",
+      "United Republic of Tanzania",
+      "eSwatini",
+      "South Africa",
+      "Malawi"
+    ],
+    "absorbers": [
+      "Malawi",
+      "South Africa",
+      "United Republic of Tanzania",
+      "Zambia",
+      "Zimbabwe",
+      "eSwatini"
+    ],
+    "enclosure": 0.604,
+    "diff": "puzzles/mozambique.json"
+  },
+  {
+    "id": 102,
+    "slug": "monaco",
+    "target": "Monaco",
+    "targetCode": "MCO",
+    "neighbors": [
+      "France"
+    ],
+    "absorbers": [
+      "France"
+    ],
+    "enclosure": 0.602,
+    "diff": "puzzles/monaco.json"
+  },
+  {
+    "id": 103,
+    "slug": "thailand",
+    "target": "Thailand",
+    "targetCode": "THA",
+    "neighbors": [
+      "Malaysia",
+      "Laos",
+      "Cambodia",
+      "Myanmar"
+    ],
+    "absorbers": [
+      "Cambodia",
+      "Laos",
+      "Malaysia",
+      "Myanmar"
+    ],
+    "enclosure": 0.597,
+    "diff": "puzzles/thailand.json"
+  },
+  {
+    "id": 104,
+    "slug": "south-africa",
+    "target": "South Africa",
+    "targetCode": "ZAF",
+    "neighbors": [
+      "Zimbabwe",
+      "eSwatini",
+      "Namibia",
+      "Mozambique",
+      "Lesotho",
+      "Botswana"
+    ],
+    "absorbers": [
+      "Botswana",
+      "French Southern and Antarctic Lands",
+      "Lesotho",
+      "Mozambique",
+      "Namibia",
+      "Zimbabwe",
+      "eSwatini"
+    ],
+    "enclosure": 0.595,
+    "diff": "puzzles/south-africa.json"
+  },
+  {
+    "id": 105,
+    "slug": "argentina",
+    "target": "Argentina",
+    "targetCode": "ARG",
+    "neighbors": [
+      "Uruguay",
+      "Paraguay",
+      "Chile",
+      "Brazil",
+      "Bolivia"
+    ],
+    "absorbers": [
+      "Bolivia",
+      "Brazil",
+      "Chile",
+      "Paraguay",
+      "Uruguay"
+    ],
+    "enclosure": 0.588,
+    "diff": "puzzles/argentina.json"
+  },
+  {
+    "id": 106,
+    "slug": "equatorial-guinea",
+    "target": "Equatorial Guinea",
+    "targetCode": "GNQ",
+    "neighbors": [
+      "Gabon",
+      "Cameroon"
+    ],
+    "absorbers": [
+      "Cameroon",
+      "Gabon"
+    ],
+    "enclosure": 0.586,
+    "diff": "puzzles/equatorial-guinea.json"
+  },
+  {
+    "id": 107,
+    "slug": "finland",
+    "target": "Finland",
+    "targetCode": "FIN",
+    "neighbors": [
+      "Sweden",
+      "Russia",
+      "Norway"
+    ],
+    "absorbers": [
+      "Norway",
+      "Russia",
+      "Sweden"
+    ],
+    "enclosure": 0.583,
+    "diff": "puzzles/finland.json"
+  },
+  {
+    "id": 108,
+    "slug": "india",
+    "target": "India",
+    "targetCode": "IND",
+    "neighbors": [
+      "Pakistan",
+      "Nepal",
+      "China",
+      "Myanmar",
+      "Bhutan",
+      "Bangladesh",
+      "Siachen Glacier"
+    ],
+    "absorbers": [
+      "Bangladesh",
+      "Bhutan",
+      "China",
+      "Maldives",
+      "Myanmar",
+      "Nepal",
+      "Pakistan",
+      "Siachen Glacier"
+    ],
+    "enclosure": 0.571,
+    "diff": "puzzles/india.json"
+  },
+  {
+    "id": 109,
+    "slug": "sierra-leone",
+    "target": "Sierra Leone",
+    "targetCode": "SLE",
+    "neighbors": [
+      "Liberia",
+      "Guinea"
+    ],
+    "absorbers": [
+      "Guinea",
+      "Liberia"
+    ],
+    "enclosure": 0.571,
+    "diff": "puzzles/sierra-leone.json"
+  },
+  {
+    "id": 110,
+    "slug": "eritrea",
+    "target": "Eritrea",
+    "targetCode": "ERI",
+    "neighbors": [
+      "Sudan",
+      "Ethiopia",
+      "Djibouti"
+    ],
+    "absorbers": [
+      "Djibouti",
+      "Ethiopia",
+      "Sudan"
+    ],
+    "enclosure": 0.57,
+    "diff": "puzzles/eritrea.json"
+  },
+  {
+    "id": 111,
+    "slug": "bangladesh",
+    "target": "Bangladesh",
+    "targetCode": "BGD",
+    "neighbors": [
+      "India",
+      "Myanmar"
+    ],
+    "absorbers": [
+      "India",
+      "Myanmar"
+    ],
+    "enclosure": 0.568,
+    "diff": "puzzles/bangladesh.json"
+  },
+  {
+    "id": 112,
+    "slug": "uruguay",
+    "target": "Uruguay",
+    "targetCode": "URY",
+    "neighbors": [
+      "Brazil",
+      "Argentina"
+    ],
+    "absorbers": [
+      "Argentina",
+      "Brazil"
+    ],
+    "enclosure": 0.567,
+    "diff": "puzzles/uruguay.json"
+  },
+  {
+    "id": 113,
+    "slug": "kuwait",
+    "target": "Kuwait",
+    "targetCode": "KWT",
+    "neighbors": [
+      "Saudi Arabia",
+      "Iraq"
+    ],
+    "absorbers": [
+      "Iraq",
+      "Saudi Arabia"
+    ],
+    "enclosure": 0.566,
+    "diff": "puzzles/kuwait.json"
+  },
+  {
+    "id": 114,
+    "slug": "el-salvador",
+    "target": "El Salvador",
+    "targetCode": "SLV",
+    "neighbors": [
+      "Honduras",
+      "Guatemala"
+    ],
+    "absorbers": [
+      "Guatemala",
+      "Honduras"
+    ],
+    "enclosure": 0.55,
+    "diff": "puzzles/el-salvador.json"
+  },
+  {
+    "id": 115,
+    "slug": "myanmar",
+    "target": "Myanmar",
+    "targetCode": "MMR",
+    "neighbors": [
+      "Thailand",
+      "Laos",
+      "India",
+      "China",
+      "Bangladesh"
+    ],
+    "absorbers": [
+      "Bangladesh",
+      "China",
+      "India",
+      "Laos",
+      "Thailand"
+    ],
+    "enclosure": 0.538,
+    "diff": "puzzles/myanmar.json"
+  },
+  {
+    "id": 116,
+    "slug": "venezuela",
+    "target": "Venezuela",
+    "targetCode": "VEN",
+    "neighbors": [
+      "Guyana",
+      "Colombia",
+      "Brazil"
+    ],
+    "absorbers": [
+      "Brazil",
+      "Colombia",
+      "Guyana"
+    ],
+    "enclosure": 0.536,
+    "diff": "puzzles/venezuela.json"
+  },
+  {
+    "id": 117,
+    "slug": "tunisia",
+    "target": "Tunisia",
+    "targetCode": "TUN",
+    "neighbors": [
+      "Libya",
+      "Algeria"
+    ],
+    "absorbers": [
+      "Algeria",
+      "Libya"
+    ],
+    "enclosure": 0.529,
+    "diff": "puzzles/tunisia.json"
+  },
+  {
+    "id": 118,
+    "slug": "honduras",
+    "target": "Honduras",
+    "targetCode": "HND",
+    "neighbors": [
+      "Nicaragua",
+      "Guatemala",
+      "El Salvador"
+    ],
+    "absorbers": [
+      "El Salvador",
+      "Guatemala",
+      "Nicaragua"
+    ],
+    "enclosure": 0.525,
+    "diff": "puzzles/honduras.json"
+  },
+  {
+    "id": 119,
+    "slug": "united-arab-emirates",
+    "target": "United Arab Emirates",
+    "targetCode": "ARE",
+    "neighbors": [
+      "Saudi Arabia",
+      "Oman"
+    ],
+    "absorbers": [
+      "Oman",
+      "Saudi Arabia"
+    ],
+    "enclosure": 0.524,
+    "diff": "puzzles/united-arab-emirates.json"
+  },
+  {
+    "id": 120,
+    "slug": "morocco",
+    "target": "Morocco",
+    "targetCode": "MAR",
+    "neighbors": [
+      "Western Sahara",
+      "Algeria"
+    ],
+    "absorbers": [
+      "Algeria",
+      "Western Sahara"
+    ],
+    "enclosure": 0.52,
+    "diff": "puzzles/morocco.json"
+  },
+  {
+    "id": 121,
+    "slug": "vietnam",
+    "target": "Vietnam",
+    "targetCode": "VNM",
+    "neighbors": [
+      "Laos",
+      "China",
+      "Cambodia"
+    ],
+    "absorbers": [
+      "Cambodia",
+      "China",
+      "Laos"
+    ],
+    "enclosure": 0.502,
+    "diff": "puzzles/vietnam.json"
+  },
+  {
+    "id": 122,
+    "slug": "brazil",
+    "target": "Brazil",
+    "targetCode": "BRA",
+    "neighbors": [
+      "Venezuela",
+      "Uruguay",
+      "Suriname",
+      "Peru",
+      "Paraguay",
+      "Guyana",
+      "France",
+      "Colombia",
+      "Bolivia",
+      "Argentina"
+    ],
+    "absorbers": [
+      "Argentina",
+      "Bolivia",
+      "Colombia",
+      "France",
+      "Guyana",
+      "Paraguay",
+      "Peru",
+      "Suriname",
+      "Uruguay",
+      "Venezuela"
+    ],
+    "enclosure": 0.49,
+    "diff": "puzzles/brazil.json"
+  },
+  {
+    "id": 123,
+    "slug": "nicaragua",
+    "target": "Nicaragua",
+    "targetCode": "NIC",
+    "neighbors": [
+      "Honduras",
+      "Costa Rica"
+    ],
+    "absorbers": [
+      "Costa Rica",
+      "Honduras"
+    ],
+    "enclosure": 0.478,
+    "diff": "puzzles/nicaragua.json"
+  },
+  {
+    "id": 124,
+    "slug": "egypt",
+    "target": "Egypt",
+    "targetCode": "EGY",
+    "neighbors": [
+      "Sudan",
+      "Libya",
+      "Israel",
+      "Palestine"
+    ],
+    "absorbers": [
+      "Israel",
+      "Libya",
+      "Palestine",
+      "Sudan"
+    ],
+    "enclosure": 0.475,
+    "diff": "puzzles/egypt.json"
+  },
+  {
+    "id": 125,
+    "slug": "croatia",
+    "target": "Croatia",
+    "targetCode": "HRV",
+    "neighbors": [
+      "Slovenia",
+      "Republic of Serbia",
+      "Montenegro",
+      "Hungary",
+      "Bosnia and Herzegovina"
+    ],
+    "absorbers": [
+      "Bosnia and Herzegovina",
+      "Hungary",
+      "Montenegro",
+      "Republic of Serbia",
+      "Slovenia"
+    ],
+    "enclosure": 0.462,
+    "diff": "puzzles/croatia.json"
+  },
+  {
+    "id": 126,
+    "slug": "ecuador",
+    "target": "Ecuador",
+    "targetCode": "ECU",
+    "neighbors": [
+      "Peru",
+      "Colombia"
+    ],
+    "absorbers": [
+      "Colombia",
+      "Peru"
+    ],
+    "enclosure": 0.459,
+    "diff": "puzzles/ecuador.json"
+  },
+  {
+    "id": 127,
+    "slug": "north-korea",
+    "target": "North Korea",
+    "targetCode": "PRK",
+    "neighbors": [
+      "South Korea",
+      "Russia",
+      "China"
+    ],
+    "absorbers": [
+      "China",
+      "Russia",
+      "South Korea"
+    ],
+    "enclosure": 0.457,
+    "diff": "puzzles/north-korea.json"
+  },
+  {
+    "id": 128,
+    "slug": "somalia",
+    "target": "Somalia",
+    "targetCode": "SOM",
+    "neighbors": [
+      "Somaliland",
+      "Kenya",
+      "Ethiopia"
+    ],
+    "absorbers": [
+      "Ethiopia",
+      "Kenya",
+      "Somaliland"
+    ],
+    "enclosure": 0.457,
+    "diff": "puzzles/somalia.json"
+  },
+  {
+    "id": 129,
+    "slug": "belize",
+    "target": "Belize",
+    "targetCode": "BLZ",
+    "neighbors": [
+      "Mexico",
+      "Guatemala"
+    ],
+    "absorbers": [
+      "Guatemala",
+      "Mexico"
+    ],
+    "enclosure": 0.45,
+    "diff": "puzzles/belize.json"
+  },
+  {
+    "id": 130,
+    "slug": "guinea-bissau",
+    "target": "Guinea-Bissau",
+    "targetCode": "GNB",
+    "neighbors": [
+      "Senegal",
+      "Guinea"
+    ],
+    "absorbers": [
+      "Guinea",
+      "Senegal"
+    ],
+    "enclosure": 0.44,
+    "diff": "puzzles/guinea-bissau.json"
+  },
+  {
+    "id": 131,
+    "slug": "macao-s-a-r",
+    "target": "Macao S.A.R",
+    "targetCode": "MAC",
+    "neighbors": [
+      "China"
+    ],
+    "absorbers": [
+      "China"
+    ],
+    "enclosure": 0.438,
+    "diff": "puzzles/macao-s-a-r.json"
+  },
+  {
+    "id": 132,
+    "slug": "oman",
+    "target": "Oman",
+    "targetCode": "OMN",
+    "neighbors": [
+      "Yemen",
+      "United Arab Emirates",
+      "Saudi Arabia"
+    ],
+    "absorbers": [
+      "Saudi Arabia",
+      "United Arab Emirates",
+      "Yemen"
+    ],
+    "enclosure": 0.431,
+    "diff": "puzzles/oman.json"
+  },
+  {
+    "id": 133,
+    "slug": "yemen",
+    "target": "Yemen",
+    "targetCode": "YEM",
+    "neighbors": [
+      "Saudi Arabia",
+      "Oman"
+    ],
+    "absorbers": [
+      "Oman",
+      "Saudi Arabia",
+      "Somalia"
+    ],
+    "enclosure": 0.419,
+    "diff": "puzzles/yemen.json"
+  },
+  {
+    "id": 134,
+    "slug": "france",
+    "target": "France",
+    "targetCode": "FRA",
+    "neighbors": [
+      "Switzerland",
+      "Suriname",
+      "Spain",
+      "Monaco",
+      "Luxembourg",
+      "Italy",
+      "Germany",
+      "Brazil",
+      "Belgium",
+      "Andorra"
+    ],
+    "absorbers": [
+      "Andorra",
+      "Belgium",
+      "Brazil",
+      "Comoros",
+      "Dominica",
+      "Germany",
+      "Italy",
+      "Luxembourg",
+      "Mauritius",
+      "Monaco",
+      "Spain",
+      "Suriname",
+      "Switzerland"
+    ],
+    "enclosure": 0.406,
+    "diff": "puzzles/france.json"
+  },
+  {
+    "id": 135,
+    "slug": "netherlands",
+    "target": "Netherlands",
+    "targetCode": "NLD",
+    "neighbors": [
+      "Germany",
+      "Belgium"
+    ],
+    "absorbers": [
+      "Belgium",
+      "Curaçao",
+      "Germany",
+      "Saint Kitts and Nevis"
+    ],
+    "enclosure": 0.405,
+    "diff": "puzzles/netherlands.json"
+  },
+  {
+    "id": 136,
+    "slug": "sweden",
+    "target": "Sweden",
+    "targetCode": "SWE",
+    "neighbors": [
+      "Norway",
+      "Finland"
+    ],
+    "absorbers": [
+      "Finland",
+      "Norway"
+    ],
+    "enclosure": 0.399,
+    "diff": "puzzles/sweden.json"
+  },
+  {
+    "id": 137,
+    "slug": "sint-maarten",
+    "target": "Sint Maarten",
+    "targetCode": "SXM",
+    "neighbors": [
+      "Saint Martin"
+    ],
+    "absorbers": [
+      "Saint Martin"
+    ],
+    "enclosure": 0.398,
+    "diff": "puzzles/sint-maarten.json"
+  },
+  {
+    "id": 138,
+    "slug": "saint-martin",
+    "target": "Saint Martin",
+    "targetCode": "MAF",
+    "neighbors": [
+      "Sint Maarten"
+    ],
+    "absorbers": [
+      "Sint Maarten"
+    ],
+    "enclosure": 0.394,
+    "diff": "puzzles/saint-martin.json"
+  },
+  {
+    "id": 139,
+    "slug": "portugal",
+    "target": "Portugal",
+    "targetCode": "PRT",
+    "neighbors": [
+      "Spain"
+    ],
+    "absorbers": [
+      "Spain"
+    ],
+    "enclosure": 0.367,
+    "diff": "puzzles/portugal.json"
+  },
+  {
+    "id": 140,
+    "slug": "cyprus",
+    "target": "Cyprus",
+    "targetCode": "CYP",
+    "neighbors": [
+      "Northern Cyprus"
+    ],
+    "absorbers": [
+      "Northern Cyprus"
+    ],
+    "enclosure": 0.352,
+    "diff": "puzzles/cyprus.json"
+  },
+  {
+    "id": 141,
+    "slug": "malaysia",
+    "target": "Malaysia",
+    "targetCode": "MYS",
+    "neighbors": [
+      "Thailand",
+      "Indonesia",
+      "Brunei"
+    ],
+    "absorbers": [
+      "Brunei",
+      "Indonesia",
+      "Thailand"
+    ],
+    "enclosure": 0.344,
+    "diff": "puzzles/malaysia.json"
+  },
+  {
+    "id": 142,
+    "slug": "costa-rica",
+    "target": "Costa Rica",
+    "targetCode": "CRI",
+    "neighbors": [
+      "Panama",
+      "Nicaragua"
+    ],
+    "absorbers": [
+      "Nicaragua",
+      "Panama"
+    ],
+    "enclosure": 0.334,
+    "diff": "puzzles/costa-rica.json"
+  },
+  {
+    "id": 143,
+    "slug": "northern-cyprus",
+    "target": "Northern Cyprus",
+    "targetCode": "CYN",
+    "neighbors": [
+      "Cyprus"
+    ],
+    "absorbers": [
+      "Cyprus"
+    ],
+    "enclosure": 0.329,
+    "diff": "puzzles/northern-cyprus.json"
+  },
+  {
+    "id": 144,
+    "slug": "turkey",
+    "target": "Turkey",
+    "targetCode": "TUR",
+    "neighbors": [
+      "Syria",
+      "Iraq",
+      "Iran",
+      "Greece",
+      "Georgia",
+      "Bulgaria",
+      "Azerbaijan",
+      "Armenia"
+    ],
+    "absorbers": [
+      "Armenia",
+      "Azerbaijan",
+      "Bulgaria",
+      "Georgia",
+      "Greece",
+      "Iran",
+      "Iraq",
+      "Syria"
+    ],
+    "enclosure": 0.324,
+    "diff": "puzzles/turkey.json"
+  },
+  {
+    "id": 145,
+    "slug": "estonia",
+    "target": "Estonia",
+    "targetCode": "EST",
+    "neighbors": [
+      "Russia",
+      "Latvia"
+    ],
+    "absorbers": [
+      "Latvia",
+      "Russia"
+    ],
+    "enclosure": 0.294,
+    "diff": "puzzles/estonia.json"
+  },
+  {
+    "id": 146,
+    "slug": "spain",
+    "target": "Spain",
+    "targetCode": "ESP",
+    "neighbors": [
+      "Portugal",
+      "France",
+      "Andorra"
+    ],
+    "absorbers": [
+      "Andorra",
+      "France",
+      "Morocco",
+      "Portugal"
+    ],
+    "enclosure": 0.273,
+    "diff": "puzzles/spain.json"
+  },
+  {
+    "id": 147,
+    "slug": "chile",
+    "target": "Chile",
+    "targetCode": "CHL",
+    "neighbors": [
+      "Peru",
+      "Bolivia",
+      "Argentina"
+    ],
+    "absorbers": [
+      "Argentina",
+      "Bolivia",
+      "Peru",
+      "Pitcairn Islands"
+    ],
+    "enclosure": 0.253,
+    "diff": "puzzles/chile.json",
+    "diffDistorted": "puzzles/chile-distorted.json"
+  },
+  {
+    "id": 148,
+    "slug": "mexico",
+    "target": "Mexico",
+    "targetCode": "MEX",
+    "neighbors": [
+      "United States of America",
+      "Guatemala",
+      "Belize"
+    ],
+    "absorbers": [
+      "Belize",
+      "Guatemala",
+      "United States of America"
+    ],
+    "enclosure": 0.24,
+    "diff": "puzzles/mexico.json"
+  },
+  {
+    "id": 149,
+    "slug": "italy",
+    "target": "Italy",
+    "targetCode": "ITA",
+    "neighbors": [
+      "Switzerland",
+      "Slovenia",
+      "San Marino",
+      "France",
+      "Austria"
+    ],
+    "absorbers": [
+      "Austria",
+      "France",
+      "San Marino",
+      "Slovenia",
+      "Switzerland"
+    ],
+    "enclosure": 0.236,
+    "diff": "puzzles/italy.json"
+  },
+  {
+    "id": 150,
+    "slug": "east-timor",
+    "target": "East Timor",
+    "targetCode": "TLS",
+    "neighbors": [
+      "Indonesia"
+    ],
+    "absorbers": [
+      "Indonesia"
+    ],
+    "enclosure": 0.209,
+    "diff": "puzzles/east-timor.json"
+  },
+  {
+    "id": 151,
+    "slug": "united-states-of-america",
+    "target": "United States of America",
+    "targetCode": "USA",
+    "neighbors": [
+      "Mexico",
+      "Canada"
+    ],
+    "absorbers": [
+      "Canada",
+      "Marshall Islands",
+      "Mexico",
+      "Russia"
+    ],
+    "enclosure": 0.188,
+    "diff": "puzzles/united-states-of-america.json"
+  },
+  {
+    "id": 152,
+    "slug": "dominican-republic",
+    "target": "Dominican Republic",
+    "targetCode": "DOM",
+    "neighbors": [
+      "Haiti"
+    ],
+    "absorbers": [
+      "Haiti"
+    ],
+    "enclosure": 0.185,
+    "diff": "puzzles/dominican-republic.json"
+  },
+  {
+    "id": 153,
+    "slug": "panama",
+    "target": "Panama",
+    "targetCode": "PAN",
+    "neighbors": [
+      "Costa Rica",
+      "Colombia"
+    ],
+    "absorbers": [
+      "Colombia",
+      "Costa Rica"
+    ],
+    "enclosure": 0.185,
+    "diff": "puzzles/panama.json"
+  },
+  {
+    "id": 154,
+    "slug": "russia",
+    "target": "Russia",
+    "targetCode": "RUS",
+    "neighbors": [
+      "Ukraine",
+      "Poland",
+      "Norway",
+      "North Korea",
+      "Mongolia",
+      "Lithuania",
+      "Latvia",
+      "Kazakhstan",
+      "Georgia",
+      "Finland",
+      "Estonia",
+      "China",
+      "Belarus",
+      "Azerbaijan"
+    ],
+    "absorbers": [
+      "Azerbaijan",
+      "Belarus",
+      "Canada",
+      "China",
+      "Estonia",
+      "Finland",
+      "Georgia",
+      "Kazakhstan",
+      "Latvia",
+      "Lithuania",
+      "Mongolia",
+      "North Korea",
+      "Norway",
+      "Poland",
+      "Ukraine",
+      "United States of America"
+    ],
+    "enclosure": 0.172,
+    "diff": "puzzles/russia.json"
+  },
+  {
+    "id": 155,
+    "slug": "haiti",
+    "target": "Haiti",
+    "targetCode": "HTI",
+    "neighbors": [
+      "Dominican Republic"
+    ],
+    "absorbers": [
+      "Dominican Republic"
+    ],
+    "enclosure": 0.163,
+    "diff": "puzzles/haiti.json"
+  },
+  {
+    "id": 156,
+    "slug": "qatar",
+    "target": "Qatar",
+    "targetCode": "QAT",
+    "neighbors": [
+      "Saudi Arabia"
+    ],
+    "absorbers": [
+      "Saudi Arabia"
+    ],
+    "enclosure": 0.145,
+    "diff": "puzzles/qatar.json"
+  },
+  {
+    "id": 157,
+    "slug": "ireland",
+    "target": "Ireland",
+    "targetCode": "IRL",
+    "neighbors": [
+      "United Kingdom"
+    ],
+    "absorbers": [
+      "United Kingdom"
+    ],
+    "enclosure": 0.136,
+    "diff": "puzzles/ireland.json"
+  },
+  {
+    "id": 158,
+    "slug": "hong-kong-s-a-r",
+    "target": "Hong Kong S.A.R.",
+    "targetCode": "HKG",
+    "neighbors": [
+      "China"
+    ],
+    "absorbers": [
+      "China"
+    ],
+    "enclosure": 0.133,
+    "diff": "puzzles/hong-kong-s-a-r.json"
+  },
+  {
+    "id": 159,
+    "slug": "greece",
+    "target": "Greece",
+    "targetCode": "GRC",
+    "neighbors": [
+      "Turkey",
+      "North Macedonia",
+      "Bulgaria",
+      "Albania"
+    ],
+    "absorbers": [
+      "Albania",
+      "Bulgaria",
+      "North Macedonia",
+      "Turkey"
+    ],
+    "enclosure": 0.126,
+    "diff": "puzzles/greece.json"
+  },
+  {
+    "id": 160,
+    "slug": "norway",
+    "target": "Norway",
+    "targetCode": "NOR",
+    "neighbors": [
+      "Sweden",
+      "Russia",
+      "Finland"
+    ],
+    "absorbers": [
+      "Finland",
+      "Greenland",
+      "Russia",
+      "Sweden"
+    ],
+    "enclosure": 0.123,
+    "diff": "puzzles/norway.json"
+  },
+  {
+    "id": 161,
+    "slug": "south-korea",
+    "target": "South Korea",
+    "targetCode": "KOR",
+    "neighbors": [
+      "North Korea"
+    ],
+    "absorbers": [
+      "North Korea"
+    ],
+    "enclosure": 0.092,
+    "diff": "puzzles/south-korea.json"
+  },
+  {
+    "id": 162,
+    "slug": "papua-new-guinea",
+    "target": "Papua New Guinea",
+    "targetCode": "PNG",
+    "neighbors": [
+      "Indonesia"
+    ],
+    "absorbers": [
+      "Indonesia",
+      "Solomon Islands"
+    ],
+    "enclosure": 0.08,
+    "diff": "puzzles/papua-new-guinea.json"
+  },
+  {
+    "id": 163,
+    "slug": "canada",
+    "target": "Canada",
+    "targetCode": "CAN",
+    "neighbors": [
+      "United States of America"
+    ],
+    "absorbers": [
+      "Saint Pierre and Miquelon",
+      "United States of America"
+    ],
+    "enclosure": 0.057,
+    "diff": "puzzles/canada.json"
+  },
+  {
+    "id": 164,
+    "slug": "indonesia",
+    "target": "Indonesia",
+    "targetCode": "IDN",
+    "neighbors": [
+      "East Timor",
+      "Papua New Guinea",
+      "Malaysia"
+    ],
+    "absorbers": [
+      "East Timor",
+      "Malaysia",
+      "Papua New Guinea"
+    ],
+    "enclosure": 0.054,
+    "diff": "puzzles/indonesia.json"
+  },
+  {
+    "id": 165,
+    "slug": "united-kingdom",
+    "target": "United Kingdom",
+    "targetCode": "GBR",
+    "neighbors": [
+      "Ireland"
+    ],
+    "absorbers": [
+      "Ireland"
+    ],
+    "enclosure": 0.043,
+    "diff": "puzzles/united-kingdom.json"
+  },
+  {
+    "id": 166,
+    "slug": "denmark",
+    "target": "Denmark",
+    "targetCode": "DNK",
+    "neighbors": [
+      "Germany"
+    ],
+    "absorbers": [
+      "Germany"
+    ],
+    "enclosure": 0.036,
+    "diff": "puzzles/denmark.json"
+  }
+]

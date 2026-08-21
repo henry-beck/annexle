@@ -18,9 +18,15 @@ export function listVariants(entry) {
       diffUrl: `${DATA_ROOT}/${entry.diff}`,
     },
   ];
-  // Later:
-  // if (entry.diffDistorted)
-  //   variants.push({ key: "distorted", label: "Distorted",
-  //                   diffUrl: `${DATA_ROOT}/${entry.diffDistorted}` });
+  // The distributed-distortion variant, present only on puzzles the pipeline
+  // has built it for (build-distorted writes diffDistorted into the index).
+  // Its presence is what makes the dev picker's variant toggle appear.
+  if (entry.diffDistorted) {
+    variants.push({
+      key: "distorted",
+      label: "Distorted",
+      diffUrl: `${DATA_ROOT}/${entry.diffDistorted}`,
+    });
+  }
   return variants;
 }
