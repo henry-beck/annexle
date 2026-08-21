@@ -331,7 +331,28 @@ def swallow(geoms, target_name):
         add = unary_union([make_valid(a) for a in adds])
         expanded[name] = make_valid(unary_union([geoms[name], add])).buffer(0)
     healed = _heal_target_footprint(expanded, geoms[target_name])
-    return _declutter_absorbers(healed, geoms)
+    decluttered = _declutter_absorbers(healed, geoms)
+    return _clamp_to_land(decluttered, geoms, target_name)
+
+def _clamp_to_land(expanded, geoms, target_name):
+    """Hard invariant: an absorber can ONLY be its own real land plus part of the
+    vanished target — never open sea. So clamp each absorber to
+    base[absorber] UNION target_footprint. This is a provably-correct tightening
+    (it can't remove anything legitimate: a country's land and the swallowed
+    target are exactly what an absorber may contain), and it makes the
+    "absorber swallows the ocean" failure geometrically IMPOSSIBLE regardless of
+    how a given GEOS build partitions or unions the pieces — an ocean point is
+    neither base land nor inside the target, so it can never end up in a feature.
+    Legit far-flung fallback territory (Easter Island, Socotra) is part of the
+    target footprint, so it is preserved."""
+    target = geoms[target_name]
+    out = {}
+    for name, g in expanded.items():
+        allowed = make_valid(unary_union([geoms[name], target]))
+        clamped = make_valid(g.intersection(allowed)).buffer(0)
+        if not clamped.is_empty:
+            out[name] = clamped
+    return out
 
 # tiny fragments of the target, detached from an absorber's real body and far
 # from it, are Voronoi/heal artifacts that get mis-tagged to a distant country

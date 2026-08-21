@@ -23,6 +23,9 @@ public/data/puzzles/*.json
 # Chile: a previously-smeared case (Pitcairn) kept as a demo of the declutter fix.
 !public/data/puzzles/chile.json
 !public/data/puzzles/chile-distorted.json
+# Turkey: the reported Syria-ocean-smear case, kept as a demo of the land clamp.
+!public/data/puzzles/turkey.json
+!public/data/puzzles/turkey-distorted.json
 # The puzzle index is committed now too — the dev picker lists every puzzle from
 # it, and it carries the diffDistorted pointers for the pilot four.
 !public/data/puzzles.json
