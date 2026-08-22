@@ -41,7 +41,7 @@ Outputs land in ./out/ :
     out/puzzles/<slug>.json    per-puzzle diff (removed target + changed absorbers)
 """
 
-import json, math, os, sys, re, hashlib
+import json, math, os, sys, re, hashlib, unicodedata
 import numpy as np
 import shapely
 from shapely.geometry import shape, mapping, MultiPoint, Polygon
@@ -56,14 +56,37 @@ OUT = "out"
 NAME_FIELD = "ADMIN"
 CODE_FIELD = "ADM0_A3"
 
+# Natural Earth's ADMIN field carries some names we present differently. Applied
+# once at load() so every downstream artifact (adjacency, world.geojson,
+# countries.json, puzzles.json targets AND neighbor entries, manifest, slugs)
+# inherits the new name — there is no other place names are minted. Note the
+# source really does spell it "eSwatini" (verified in the ADMIN field), so this
+# corrects a source stylization, not a pipeline typo.
+RENAME = {
+    "eSwatini": "Eswatini",
+    "Ivory Coast": "Côte d'Ivoire",
+    "United Republic of Tanzania": "Tanzania",
+    "Turkey": "Türkiye",
+    "East Timor": "Timor-Leste",
+}
+
+# Antarctica is not rendered at all. Siachen Glacier is rendered (dropping it
+# would punch a ~2000 km2 hole in the Karakoram) but is kept out of ALL game
+# logic — never a puzzle target, never in the guess pool, never a neighbour or
+# absorber — because it is disputed, uninhabited military-line territory
+# (NE TYPE "Indeterminate", SOVEREIGNT "Kashmir"), not a sovereign state. This
+# is a deliberate one-off: contested-but-governed entities (Kosovo, Palestine,
+# Northern Cyprus, Western Sahara) are real NE sovereign/disputed states and stay.
+EXCLUDE_FROM_MAP = {"Antarctica"}
+EXCLUDE_FROM_GAME = {"Antarctica", "Siachen Glacier"}
+
 # ---------------------------------------------------------------- load & index
 def load():
     data = json.load(open(DATA))
     geoms, codes = {}, {}
     for f in data["features"]:
         p = f["properties"]
-        # skip Antarctica & anything without a real sovereign land border game-wise
-        name = p[NAME_FIELD]
+        name = RENAME.get(p[NAME_FIELD], p[NAME_FIELD])  # canonical display name
         g = shape(f["geometry"])
         if not g.is_valid:
             g = g.buffer(0)
@@ -77,7 +100,7 @@ def find_neighbors(geoms, name):
     probe = g.buffer(0.02)  # ~2km fuzz, catches near-touching borders / river gaps
     out = []
     for other, og in geoms.items():
-        if other == name:
+        if other == name or other in EXCLUDE_FROM_GAME:
             continue
         if not probe.intersects(og):
             continue
@@ -178,7 +201,7 @@ def piece_borderers(piece, geoms, exclude):
     pb = piece.boundary
     out = []
     for other, og in geoms.items():
-        if other in exclude:
+        if other in exclude or other in EXCLUDE_FROM_GAME:
             continue
         if not probe.intersects(og):
             continue
@@ -197,7 +220,7 @@ def nearest_country(piece, geoms, exclude, prefer=None, tie_km=150):
     pc = piece.centroid
     ranked = sorted(
         ((_gc_km(pc, og.centroid), other) for other, og in geoms.items()
-         if other not in exclude),
+         if other not in exclude and other not in EXCLUDE_FROM_GAME),
         key=lambda t: t[0],
     )
     shortlist = [name for _, name in ranked[:15]]
@@ -302,7 +325,7 @@ def swallow(geoms, target_name):
     countries bordering THAT piece (nearest-country fallback if none), so
     far-flung territory routes locally and no single projection ever spans
     the target's extremes -- which is what fixes the cross-ocean crashes."""
-    exclude = {target_name}
+    exclude = {target_name} | EXCLUDE_FROM_GAME
     pieces = split_pieces(geoms[target_name])
 
     # candidates per piece; collect the "connected" set (borders some piece)
@@ -469,7 +492,12 @@ def geodesic_area_km2(geom, main_only=True):
     return abs(area) / 1e6
 
 def slug(name):
-    return re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
+    # Transliterate accents first (ô->o, ü->u) so a display name like
+    # "Côte d'Ivoire" / "Türkiye" yields a clean ascii slug ("cote-d-ivoire",
+    # "turkiye") for filenames and ?slug= URLs, not "c-te-d-ivoire". Pure-ascii
+    # names are unaffected.
+    ascii_name = unicodedata.normalize("NFKD", name).encode("ascii", "ignore").decode("ascii")
+    return re.sub(r"[^a-z0-9]+", "-", ascii_name.lower()).strip("-")
 
 # ------------------------------------------------------------------- CLI: candidates
 def cmd_candidates(geoms, codes):
@@ -509,7 +537,7 @@ def build_adjacency(geoms, codes):
     "fully enclosed" from "coastal with one land neighbor"."""
     adjacency = {}
     for name, g in geoms.items():
-        if name == "Antarctica":
+        if name in EXCLUDE_FROM_GAME:
             continue
         nbrs = find_neighbors(geoms, name)
         adjacency[name] = {
@@ -552,7 +580,7 @@ def write_world_base(geoms, codes):
     """The shared, unmodified world -- written once, cached by the client
     across every puzzle. Each puzzle ships only a small diff against this."""
     feats = [feature(name, codes.get(name, ""), g)
-             for name, g in geoms.items() if name != "Antarctica"]
+             for name, g in geoms.items() if name not in EXCLUDE_FROM_MAP]
     fc = {"type": "FeatureCollection", "features": feats}
     with open(f"{OUT}/world.geojson", "w") as fh:
         json.dump(fc, fh, separators=(",", ":"), ensure_ascii=False)
@@ -598,10 +626,11 @@ def build_puzzles(geoms, codes, targets):
     with open(f"{OUT}/puzzles.json", "w") as fh:
         json.dump(puzzles, fh, indent=2, ensure_ascii=False)
 
-    # centroids for every guessable country (land countries only)
+    # centroids for every guessable country (land countries only; excludes
+    # non-sovereign entities like Siachen Glacier from the guess pool)
     countries = []
     for name, g in geoms.items():
-        if name == "Antarctica":
+        if name in EXCLUDE_FROM_GAME:
             continue
         lat, lng = main_centroid(g)
         countries.append({"name": name, "code": codes.get(name, ""),

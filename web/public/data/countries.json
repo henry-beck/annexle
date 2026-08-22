@@ -318,6 +318,12 @@
     "lng": 15.51
   },
   {
+    "name": "Côte d'Ivoire",
+    "code": "CIV",
+    "lat": 7.53,
+    "lng": -5.7
+  },
+  {
     "name": "Democratic Republic of the Congo",
     "code": "COD",
     "lat": -4.06,
@@ -346,12 +352,6 @@
     "code": "DOM",
     "lat": 18.77,
     "lng": -70.12
-  },
-  {
-    "name": "East Timor",
-    "code": "TLS",
-    "lat": -8.93,
-    "lng": 125.7
   },
   {
     "name": "Ecuador",
@@ -388,6 +388,12 @@
     "code": "EST",
     "lat": 58.62,
     "lng": 25.5
+  },
+  {
+    "name": "Eswatini",
+    "code": "SWZ",
+    "lat": -26.57,
+    "lng": 31.45
   },
   {
     "name": "Ethiopia",
@@ -616,12 +622,6 @@
     "code": "ITA",
     "lat": 42.52,
     "lng": 12.67
-  },
-  {
-    "name": "Ivory Coast",
-    "code": "CIV",
-    "lat": 7.53,
-    "lng": -5.7
   },
   {
     "name": "Jamaica",
@@ -1134,12 +1134,6 @@
     "lng": 55.49
   },
   {
-    "name": "Siachen Glacier",
-    "code": "KAS",
-    "lat": 35.41,
-    "lng": 77.26
-  },
-  {
     "name": "Sierra Leone",
     "code": "SLE",
     "lat": 8.45,
@@ -1272,6 +1266,12 @@
     "lng": 70.92
   },
   {
+    "name": "Tanzania",
+    "code": "TZA",
+    "lat": -6.36,
+    "lng": 34.24
+  },
+  {
     "name": "Thailand",
     "code": "THA",
     "lat": 13.02,
@@ -1282,6 +1282,12 @@
     "code": "BHS",
     "lat": 24.73,
     "lng": -78.03
+  },
+  {
+    "name": "Timor-Leste",
+    "code": "TLS",
+    "lat": -8.93,
+    "lng": 125.7
   },
   {
     "name": "Togo",
@@ -1308,12 +1314,6 @@
     "lng": 8.88
   },
   {
-    "name": "Turkey",
-    "code": "TUR",
-    "lat": 38.95,
-    "lng": 35.5
-  },
-  {
     "name": "Turkmenistan",
     "code": "TKM",
     "lat": 38.97,
@@ -1330,6 +1330,12 @@
     "code": "TUV",
     "lat": -8.5,
     "lng": 179.21
+  },
+  {
+    "name": "Türkiye",
+    "code": "TUR",
+    "lat": 38.95,
+    "lng": 35.5
   },
   {
     "name": "Uganda",
@@ -1354,12 +1360,6 @@
     "code": "GBR",
     "lat": 54.35,
     "lng": -1.96
-  },
-  {
-    "name": "United Republic of Tanzania",
-    "code": "TZA",
-    "lat": -6.36,
-    "lng": 34.24
   },
   {
     "name": "United States Virgin Islands",
@@ -1438,11 +1438,5 @@
     "code": "ZWE",
     "lat": -19.01,
     "lng": 29.35
-  },
-  {
-    "name": "eSwatini",
-    "code": "SWZ",
-    "lat": -26.57,
-    "lng": 31.45
   }
 ]
