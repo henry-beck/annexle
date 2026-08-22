@@ -2934,7 +2934,8 @@
       "Syria"
     ],
     "enclosure": 0.324,
-    "diff": "puzzles/turkey.json"
+    "diff": "puzzles/turkey.json",
+    "diffDistorted": "puzzles/turkey-distorted.json"
   },
   {
     "id": 145,
