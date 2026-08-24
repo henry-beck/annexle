@@ -288,15 +288,22 @@ def _voronoi_cells(pts, tags, holeP, step):
 # shared curve, with its endpoints pinned; both adjacent cells are then rebuilt
 # from the same perturbed edge by re-polygonizing. So tripoints stay tripoints,
 # nothing detaches, and the tiling stays gap/overlap-free by construction.
-SEAM_STEP_M = 3000       # densify seams every 3 km before curving
+SEAM_STEP_M = 1500       # densify seams every 1.5 km so high-frequency octaves resolve
 SEAM_MIN_EDGE_M = 25000  # edges shorter than this stay straight (perturbation risky/pointless)
-SEAM_AMP_M = 22000       # peak seam excursion (tuned by eye on the pilot renders)
+SEAM_AMP_M = 32000       # peak seam excursion CAP (the adaptive slope bound usually binds first)
+SEAM_OCTAVES = 4         # octaves of fBm noise -> irregular, non-repeating wander
+SEAM_SLOPE_CAP = 0.9     # max |d(displacement)/d(arclength)|; keeps the curve from folding
 
 def _wiggle_edge(ls, seed_int):
-    """Curve one internal seam edge with a deterministic band-limited sinusoid
-    along its arc length, displaced along the local normal, tapered to zero at
-    both endpoints so the nodes (tripoints / outline-attachment points) do not
-    move. Amplitude is capped below wavelength/2pi so the curve can't self-fold."""
+    """Curve one internal seam edge with deterministic fractional-Brownian noise
+    (a sum of octaves at non-harmonic, randomised frequencies + phases with
+    halving amplitude), displaced along the local normal and tapered to zero at
+    both endpoints so the nodes (tripoints / outline-attachment points) stay
+    pinned. The output reads as irregular, real-border wander rather than a clean
+    repeating wave. Amplitude is bounded two ways: a hard cap (SEAM_AMP_M) and an
+    adaptive slope bound (the actual max gradient of the shape is measured and the
+    amplitude scaled so |slope| <= SEAM_SLOPE_CAP), so no matter how jagged the
+    noise is the curve cannot fold back and self-cross."""
     coords = list(ls.coords)
     if len(coords) < 2 or coords[0] == coords[-1]:
         return ls  # ring or degenerate: leave straight
@@ -305,7 +312,7 @@ def _wiggle_edge(ls, seed_int):
         return ls
     P = np.asarray(shapely.segmentize(ls, SEAM_STEP_M).coords, dtype=float)
     n = len(P)
-    if n < 3:
+    if n < 4:
         return ls
     seg = np.diff(P, axis=0)
     s = np.concatenate([[0.0], np.cumsum(np.hypot(seg[:, 0], seg[:, 1]))])
@@ -313,15 +320,23 @@ def _wiggle_edge(ls, seed_int):
     tl = np.hypot(tang[:, 0], tang[:, 1]); tl[tl < 1e-9] = 1.0
     T = tang / tl[:, None]
     Nrm = np.stack([-T[:, 1], T[:, 0]], axis=1)          # unit left normal
-    lam = float(np.clip(L / 3.0, 60000.0, 250000.0))     # ~3 half-waves per edge
-    amp = min(SEAM_AMP_M, lam / (2 * np.pi) * 0.9)       # no-fold bound
+    lam = float(np.clip(L / 2.2, 60000.0, 250000.0))     # base (largest) wavelength
     rng = np.random.default_rng(seed_int)
-    disp = np.zeros(n); wsum = 0.0
-    for w, lmul in ((1.0, 1.0), (0.5, 1.7)):             # band-limited: lmul>=1 keeps min-lambda=lam
-        disp += w * np.sin(2 * np.pi * s / (lam * lmul) + rng.uniform(0, 2 * np.pi))
-        wsum += w
-    disp = disp / wsum * amp * np.sin(np.pi * s / L)     # taper -> 0 at both ends
-    Pn = P + Nrm * disp[:, None]
+
+    # fBm: octave 0 is the big low-frequency wander; each further octave doubles
+    # frequency (with per-octave jitter so it never repeats) and halves amplitude,
+    # adding finer irregular detail on top.
+    disp = np.zeros(n); ampo = 1.0; wsum = 0.0
+    for o in range(SEAM_OCTAVES):
+        freq = (2.0 ** o) / lam * rng.uniform(0.7, 1.3)  # non-harmonic
+        disp += ampo * np.sin(2 * np.pi * freq * s + rng.uniform(0, 2 * np.pi))
+        wsum += ampo
+        ampo *= 0.5
+    shape = (disp / wsum) * np.sin(np.pi * s / L)        # normalise (peak<=1) + taper -> 0 at ends
+
+    slope = np.abs(np.gradient(shape, s)).max()          # per-unit-amplitude max slope of THIS shape
+    amp = min(SEAM_AMP_M, SEAM_SLOPE_CAP / slope) if slope > 1e-12 else SEAM_AMP_M
+    Pn = P + Nrm * (amp * shape)[:, None]
     Pn[0], Pn[-1] = P[0], P[-1]                          # pin endpoints exactly
     return LineString(Pn)
 
