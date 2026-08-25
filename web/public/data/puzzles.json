@@ -230,7 +230,8 @@
       "Sudan"
     ],
     "enclosure": 1.0,
-    "diff": "puzzles/central-african-republic.json"
+    "diff": "puzzles/central-african-republic.json",
+    "diffDistorted": "puzzles/central-african-republic-distorted.json"
   },
   {
     "id": 12,
@@ -254,7 +255,8 @@
       "Sudan"
     ],
     "enclosure": 1.0,
-    "diff": "puzzles/chad.json"
+    "diff": "puzzles/chad.json",
+    "diffDistorted": "puzzles/chad-distorted.json"
   },
   {
     "id": 13,
@@ -497,7 +499,8 @@
       "Senegal"
     ],
     "enclosure": 1.0,
-    "diff": "puzzles/mali.json"
+    "diff": "puzzles/mali.json",
+    "diffDistorted": "puzzles/mali-distorted.json"
   },
   {
     "id": 25,
@@ -572,7 +575,8 @@
       "Nigeria"
     ],
     "enclosure": 1.0,
-    "diff": "puzzles/niger.json"
+    "diff": "puzzles/niger.json",
+    "diffDistorted": "puzzles/niger-distorted.json"
   },
   {
     "id": 29,
@@ -847,7 +851,8 @@
       "Zimbabwe"
     ],
     "enclosure": 1.0,
-    "diff": "puzzles/zambia.json"
+    "diff": "puzzles/zambia.json",
+    "diffDistorted": "puzzles/zambia-distorted.json"
   },
   {
     "id": 42,
@@ -885,7 +890,8 @@
       "Republic of Serbia"
     ],
     "enclosure": 0.993,
-    "diff": "puzzles/bosnia-and-herzegovina.json"
+    "diff": "puzzles/bosnia-and-herzegovina.json",
+    "diffDistorted": "puzzles/bosnia-and-herzegovina-distorted.json"
   },
   {
     "id": 44,
@@ -915,7 +921,8 @@
       "Zambia"
     ],
     "enclosure": 0.987,
-    "diff": "puzzles/democratic-republic-of-the-congo.json"
+    "diff": "puzzles/democratic-republic-of-the-congo.json",
+    "diffDistorted": "puzzles/democratic-republic-of-the-congo-distorted.json"
   },
   {
     "id": 45,
@@ -937,7 +944,8 @@
       "Syria"
     ],
     "enclosure": 0.987,
-    "diff": "puzzles/jordan.json"
+    "diff": "puzzles/jordan.json",
+    "diffDistorted": "puzzles/jordan-distorted.json"
   },
   {
     "id": 46,
@@ -981,7 +989,8 @@
       "Türkiye"
     ],
     "enclosure": 0.981,
-    "diff": "puzzles/iraq.json"
+    "diff": "puzzles/iraq.json",
+    "diffDistorted": "puzzles/iraq-distorted.json"
   },
   {
     "id": 48,
@@ -1081,7 +1090,8 @@
       "Türkiye"
     ],
     "enclosure": 0.931,
-    "diff": "puzzles/syria.json"
+    "diff": "puzzles/syria.json",
+    "diffDistorted": "puzzles/syria-distorted.json"
   },
   {
     "id": 53,
@@ -1128,7 +1138,8 @@
       "South Sudan"
     ],
     "enclosure": 0.92,
-    "diff": "puzzles/sudan.json"
+    "diff": "puzzles/sudan.json",
+    "diffDistorted": "puzzles/sudan-distorted.json"
   },
   {
     "id": 55,
@@ -1188,7 +1199,8 @@
       "Ukraine"
     ],
     "enclosure": 0.895,
-    "diff": "puzzles/romania.json"
+    "diff": "puzzles/romania.json",
+    "diffDistorted": "puzzles/romania-distorted.json"
   },
   {
     "id": 58,
@@ -1212,7 +1224,8 @@
       "Republic of the Congo"
     ],
     "enclosure": 0.888,
-    "diff": "puzzles/cameroon.json"
+    "diff": "puzzles/cameroon.json",
+    "diffDistorted": "puzzles/cameroon-distorted.json"
   },
   {
     "id": 59,
@@ -1236,7 +1249,8 @@
       "Sierra Leone"
     ],
     "enclosure": 0.877,
-    "diff": "puzzles/guinea.json"
+    "diff": "puzzles/guinea.json",
+    "diffDistorted": "puzzles/guinea-distorted.json"
   },
   {
     "id": 60,
@@ -1258,7 +1272,8 @@
       "Uzbekistan"
     ],
     "enclosure": 0.877,
-    "diff": "puzzles/kazakhstan.json"
+    "diff": "puzzles/kazakhstan.json",
+    "diffDistorted": "puzzles/kazakhstan-distorted.json"
   },
   {
     "id": 61,
@@ -1322,7 +1337,8 @@
       "Western Sahara"
     ],
     "enclosure": 0.858,
-    "diff": "puzzles/mauritania.json"
+    "diff": "puzzles/mauritania.json",
+    "diffDistorted": "puzzles/mauritania-distorted.json"
   },
   {
     "id": 64,
@@ -1342,7 +1358,8 @@
       "Iran"
     ],
     "enclosure": 0.85,
-    "diff": "puzzles/pakistan.json"
+    "diff": "puzzles/pakistan.json",
+    "diffDistorted": "puzzles/pakistan-distorted.json"
   },
   {
     "id": 65,
@@ -1412,7 +1429,8 @@
       "Western Sahara"
     ],
     "enclosure": 0.829,
-    "diff": "puzzles/algeria.json"
+    "diff": "puzzles/algeria.json",
+    "diffDistorted": "puzzles/algeria-distorted.json"
   },
   {
     "id": 68,
@@ -1518,7 +1536,8 @@
       "Ukraine"
     ],
     "enclosure": 0.776,
-    "diff": "puzzles/poland.json"
+    "diff": "puzzles/poland.json",
+    "diffDistorted": "puzzles/poland-distorted.json"
   },
   {
     "id": 73,
@@ -1602,7 +1621,8 @@
       "Slovakia"
     ],
     "enclosure": 0.753,
-    "diff": "puzzles/ukraine.json"
+    "diff": "puzzles/ukraine.json",
+    "diffDistorted": "puzzles/ukraine-distorted.json"
   },
   {
     "id": 77,
@@ -1644,7 +1664,8 @@
       "Zambia"
     ],
     "enclosure": 0.745,
-    "diff": "puzzles/angola.json"
+    "diff": "puzzles/angola.json",
+    "diffDistorted": "puzzles/angola-distorted.json"
   },
   {
     "id": 79,
@@ -1672,7 +1693,8 @@
       "Zambia"
     ],
     "enclosure": 0.742,
-    "diff": "puzzles/tanzania.json"
+    "diff": "puzzles/tanzania.json",
+    "diffDistorted": "puzzles/tanzania-distorted.json"
   },
   {
     "id": 80,
@@ -1692,7 +1714,8 @@
       "Uzbekistan"
     ],
     "enclosure": 0.737,
-    "diff": "puzzles/turkmenistan.json"
+    "diff": "puzzles/turkmenistan.json",
+    "diffDistorted": "puzzles/turkmenistan-distorted.json"
   },
   {
     "id": 81,
@@ -1712,7 +1735,8 @@
       "Niger"
     ],
     "enclosure": 0.736,
-    "diff": "puzzles/nigeria.json"
+    "diff": "puzzles/nigeria.json",
+    "diffDistorted": "puzzles/nigeria-distorted.json"
   },
   {
     "id": 82,
@@ -1750,7 +1774,8 @@
       "Zambia"
     ],
     "enclosure": 0.727,
-    "diff": "puzzles/namibia.json"
+    "diff": "puzzles/namibia.json",
+    "diffDistorted": "puzzles/namibia-distorted.json"
   },
   {
     "id": 84,
@@ -1808,7 +1833,8 @@
       "Tunisia"
     ],
     "enclosure": 0.699,
-    "diff": "puzzles/libya.json"
+    "diff": "puzzles/libya.json",
+    "diffDistorted": "puzzles/libya-distorted.json"
   },
   {
     "id": 87,
@@ -1830,7 +1856,8 @@
       "Venezuela"
     ],
     "enclosure": 0.694,
-    "diff": "puzzles/colombia.json"
+    "diff": "puzzles/colombia.json",
+    "diffDistorted": "puzzles/colombia-distorted.json"
   },
   {
     "id": 88,
@@ -1874,7 +1901,8 @@
       "Vietnam"
     ],
     "enclosure": 0.681,
-    "diff": "puzzles/china.json"
+    "diff": "puzzles/china.json",
+    "diffDistorted": "puzzles/china-distorted.json"
   },
   {
     "id": 89,
@@ -2026,7 +2054,8 @@
       "Türkiye"
     ],
     "enclosure": 0.63,
-    "diff": "puzzles/iran.json"
+    "diff": "puzzles/iran.json",
+    "diffDistorted": "puzzles/iran-distorted.json"
   },
   {
     "id": 97,
@@ -2056,7 +2085,8 @@
       "Switzerland"
     ],
     "enclosure": 0.627,
-    "diff": "puzzles/germany.json"
+    "diff": "puzzles/germany.json",
+    "diffDistorted": "puzzles/germany-distorted.json"
   },
   {
     "id": 98,
@@ -2100,7 +2130,8 @@
       "Yemen"
     ],
     "enclosure": 0.606,
-    "diff": "puzzles/saudi-arabia.json"
+    "diff": "puzzles/saudi-arabia.json",
+    "diffDistorted": "puzzles/saudi-arabia-distorted.json"
   },
   {
     "id": 100,
@@ -2158,7 +2189,8 @@
       "Myanmar"
     ],
     "enclosure": 0.597,
-    "diff": "puzzles/thailand.json"
+    "diff": "puzzles/thailand.json",
+    "diffDistorted": "puzzles/thailand-distorted.json"
   },
   {
     "id": 103,
@@ -2205,7 +2237,8 @@
       "Uruguay"
     ],
     "enclosure": 0.588,
-    "diff": "puzzles/argentina.json"
+    "diff": "puzzles/argentina.json",
+    "diffDistorted": "puzzles/argentina-distorted.json"
   },
   {
     "id": 105,
@@ -2346,7 +2379,8 @@
       "Pakistan"
     ],
     "enclosure": 0.565,
-    "diff": "puzzles/india.json"
+    "diff": "puzzles/india.json",
+    "diffDistorted": "puzzles/india-distorted.json"
   },
   {
     "id": 113,
@@ -2384,7 +2418,8 @@
       "Thailand"
     ],
     "enclosure": 0.538,
-    "diff": "puzzles/myanmar.json"
+    "diff": "puzzles/myanmar.json",
+    "diffDistorted": "puzzles/myanmar-distorted.json"
   },
   {
     "id": 115,
@@ -2402,7 +2437,8 @@
       "Guyana"
     ],
     "enclosure": 0.536,
-    "diff": "puzzles/venezuela.json"
+    "diff": "puzzles/venezuela.json",
+    "diffDistorted": "puzzles/venezuela-distorted.json"
   },
   {
     "id": 116,
@@ -2436,7 +2472,8 @@
       "Nicaragua"
     ],
     "enclosure": 0.525,
-    "diff": "puzzles/honduras.json"
+    "diff": "puzzles/honduras.json",
+    "diffDistorted": "puzzles/honduras-distorted.json"
   },
   {
     "id": 118,
@@ -2518,7 +2555,8 @@
       "Venezuela"
     ],
     "enclosure": 0.49,
-    "diff": "puzzles/brazil.json"
+    "diff": "puzzles/brazil.json",
+    "diffDistorted": "puzzles/brazil-distorted.json"
   },
   {
     "id": 122,
@@ -2554,7 +2592,8 @@
       "Sudan"
     ],
     "enclosure": 0.475,
-    "diff": "puzzles/egypt.json"
+    "diff": "puzzles/egypt.json",
+    "diffDistorted": "puzzles/egypt-distorted.json"
   },
   {
     "id": 124,
@@ -2576,7 +2615,8 @@
       "Slovenia"
     ],
     "enclosure": 0.462,
-    "diff": "puzzles/croatia.json"
+    "diff": "puzzles/croatia.json",
+    "diffDistorted": "puzzles/croatia-distorted.json"
   },
   {
     "id": 125,
@@ -2744,7 +2784,8 @@
       "Switzerland"
     ],
     "enclosure": 0.406,
-    "diff": "puzzles/france.json"
+    "diff": "puzzles/france.json",
+    "diffDistorted": "puzzles/france-distorted.json"
   },
   {
     "id": 134,
@@ -3006,7 +3047,8 @@
       "Switzerland"
     ],
     "enclosure": 0.236,
-    "diff": "puzzles/italy.json"
+    "diff": "puzzles/italy.json",
+    "diffDistorted": "puzzles/italy-distorted.json"
   },
   {
     "id": 149,
@@ -3110,7 +3152,8 @@
       "United States of America"
     ],
     "enclosure": 0.172,
-    "diff": "puzzles/russia.json"
+    "diff": "puzzles/russia.json",
+    "diffDistorted": "puzzles/russia-distorted.json"
   },
   {
     "id": 154,
@@ -3186,7 +3229,8 @@
       "Türkiye"
     ],
     "enclosure": 0.126,
-    "diff": "puzzles/greece.json"
+    "diff": "puzzles/greece.json",
+    "diffDistorted": "puzzles/greece-distorted.json"
   },
   {
     "id": 159,
