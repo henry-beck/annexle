@@ -80,6 +80,23 @@ RENAME = {
 EXCLUDE_FROM_MAP = {"Antarctica"}
 EXCLUDE_FROM_GAME = {"Antarctica", "Siachen Glacier"}
 
+# Every puzzle ships BOTH a straight (Voronoi) and an organic (curved-seam) diff.
+# These slugs default to ORGANIC for real players (no ?dev); every other puzzle
+# defaults to STRAIGHT. Editing this set + rebuilding is the only step needed to
+# promote more puzzles to organic-by-default — both variants already exist, so it
+# just flips which one `<slug>.json` copies and the entry's defaultVariant.
+# Distortion is generated only for these slugs (stacked on the organic base).
+ORGANIC_DEFAULT_SLUGS = {
+    "chad", "central-african-republic", "mali", "niger", "zambia",
+    "bosnia-and-herzegovina", "democratic-republic-of-the-congo", "jordan",
+    "iraq", "syria", "sudan", "romania", "cameroon", "guinea", "kazakhstan",
+    "pakistan", "mauritania", "algeria", "poland", "ukraine", "angola",
+    "tanzania", "turkmenistan", "nigeria", "namibia", "libya", "china",
+    "colombia", "iran", "germany", "saudi-arabia", "thailand", "argentina",
+    "india", "myanmar", "venezuela", "honduras", "brazil", "egypt", "croatia",
+    "france", "turkiye", "italy", "russia", "greece",
+}
+
 # ---------------------------------------------------------------- load & index
 def load():
     data = json.load(open(DATA))
@@ -717,6 +734,13 @@ def build_puzzles(geoms, codes, targets):
     os.makedirs(f"{OUT}/puzzles", exist_ok=True)
     nbase = write_world_base(geoms, codes)
 
+    def _diff(name, expanded):
+        return {"target": name, "removed": name,
+                "changed": [feature(a, codes.get(a, ""), expanded[a]) for a in sorted(expanded)]}
+    def _write(path, obj):
+        with open(path, "w") as fh:
+            json.dump(obj, fh, separators=(",", ":"), ensure_ascii=False)
+
     puzzles = []
     for i, name in enumerate(targets):
         if name not in geoms:
@@ -726,29 +750,37 @@ def build_puzzles(geoms, codes, targets):
         if not nbrs:
             print(f"  !! '{name}' has no land neighbors, skipping")
             continue
-        expanded = swallow(geoms, name)
+        # both variants: straight Voronoi seams and organic (curved) seams
+        straight = swallow(geoms, name, organic=False)
+        organic = swallow(geoms, name, organic=True)
         # invariant: the swallowed target's name must appear on NO feature.
-        assert name not in expanded, f"target {name!r} absorbed itself"
-        absorbers = sorted(expanded)
+        assert name not in straight and name not in organic, f"target {name!r} absorbed itself"
         s = slug(name)
-        diff = {
-            "target": name,
-            "removed": name,   # client deletes this feature from the base
-            "changed": [feature(a, codes.get(a, ""), expanded[a]) for a in absorbers],
-        }
-        with open(f"{OUT}/puzzles/{s}.json", "w") as fh:
-            json.dump(diff, fh, separators=(",", ":"), ensure_ascii=False)
+        organic_default = s in ORGANIC_DEFAULT_SLUGS
+        # <slug>.json IS the default (what the daily, non-dev client fetches) AND
+        # doubles as the default-matching variant, so we only write two base
+        # files per puzzle, not three — the other variant gets a suffixed file.
+        _write(f"{OUT}/puzzles/{s}.json", _diff(name, organic if organic_default else straight))
+        if organic_default:
+            _write(f"{OUT}/puzzles/{s}-straight.json", _diff(name, straight))
+            diff_straight, diff_organic = f"puzzles/{s}-straight.json", f"puzzles/{s}.json"
+        else:
+            _write(f"{OUT}/puzzles/{s}-organic.json", _diff(name, organic))
+            diff_straight, diff_organic = f"puzzles/{s}.json", f"puzzles/{s}-organic.json"
         puzzles.append({
             "id": i + 1,
             "slug": s,
             "target": name,
             "targetCode": codes.get(name, ""),
             "neighbors": nbrs,
-            "absorbers": absorbers,
+            "absorbers": sorted(organic),
             "enclosure": round(enclosure(geoms, name, nbrs), 3),
-            "diff": f"puzzles/{s}.json",
+            "diff": f"puzzles/{s}.json",                    # default (daily path)
+            "diffStraight": diff_straight,
+            "diffOrganic": diff_organic,
+            "defaultVariant": "organic" if organic_default else "straight",
         })
-        print(f"  ok  {name:22} absorbers={len(absorbers):2} enclosure={puzzles[-1]['enclosure']}")
+        print(f"  ok  {name:22} absorbers={len(sorted(organic)):2} default={'organic' if organic_default else 'straight'}")
     with open(f"{OUT}/puzzles.json", "w") as fh:
         json.dump(puzzles, fh, indent=2, ensure_ascii=False)
 

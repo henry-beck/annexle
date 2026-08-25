@@ -29,7 +29,7 @@ export default function DevApp() {
   const [slug, setSlug] = useState(null);
   const [query, setQuery] = useState("");
   const [view, setView] = useState("flat"); // "flat" | "globe"
-  const [variantKey, setVariantKey] = useState("swallow");
+  const [variantKey, setVariantKey] = useState(null); // null -> puzzle's default
 
   useEffect(() => {
     let cancelled = false;
@@ -67,7 +67,10 @@ export default function DevApp() {
 
   const entry = useMemo(() => puzzles.find((p) => p.slug === slug) || null, [puzzles, slug]);
   const variants = useMemo(() => (entry ? listVariants(entry) : []), [entry]);
-  const variant = variants.find((v) => v.key === variantKey) || variants[0] || null;
+  // null variantKey means "show this puzzle's default variant" (organic for the
+  // 44, straight otherwise) until the user explicitly toggles.
+  const effectiveKey = variantKey || entry?.defaultVariant || variants[0]?.key;
+  const variant = variants.find((v) => v.key === effectiveKey) || variants[0] || null;
   const globe = view === "globe";
 
   if (data.status === "loading") return <Shell><Muted>Loading dev index…</Muted></Shell>;
@@ -122,7 +125,7 @@ export default function DevApp() {
                 key={p.slug}
                 onClick={() => {
                   setSlug(p.slug);
-                  setVariantKey("swallow");
+                  setVariantKey(null); // fall back to the new puzzle's default variant
                 }}
                 style={{
                   display: "block",
@@ -163,7 +166,7 @@ export default function DevApp() {
                 {variants.length > 1 && (
                   <Toggle
                     options={variants.map((v) => [v.key, v.label])}
-                    value={variant?.key}
+                    value={effectiveKey}
                     onChange={setVariantKey}
                   />
                 )}
