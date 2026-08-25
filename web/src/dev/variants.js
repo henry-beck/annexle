@@ -1,32 +1,23 @@
 // Geometry variants of a single puzzle.
 //
-// Today every puzzle has exactly one variant: the current per-piece swallow,
-// whose diff lives at `puzzles/<slug>.json` (the `diff` field of a puzzles.json
-// entry). This helper is the single place that knows how a puzzle maps to its
-// diff URL(s), so adding the planned distorted-mode variant later is additive:
-// return a second { key:"distorted", … } entry here and every consumer (the dev
-// picker's variant toggle, a future side-by-side A/B view) picks it up without
-// changing — no code assumes a slug owns exactly one diff.
+// Every puzzle ships two seam-style variants — straight (Voronoi) and organic
+// (curved seams) — at `diffStraight` / `diffOrganic`. Puzzles the pipeline built
+// distortion for also carry `diffDistorted` (stacked on the organic base). This
+// helper is the single place that maps a puzzles.json entry to its variant URLs;
+// the dev picker's toggle renders whatever it returns, so the 44 organic-default
+// puzzles show Straight/Organic/Distorted and every other puzzle shows
+// Straight/Organic automatically. `entry.defaultVariant` names which one the
+// daily (non-dev) client serves at `<slug>.json`.
 const DATA_ROOT = import.meta.env.BASE_URL + "data";
 
 export function listVariants(entry) {
+  const url = (p) => `${DATA_ROOT}/${p}`;
   const variants = [
-    {
-      key: "swallow",
-      label: "Current",
-      // entry.diff is a path relative to the data root, e.g. "puzzles/x.json".
-      diffUrl: `${DATA_ROOT}/${entry.diff}`,
-    },
+    { key: "straight", label: "Straight", diffUrl: url(entry.diffStraight || entry.diff) },
+    { key: "organic", label: "Organic", diffUrl: url(entry.diffOrganic || entry.diff) },
   ];
-  // The distributed-distortion variant, present only on puzzles the pipeline
-  // has built it for (build-distorted writes diffDistorted into the index).
-  // Its presence is what makes the dev picker's variant toggle appear.
   if (entry.diffDistorted) {
-    variants.push({
-      key: "distorted",
-      label: "Distorted",
-      diffUrl: `${DATA_ROOT}/${entry.diffDistorted}`,
-    });
+    variants.push({ key: "distorted", label: "Distorted", diffUrl: url(entry.diffDistorted) });
   }
   return variants;
 }
