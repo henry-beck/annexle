@@ -44,8 +44,8 @@ Outputs land in ./out/ :
 import json, math, os, sys, re, hashlib, unicodedata
 import numpy as np
 import shapely
-from shapely.geometry import shape, mapping, MultiPoint, Polygon
-from shapely.ops import unary_union, voronoi_diagram, transform
+from shapely.geometry import shape, mapping, MultiPoint, Polygon, LineString
+from shapely.ops import unary_union, voronoi_diagram, transform, linemerge, polygonize
 from shapely import make_valid, set_precision
 from shapely.errors import GEOSException
 from pyproj import Transformer, Geod
@@ -279,10 +279,128 @@ def _voronoi_cells(pts, tags, holeP, step):
             continue
     return None
 
-def _voronoi_slices(holeP, candP, step=6000, reach=70000):
+# ---------------------------------------------------- organic seam perturbation
+# The Voronoi partition draws straight-line seams meeting at sharp tripoints,
+# which reads as an artificial diagram. We curve the INTERNAL seams (leaving the
+# piece outline / silhouette untouched) so borders wander like real ones. The
+# seams are treated as a GRAPH: each internal edge (a maximal run between nodes —
+# tripoints, or where a seam meets the piece outline) is perturbed ONCE, as a
+# shared curve, with its endpoints pinned; both adjacent cells are then rebuilt
+# from the same perturbed edge by re-polygonizing. So tripoints stay tripoints,
+# nothing detaches, and the tiling stays gap/overlap-free by construction.
+SEAM_STEP_M = 1500       # densify seams every 1.5 km so high-frequency octaves resolve
+SEAM_MIN_EDGE_M = 25000  # edges shorter than this stay straight (perturbation risky/pointless)
+SEAM_AMP_M = 32000       # peak seam excursion CAP (the adaptive slope bound usually binds first)
+SEAM_OCTAVES = 4         # octaves of fBm noise -> irregular, non-repeating wander
+SEAM_SLOPE_CAP = 0.9     # max |d(displacement)/d(arclength)|; keeps the curve from folding
+
+def _wiggle_edge(ls, seed_int):
+    """Curve one internal seam edge with deterministic fractional-Brownian noise
+    (a sum of octaves at non-harmonic, randomised frequencies + phases with
+    halving amplitude), displaced along the local normal and tapered to zero at
+    both endpoints so the nodes (tripoints / outline-attachment points) stay
+    pinned. The output reads as irregular, real-border wander rather than a clean
+    repeating wave. Amplitude is bounded two ways: a hard cap (SEAM_AMP_M) and an
+    adaptive slope bound (the actual max gradient of the shape is measured and the
+    amplitude scaled so |slope| <= SEAM_SLOPE_CAP), so no matter how jagged the
+    noise is the curve cannot fold back and self-cross."""
+    coords = list(ls.coords)
+    if len(coords) < 2 or coords[0] == coords[-1]:
+        return ls  # ring or degenerate: leave straight
+    L = ls.length
+    if L < SEAM_MIN_EDGE_M:
+        return ls
+    P = np.asarray(shapely.segmentize(ls, SEAM_STEP_M).coords, dtype=float)
+    n = len(P)
+    if n < 4:
+        return ls
+    seg = np.diff(P, axis=0)
+    s = np.concatenate([[0.0], np.cumsum(np.hypot(seg[:, 0], seg[:, 1]))])
+    tang = np.gradient(P, axis=0)
+    tl = np.hypot(tang[:, 0], tang[:, 1]); tl[tl < 1e-9] = 1.0
+    T = tang / tl[:, None]
+    Nrm = np.stack([-T[:, 1], T[:, 0]], axis=1)          # unit left normal
+    lam = float(np.clip(L / 2.2, 60000.0, 250000.0))     # base (largest) wavelength
+    rng = np.random.default_rng(seed_int)
+
+    # fBm: octave 0 is the big low-frequency wander; each further octave doubles
+    # frequency (with per-octave jitter so it never repeats) and halves amplitude,
+    # adding finer irregular detail on top.
+    disp = np.zeros(n); ampo = 1.0; wsum = 0.0
+    for o in range(SEAM_OCTAVES):
+        freq = (2.0 ** o) / lam * rng.uniform(0.7, 1.3)  # non-harmonic
+        disp += ampo * np.sin(2 * np.pi * freq * s + rng.uniform(0, 2 * np.pi))
+        wsum += ampo
+        ampo *= 0.5
+    shape = (disp / wsum) * np.sin(np.pi * s / L)        # normalise (peak<=1) + taper -> 0 at ends
+
+    slope = np.abs(np.gradient(shape, s)).max()          # per-unit-amplitude max slope of THIS shape
+    amp = min(SEAM_AMP_M, SEAM_SLOPE_CAP / slope) if slope > 1e-12 else SEAM_AMP_M
+    Pn = P + Nrm * (amp * shape)[:, None]
+    Pn[0], Pn[-1] = P[0], P[-1]                          # pin endpoints exactly
+    return LineString(Pn)
+
+def _organic_seams(slices, holeP, seed):
+    """Given Voronoi `slices` (name -> projected polygon) that tile `holeP`,
+    curve their shared internal seams. Returns a new name -> polygon dict that
+    still tiles `holeP` exactly.
+
+    Method (robust polygon booleans, no polygonize-from-linework): every internal
+    seam is a maximal edge between nodes (tripoints / where it meets the outline).
+    Curve each edge ONCE; the straight edge S and its curved version W share
+    endpoints, so S+reverse(W) closes a thin 'ribbon' lens. Where W bulged into
+    B's side, that lens area moves from B to A; where it bulged into A, from A to
+    B. Since the taper pins endpoints (incl. tripoints), ribbons pinch to zero
+    width at every node and never overlap, so swapping them keeps the tiling
+    exact, keeps tripoints together, and leaves holeP.boundary untouched."""
+    names = [n for n in slices if not slices[n].is_empty]
+    if len(names) < 2:
+        return slices
+    # internal edges = maximal runs of the noded cell-boundary network that are
+    # NOT on the piece outline (holeP.boundary).
+    merged = linemerge(unary_union([slices[n].boundary for n in names]))
+    edges = list(merged.geoms) if merged.geom_type.startswith("Multi") else [merged]
+    outer = holeP.boundary.buffer(1.0)
+    inner = [e for e in edges if not outer.contains(e)]
+    if not inner:
+        return slices
+    seed_int = int.from_bytes(hashlib.sha256(seed.encode()).digest()[:8], "big")
+
+    new = {n: slices[n] for n in names}
+    for k, e in enumerate(inner):
+        # the two cells this edge separates
+        adj = [n for n in names if slices[n].boundary.buffer(2.0).contains(e)]
+        if len(adj) != 2:
+            continue
+        A, B = adj
+        W = _wiggle_edge(e, seed_int + k)
+        if W is e or list(W.coords) == list(e.coords):
+            continue
+        ring = list(e.coords) + list(W.coords)[::-1]
+        lens = make_valid(Polygon(ring)).buffer(0)
+        if lens.is_empty:
+            continue
+        gain_A = lens.intersection(slices[B])   # lens area on B's straight side -> A
+        gain_B = lens.intersection(slices[A])   # lens area on A's straight side -> B
+        new[A] = make_valid(new[A].union(gain_A).difference(gain_B))
+        new[B] = make_valid(new[B].union(gain_B).difference(gain_A))
+
+    result = {}
+    for n, g in new.items():
+        g = make_valid(g).intersection(holeP)
+        if not g.is_empty:
+            result[n] = g
+    # safety net: if booleans dropped or double-counted area, keep the straight
+    # partition rather than ship a hole/overlap.
+    if abs(unary_union(list(result.values())).area - holeP.area) > holeP.area * 1e-4:
+        return slices
+    return result
+
+def _voronoi_slices(holeP, candP, step=6000, reach=70000, seed=None):
     """Partition projected piece `holeP` among projected candidate geoms
     `candP` (name -> geom) by a Voronoi diagram of densified candidate
-    boundary points. Returns name -> projected slice geometry."""
+    boundary points. Returns name -> projected slice geometry. When `seed` is
+    given, the internal seams are curved (organic borders) before returning."""
     near = holeP.buffer(reach)
     pts, tags = [], []
     for name, g in candP.items():
@@ -315,16 +433,22 @@ def _voronoi_slices(holeP, candP, step=6000, reach=70000):
             cc = cell.centroid
             tag = tags[min(range(len(pts)), key=lambda i: cc.distance(pts[i]))]
         slices[tag].append(sl)
-    return {name: unary_union(ss) for name, ss in slices.items() if ss}
+    out = {name: unary_union(ss) for name, ss in slices.items() if ss}
+    if seed is not None:
+        out = _organic_seams(out, holeP, seed)
+    return out
 
 # ------------------------------------------------------------------- the swallow
-def swallow(geoms, target_name):
+def swallow(geoms, target_name, organic=True):
     """Per-piece swallow. Returns {country_name -> new lon/lat geometry}
     for every country whose shape changed (the absorbers); the target is
     not a key. Each disconnected piece of the target is absorbed only by
     countries bordering THAT piece (nearest-country fallback if none), so
     far-flung territory routes locally and no single projection ever spans
-    the target's extremes -- which is what fixes the cross-ocean crashes."""
+    the target's extremes -- which is what fixes the cross-ocean crashes.
+
+    `organic` curves the internal partition seams (default on); pass False for
+    the straight-line Voronoi partition (before/after comparison)."""
     exclude = {target_name} | EXCLUDE_FROM_GAME
     pieces = split_pieces(geoms[target_name])
 
@@ -333,8 +457,9 @@ def swallow(geoms, target_name):
     piece_borders = [piece_borderers(p, geoms, exclude) for p in pieces]
     connected = set().union(*piece_borders) if piece_borders else set()
 
+    seed_base = slug(target_name)
     absorbed = {}  # absorber name -> list of lon/lat slice geoms
-    for piece, borders in zip(pieces, piece_borders):
+    for pi, (piece, borders) in enumerate(zip(pieces, piece_borders)):
         cands = borders
         if not cands:
             nb = nearest_country(piece, geoms, exclude, prefer=connected)
@@ -346,7 +471,8 @@ def swallow(geoms, target_name):
             continue
         fwd, inv = local_proj(piece)
         holeP = fwd(piece)
-        for name, projslice in _voronoi_slices(holeP, {c: fwd(geoms[c]) for c in cands}).items():
+        seed = f"{seed_base}:{pi}" if organic else None
+        for name, projslice in _voronoi_slices(holeP, {c: fwd(geoms[c]) for c in cands}, seed=seed).items():
             absorbed.setdefault(name, []).append(inv(projslice))
 
     expanded = {}
