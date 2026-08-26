@@ -57,9 +57,11 @@ export default function FlatMap({ fc, width, height, colors = null }) {
               data-name={s.name}
               d={s.d}
               className="country"
-              // dev distinct-country coloring: an explicit per-feature fill
-              // overrides the uniform .country fill; absent in production.
-              fill={colors ? colors.get(s.name) || "var(--land)" : undefined}
+              // dev distinct-country coloring: an INLINE style fill, which
+              // outranks the `.country { fill }` author rule in the cascade (a
+              // presentation `fill` attribute would not — the class rule wins).
+              // Absent in production, so the daily map keeps its uniform fill.
+              style={colors ? { fill: colors.get(s.name) || "var(--land)" } : undefined}
               onMouseEnter={() => setHover((h) => ({ ...h, name: s.name }))}
               onMouseMove={(e) => {
                 const r = svgRef.current.getBoundingClientRect();
