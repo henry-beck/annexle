@@ -763,6 +763,49 @@ def feature(name, code, geom):
             "properties": {"name": name, "code": code},
             "geometry": mapping(quantize(geom))}
 
+# ---- structural no-ocean guard (single emit chokepoint for every variant) ----
+_LAND_UNION = None
+def land_union(geoms):
+    """Union of every real country's land, built once and cached. It's the
+    reference an emitted puzzle feature is clipped against so it can never
+    contain open ocean — a country's own land plus the swallowed target's land
+    are all inside it, only sea is outside."""
+    global _LAND_UNION
+    if _LAND_UNION is None:
+        # quantize to the SAME grid the base map (world.geojson) is emitted on,
+        # so a clipped coastline aligns vertex-for-vertex with the rendered land
+        # and leaves no mismatch fringe against it.
+        _LAND_UNION = unary_union([quantize(g) for g in geoms.values()]).buffer(0)
+    return _LAND_UNION
+
+# Only re-clip a feature whose open-ocean coverage exceeds this. Clean features
+# sit at <5 km^2 of coastal quantization residue (measured), real smears are
+# ~10^6 km^2, so any threshold in between is safe; keeping it means a clean
+# feature passes through byte-for-byte instead of being re-noded by the boolean.
+CLIP_OCEAN_MIN_KM2 = 25.0
+
+def clip_ocean(geom, geoms):
+    over = geom.difference(land_union(geoms))
+    if over.is_empty or geodesic_area_km2(over, main_only=False) < CLIP_OCEAN_MIN_KM2:
+        return geom
+    return make_valid(geom.intersection(land_union(geoms))).buffer(0)
+
+def emit_diff(target_name, expanded, geoms, codes):
+    """THE single chokepoint every puzzle-diff variant is built through. Clips
+    each absorber to the land union and drops degenerate needle slivers HERE, at
+    emit — so the invariants "no feature contains open ocean" and "no d3 winding
+    blow-up" hold for straight, organic, distorted, and any FUTURE generation
+    path, regardless of what produced the geometry or whether an earlier clamp
+    ran. This is what makes them structural rather than remembered per path:
+    geometry produced AFTER some earlier clamp (the organic and distort warps
+    both run after swallow's _clamp_to_land) still cannot ship ocean, because
+    clipping is the last thing that happens before serialization."""
+    clipped = {n: clip_ocean(g, geoms) for n, g in expanded.items()}
+    clipped = _drop_needle_slivers(clipped, geoms)
+    return {"target": target_name, "removed": target_name,
+            "changed": [feature(a, codes.get(a, ""), clipped[a])
+                        for a in sorted(clipped) if not clipped[a].is_empty]}
+
 def write_world_base(geoms, codes):
     """The shared, unmodified world -- written once, cached by the client
     across every puzzle. Each puzzle ships only a small diff against this."""
@@ -779,8 +822,7 @@ def build_puzzles(geoms, codes, targets):
     nbase = write_world_base(geoms, codes)
 
     def _diff(name, expanded):
-        return {"target": name, "removed": name,
-                "changed": [feature(a, codes.get(a, ""), expanded[a]) for a in sorted(expanded)]}
+        return emit_diff(name, expanded, geoms, codes)  # clip-ocean + de-needle at emit
     def _write(path, obj):
         with open(path, "w") as fh:
             json.dump(obj, fh, separators=(",", ":"), ensure_ascii=False)
@@ -1131,12 +1173,9 @@ def build_distorted_puzzles(geoms, codes, targets, **kw):
         changed = distort(geoms, name, **kw)
         assert name not in changed, f"target {name!r} present in distorted output"
         s = slug(name)
-        absorbers = sorted(changed)
-        diff = {
-            "target": name,
-            "removed": name,
-            "changed": [feature(a, codes.get(a, ""), changed[a]) for a in absorbers],
-        }
+        # same emit chokepoint as the ordinary variants: clip-ocean + de-needle,
+        # so the distort warp (which runs after swallow's clamp) can't ship ocean.
+        diff = emit_diff(name, changed, geoms, codes)
         with open(f"{OUT}/puzzles/{s}-distorted.json", "w") as fh:
             json.dump(diff, fh, separators=(",", ":"), ensure_ascii=False)
         if s in by_slug:
