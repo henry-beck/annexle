@@ -81,21 +81,11 @@ EXCLUDE_FROM_MAP = {"Antarctica"}
 EXCLUDE_FROM_GAME = {"Antarctica", "Siachen Glacier"}
 
 # Every puzzle ships BOTH a straight (Voronoi) and an organic (curved-seam) diff.
-# These slugs default to ORGANIC for real players (no ?dev); every other puzzle
-# defaults to STRAIGHT. Editing this set + rebuilding is the only step needed to
-# promote more puzzles to organic-by-default — both variants already exist, so it
-# just flips which one `<slug>.json` copies and the entry's defaultVariant.
-# Distortion is generated only for these slugs (stacked on the organic base).
-ORGANIC_DEFAULT_SLUGS = {
-    "chad", "central-african-republic", "mali", "niger", "zambia",
-    "bosnia-and-herzegovina", "democratic-republic-of-the-congo", "jordan",
-    "iraq", "syria", "sudan", "romania", "cameroon", "guinea", "kazakhstan",
-    "pakistan", "mauritania", "algeria", "poland", "ukraine", "angola",
-    "tanzania", "turkmenistan", "nigeria", "namibia", "libya", "china",
-    "colombia", "iran", "germany", "saudi-arabia", "thailand", "argentina",
-    "india", "myanmar", "venezuela", "honduras", "brazil", "egypt", "croatia",
-    "france", "turkiye", "italy", "russia", "greece",
-}
+# Every puzzle defaults to the ORGANIC seam for real players (no ?dev); the
+# straight (Voronoi) seam is still generated and shipped as a dev-mode reference
+# variant. Distortion is a separate, narrower set driven by explicit build-
+# distorted targets (the entries carrying diffDistorted in puzzles.json), not by
+# the default-seam choice — so making organic universal does not expand it.
 
 # ---------------------------------------------------------------- load & index
 def load():
@@ -842,17 +832,12 @@ def build_puzzles(geoms, codes, targets):
         # invariant: the swallowed target's name must appear on NO feature.
         assert name not in straight and name not in organic, f"target {name!r} absorbed itself"
         s = slug(name)
-        organic_default = s in ORGANIC_DEFAULT_SLUGS
-        # <slug>.json IS the default (what the daily, non-dev client fetches) AND
-        # doubles as the default-matching variant, so we only write two base
-        # files per puzzle, not three — the other variant gets a suffixed file.
-        _write(f"{OUT}/puzzles/{s}.json", _diff(name, organic if organic_default else straight))
-        if organic_default:
-            _write(f"{OUT}/puzzles/{s}-straight.json", _diff(name, straight))
-            diff_straight, diff_organic = f"puzzles/{s}-straight.json", f"puzzles/{s}.json"
-        else:
-            _write(f"{OUT}/puzzles/{s}-organic.json", _diff(name, organic))
-            diff_straight, diff_organic = f"puzzles/{s}.json", f"puzzles/{s}-organic.json"
+        # Every puzzle defaults to the ORGANIC seam. <slug>.json IS the default
+        # (what the daily, non-dev client fetches) and doubles as the organic
+        # variant; the straight (Voronoi) seam is still generated and shipped as
+        # the suffixed reference variant for the dev-mode comparison toggle.
+        _write(f"{OUT}/puzzles/{s}.json", _diff(name, organic))
+        _write(f"{OUT}/puzzles/{s}-straight.json", _diff(name, straight))
         puzzles.append({
             "id": i + 1,
             "slug": s,
@@ -861,12 +846,12 @@ def build_puzzles(geoms, codes, targets):
             "neighbors": nbrs,
             "absorbers": sorted(organic),
             "enclosure": round(enclosure(geoms, name, nbrs), 3),
-            "diff": f"puzzles/{s}.json",                    # default (daily path)
-            "diffStraight": diff_straight,
-            "diffOrganic": diff_organic,
-            "defaultVariant": "organic" if organic_default else "straight",
+            "diff": f"puzzles/{s}.json",                    # default (daily path) = organic
+            "diffStraight": f"puzzles/{s}-straight.json",
+            "diffOrganic": f"puzzles/{s}.json",
+            "defaultVariant": "organic",
         })
-        print(f"  ok  {name:22} absorbers={len(sorted(organic)):2} default={'organic' if organic_default else 'straight'}")
+        print(f"  ok  {name:22} absorbers={len(sorted(organic)):2} default=organic")
     with open(f"{OUT}/puzzles.json", "w") as fh:
         json.dump(puzzles, fh, indent=2, ensure_ascii=False)
 
