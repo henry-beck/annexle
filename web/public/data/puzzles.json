@@ -22,9 +22,9 @@
     ],
     "enclosure": 1.0,
     "diff": "puzzles/afghanistan.json",
-    "diffStraight": "puzzles/afghanistan.json",
-    "diffOrganic": "puzzles/afghanistan-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/afghanistan-straight.json",
+    "diffOrganic": "puzzles/afghanistan.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 2,
@@ -41,9 +41,9 @@
     ],
     "enclosure": 1.0,
     "diff": "puzzles/andorra.json",
-    "diffStraight": "puzzles/andorra.json",
-    "diffOrganic": "puzzles/andorra-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/andorra-straight.json",
+    "diffOrganic": "puzzles/andorra.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 3,
@@ -64,9 +64,9 @@
     ],
     "enclosure": 1.0,
     "diff": "puzzles/armenia.json",
-    "diffStraight": "puzzles/armenia.json",
-    "diffOrganic": "puzzles/armenia-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/armenia-straight.json",
+    "diffOrganic": "puzzles/armenia.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 4,
@@ -95,9 +95,9 @@
     ],
     "enclosure": 1.0,
     "diff": "puzzles/austria.json",
-    "diffStraight": "puzzles/austria.json",
-    "diffOrganic": "puzzles/austria-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/austria-straight.json",
+    "diffOrganic": "puzzles/austria.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 5,
@@ -120,9 +120,9 @@
     ],
     "enclosure": 1.0,
     "diff": "puzzles/belarus.json",
-    "diffStraight": "puzzles/belarus.json",
-    "diffOrganic": "puzzles/belarus-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/belarus-straight.json",
+    "diffOrganic": "puzzles/belarus.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 6,
@@ -139,9 +139,9 @@
     ],
     "enclosure": 1.0,
     "diff": "puzzles/bhutan.json",
-    "diffStraight": "puzzles/bhutan.json",
-    "diffOrganic": "puzzles/bhutan-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/bhutan-straight.json",
+    "diffOrganic": "puzzles/bhutan.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 7,
@@ -164,9 +164,9 @@
     ],
     "enclosure": 1.0,
     "diff": "puzzles/bolivia.json",
-    "diffStraight": "puzzles/bolivia.json",
-    "diffOrganic": "puzzles/bolivia-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/bolivia-straight.json",
+    "diffOrganic": "puzzles/bolivia.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 8,
@@ -186,9 +186,9 @@
     ],
     "enclosure": 1.0,
     "diff": "puzzles/botswana.json",
-    "diffStraight": "puzzles/botswana.json",
-    "diffOrganic": "puzzles/botswana-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/botswana-straight.json",
+    "diffOrganic": "puzzles/botswana.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 9,
@@ -213,9 +213,9 @@
     ],
     "enclosure": 1.0,
     "diff": "puzzles/burkina-faso.json",
-    "diffStraight": "puzzles/burkina-faso.json",
-    "diffOrganic": "puzzles/burkina-faso-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/burkina-faso-straight.json",
+    "diffOrganic": "puzzles/burkina-faso.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 10,
@@ -234,9 +234,9 @@
     ],
     "enclosure": 1.0,
     "diff": "puzzles/burundi.json",
-    "diffStraight": "puzzles/burundi.json",
-    "diffOrganic": "puzzles/burundi-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/burundi-straight.json",
+    "diffOrganic": "puzzles/burundi.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 11,
@@ -313,9 +313,9 @@
     ],
     "enclosure": 1.0,
     "diff": "puzzles/czechia.json",
-    "diffStraight": "puzzles/czechia.json",
-    "diffOrganic": "puzzles/czechia-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/czechia-straight.json",
+    "diffOrganic": "puzzles/czechia.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 14,
@@ -332,9 +332,9 @@
     ],
     "enclosure": 1.0,
     "diff": "puzzles/eswatini.json",
-    "diffStraight": "puzzles/eswatini.json",
-    "diffOrganic": "puzzles/eswatini-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/eswatini-straight.json",
+    "diffOrganic": "puzzles/eswatini.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 15,
@@ -361,9 +361,9 @@
     ],
     "enclosure": 1.0,
     "diff": "puzzles/ethiopia.json",
-    "diffStraight": "puzzles/ethiopia.json",
-    "diffOrganic": "puzzles/ethiopia-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/ethiopia-straight.json",
+    "diffOrganic": "puzzles/ethiopia.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 16,
@@ -390,9 +390,9 @@
     ],
     "enclosure": 1.0,
     "diff": "puzzles/hungary.json",
-    "diffStraight": "puzzles/hungary.json",
-    "diffOrganic": "puzzles/hungary-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/hungary-straight.json",
+    "diffOrganic": "puzzles/hungary.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 17,
@@ -413,9 +413,9 @@
     ],
     "enclosure": 1.0,
     "diff": "puzzles/kosovo.json",
-    "diffStraight": "puzzles/kosovo.json",
-    "diffOrganic": "puzzles/kosovo-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/kosovo-straight.json",
+    "diffOrganic": "puzzles/kosovo.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 18,
@@ -436,9 +436,9 @@
     ],
     "enclosure": 1.0,
     "diff": "puzzles/kyrgyzstan.json",
-    "diffStraight": "puzzles/kyrgyzstan.json",
-    "diffOrganic": "puzzles/kyrgyzstan-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/kyrgyzstan-straight.json",
+    "diffOrganic": "puzzles/kyrgyzstan.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 19,
@@ -461,9 +461,9 @@
     ],
     "enclosure": 1.0,
     "diff": "puzzles/laos.json",
-    "diffStraight": "puzzles/laos.json",
-    "diffOrganic": "puzzles/laos-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/laos-straight.json",
+    "diffOrganic": "puzzles/laos.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 20,
@@ -478,9 +478,9 @@
     ],
     "enclosure": 1.0,
     "diff": "puzzles/lesotho.json",
-    "diffStraight": "puzzles/lesotho.json",
-    "diffOrganic": "puzzles/lesotho-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/lesotho-straight.json",
+    "diffOrganic": "puzzles/lesotho.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 21,
@@ -497,9 +497,9 @@
     ],
     "enclosure": 1.0,
     "diff": "puzzles/liechtenstein.json",
-    "diffStraight": "puzzles/liechtenstein.json",
-    "diffOrganic": "puzzles/liechtenstein-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/liechtenstein-straight.json",
+    "diffOrganic": "puzzles/liechtenstein.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 22,
@@ -518,9 +518,9 @@
     ],
     "enclosure": 1.0,
     "diff": "puzzles/luxembourg.json",
-    "diffStraight": "puzzles/luxembourg.json",
-    "diffOrganic": "puzzles/luxembourg-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/luxembourg-straight.json",
+    "diffOrganic": "puzzles/luxembourg.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 23,
@@ -539,9 +539,9 @@
     ],
     "enclosure": 1.0,
     "diff": "puzzles/malawi.json",
-    "diffStraight": "puzzles/malawi.json",
-    "diffOrganic": "puzzles/malawi-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/malawi-straight.json",
+    "diffOrganic": "puzzles/malawi.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 24,
@@ -588,9 +588,9 @@
     ],
     "enclosure": 1.0,
     "diff": "puzzles/moldova.json",
-    "diffStraight": "puzzles/moldova.json",
-    "diffOrganic": "puzzles/moldova-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/moldova-straight.json",
+    "diffOrganic": "puzzles/moldova.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 26,
@@ -607,9 +607,9 @@
     ],
     "enclosure": 1.0,
     "diff": "puzzles/mongolia.json",
-    "diffStraight": "puzzles/mongolia.json",
-    "diffOrganic": "puzzles/mongolia-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/mongolia-straight.json",
+    "diffOrganic": "puzzles/mongolia.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 27,
@@ -626,9 +626,9 @@
     ],
     "enclosure": 1.0,
     "diff": "puzzles/nepal.json",
-    "diffStraight": "puzzles/nepal.json",
-    "diffOrganic": "puzzles/nepal-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/nepal-straight.json",
+    "diffOrganic": "puzzles/nepal.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 28,
@@ -681,9 +681,9 @@
     ],
     "enclosure": 1.0,
     "diff": "puzzles/north-macedonia.json",
-    "diffStraight": "puzzles/north-macedonia.json",
-    "diffOrganic": "puzzles/north-macedonia-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/north-macedonia-straight.json",
+    "diffOrganic": "puzzles/north-macedonia.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 30,
@@ -702,9 +702,9 @@
     ],
     "enclosure": 1.0,
     "diff": "puzzles/paraguay.json",
-    "diffStraight": "puzzles/paraguay.json",
-    "diffOrganic": "puzzles/paraguay-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/paraguay-straight.json",
+    "diffOrganic": "puzzles/paraguay.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 31,
@@ -733,9 +733,9 @@
     ],
     "enclosure": 1.0,
     "diff": "puzzles/republic-of-serbia.json",
-    "diffStraight": "puzzles/republic-of-serbia.json",
-    "diffOrganic": "puzzles/republic-of-serbia-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/republic-of-serbia-straight.json",
+    "diffOrganic": "puzzles/republic-of-serbia.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 32,
@@ -756,9 +756,9 @@
     ],
     "enclosure": 1.0,
     "diff": "puzzles/rwanda.json",
-    "diffStraight": "puzzles/rwanda.json",
-    "diffOrganic": "puzzles/rwanda-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/rwanda-straight.json",
+    "diffOrganic": "puzzles/rwanda.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 33,
@@ -773,9 +773,9 @@
     ],
     "enclosure": 1.0,
     "diff": "puzzles/san-marino.json",
-    "diffStraight": "puzzles/san-marino.json",
-    "diffOrganic": "puzzles/san-marino-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/san-marino-straight.json",
+    "diffOrganic": "puzzles/san-marino.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 34,
@@ -798,9 +798,9 @@
     ],
     "enclosure": 1.0,
     "diff": "puzzles/slovakia.json",
-    "diffStraight": "puzzles/slovakia.json",
-    "diffOrganic": "puzzles/slovakia-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/slovakia-straight.json",
+    "diffOrganic": "puzzles/slovakia.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 35,
@@ -825,9 +825,9 @@
     ],
     "enclosure": 1.0,
     "diff": "puzzles/south-sudan.json",
-    "diffStraight": "puzzles/south-sudan.json",
-    "diffOrganic": "puzzles/south-sudan-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/south-sudan-straight.json",
+    "diffOrganic": "puzzles/south-sudan.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 36,
@@ -850,9 +850,9 @@
     ],
     "enclosure": 1.0,
     "diff": "puzzles/switzerland.json",
-    "diffStraight": "puzzles/switzerland.json",
-    "diffOrganic": "puzzles/switzerland-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/switzerland-straight.json",
+    "diffOrganic": "puzzles/switzerland.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 37,
@@ -873,9 +873,9 @@
     ],
     "enclosure": 1.0,
     "diff": "puzzles/tajikistan.json",
-    "diffStraight": "puzzles/tajikistan.json",
-    "diffOrganic": "puzzles/tajikistan-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/tajikistan-straight.json",
+    "diffOrganic": "puzzles/tajikistan.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 38,
@@ -898,9 +898,9 @@
     ],
     "enclosure": 1.0,
     "diff": "puzzles/uganda.json",
-    "diffStraight": "puzzles/uganda.json",
-    "diffOrganic": "puzzles/uganda-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/uganda-straight.json",
+    "diffOrganic": "puzzles/uganda.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 39,
@@ -923,9 +923,9 @@
     ],
     "enclosure": 1.0,
     "diff": "puzzles/uzbekistan.json",
-    "diffStraight": "puzzles/uzbekistan.json",
-    "diffOrganic": "puzzles/uzbekistan-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/uzbekistan-straight.json",
+    "diffOrganic": "puzzles/uzbekistan.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 40,
@@ -940,9 +940,9 @@
     ],
     "enclosure": 1.0,
     "diff": "puzzles/vatican.json",
-    "diffStraight": "puzzles/vatican.json",
-    "diffOrganic": "puzzles/vatican-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/vatican-straight.json",
+    "diffOrganic": "puzzles/vatican.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 41,
@@ -993,9 +993,9 @@
     ],
     "enclosure": 1.0,
     "diff": "puzzles/zimbabwe.json",
-    "diffStraight": "puzzles/zimbabwe.json",
-    "diffOrganic": "puzzles/zimbabwe-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/zimbabwe-straight.json",
+    "diffOrganic": "puzzles/zimbabwe.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 43,
@@ -1098,9 +1098,9 @@
     ],
     "enclosure": 0.983,
     "diff": "puzzles/slovenia.json",
-    "diffStraight": "puzzles/slovenia.json",
-    "diffOrganic": "puzzles/slovenia-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/slovenia-straight.json",
+    "diffOrganic": "puzzles/slovenia.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 47,
@@ -1147,9 +1147,9 @@
     ],
     "enclosure": 0.977,
     "diff": "puzzles/western-sahara.json",
-    "diffStraight": "puzzles/western-sahara.json",
-    "diffOrganic": "puzzles/western-sahara-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/western-sahara-straight.json",
+    "diffOrganic": "puzzles/western-sahara.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 49,
@@ -1168,9 +1168,9 @@
     ],
     "enclosure": 0.966,
     "diff": "puzzles/togo.json",
-    "diffStraight": "puzzles/togo.json",
-    "diffOrganic": "puzzles/togo-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/togo-straight.json",
+    "diffOrganic": "puzzles/togo.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 50,
@@ -1193,9 +1193,9 @@
     ],
     "enclosure": 0.959,
     "diff": "puzzles/republic-of-the-congo.json",
-    "diffStraight": "puzzles/republic-of-the-congo.json",
-    "diffOrganic": "puzzles/republic-of-the-congo-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/republic-of-the-congo-straight.json",
+    "diffOrganic": "puzzles/republic-of-the-congo.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 51,
@@ -1216,9 +1216,9 @@
     ],
     "enclosure": 0.934,
     "diff": "puzzles/benin.json",
-    "diffStraight": "puzzles/benin.json",
-    "diffOrganic": "puzzles/benin-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/benin-straight.json",
+    "diffOrganic": "puzzles/benin.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 52,
@@ -1265,9 +1265,9 @@
     ],
     "enclosure": 0.923,
     "diff": "puzzles/belgium.json",
-    "diffStraight": "puzzles/belgium.json",
-    "diffOrganic": "puzzles/belgium-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/belgium-straight.json",
+    "diffOrganic": "puzzles/belgium.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 54,
@@ -1316,9 +1316,9 @@
     ],
     "enclosure": 0.917,
     "diff": "puzzles/palestine.json",
-    "diffStraight": "puzzles/palestine.json",
-    "diffOrganic": "puzzles/palestine-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/palestine-straight.json",
+    "diffOrganic": "puzzles/palestine.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 56,
@@ -1339,9 +1339,9 @@
     ],
     "enclosure": 0.898,
     "diff": "puzzles/lithuania.json",
-    "diffStraight": "puzzles/lithuania.json",
-    "diffOrganic": "puzzles/lithuania-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/lithuania-straight.json",
+    "diffOrganic": "puzzles/lithuania.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 57,
@@ -1472,9 +1472,9 @@
     ],
     "enclosure": 0.861,
     "diff": "puzzles/bulgaria.json",
-    "diffStraight": "puzzles/bulgaria.json",
-    "diffOrganic": "puzzles/bulgaria-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/bulgaria-straight.json",
+    "diffOrganic": "puzzles/bulgaria.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 62,
@@ -1497,9 +1497,9 @@
     ],
     "enclosure": 0.858,
     "diff": "puzzles/kenya.json",
-    "diffStraight": "puzzles/kenya.json",
-    "diffOrganic": "puzzles/kenya-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/kenya-straight.json",
+    "diffOrganic": "puzzles/kenya.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 63,
@@ -1570,9 +1570,9 @@
     ],
     "enclosure": 0.836,
     "diff": "puzzles/israel.json",
-    "diffStraight": "puzzles/israel.json",
-    "diffOrganic": "puzzles/israel-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/israel-straight.json",
+    "diffOrganic": "puzzles/israel.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 66,
@@ -1595,9 +1595,9 @@
     ],
     "enclosure": 0.833,
     "diff": "puzzles/montenegro.json",
-    "diffStraight": "puzzles/montenegro.json",
-    "diffOrganic": "puzzles/montenegro-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/montenegro-straight.json",
+    "diffOrganic": "puzzles/montenegro.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 67,
@@ -1648,9 +1648,9 @@
     ],
     "enclosure": 0.828,
     "diff": "puzzles/georgia.json",
-    "diffStraight": "puzzles/georgia.json",
-    "diffOrganic": "puzzles/georgia-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/georgia-straight.json",
+    "diffOrganic": "puzzles/georgia.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 69,
@@ -1669,9 +1669,9 @@
     ],
     "enclosure": 0.814,
     "diff": "puzzles/cambodia.json",
-    "diffStraight": "puzzles/cambodia.json",
-    "diffOrganic": "puzzles/cambodia-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/cambodia-straight.json",
+    "diffOrganic": "puzzles/cambodia.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 70,
@@ -1694,9 +1694,9 @@
     ],
     "enclosure": 0.806,
     "diff": "puzzles/senegal.json",
-    "diffStraight": "puzzles/senegal.json",
-    "diffOrganic": "puzzles/senegal-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/senegal-straight.json",
+    "diffOrganic": "puzzles/senegal.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 71,
@@ -1717,9 +1717,9 @@
     ],
     "enclosure": 0.795,
     "diff": "puzzles/guatemala.json",
-    "diffStraight": "puzzles/guatemala.json",
-    "diffOrganic": "puzzles/guatemala-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/guatemala-straight.json",
+    "diffOrganic": "puzzles/guatemala.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 72,
@@ -1768,9 +1768,9 @@
     ],
     "enclosure": 0.771,
     "diff": "puzzles/ghana.json",
-    "diffStraight": "puzzles/ghana.json",
-    "diffOrganic": "puzzles/ghana-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/ghana-straight.json",
+    "diffOrganic": "puzzles/ghana.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 74,
@@ -1789,9 +1789,9 @@
     ],
     "enclosure": 0.771,
     "diff": "puzzles/guyana.json",
-    "diffStraight": "puzzles/guyana.json",
-    "diffOrganic": "puzzles/guyana-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/guyana-straight.json",
+    "diffOrganic": "puzzles/guyana.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 75,
@@ -1814,9 +1814,9 @@
     ],
     "enclosure": 0.769,
     "diff": "puzzles/azerbaijan.json",
-    "diffStraight": "puzzles/azerbaijan.json",
-    "diffOrganic": "puzzles/azerbaijan-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/azerbaijan-straight.json",
+    "diffOrganic": "puzzles/azerbaijan.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 76,
@@ -1869,9 +1869,9 @@
     ],
     "enclosure": 0.748,
     "diff": "puzzles/cote-d-ivoire.json",
-    "diffStraight": "puzzles/cote-d-ivoire.json",
-    "diffOrganic": "puzzles/cote-d-ivoire-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/cote-d-ivoire-straight.json",
+    "diffOrganic": "puzzles/cote-d-ivoire.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 78,
@@ -1994,9 +1994,9 @@
     ],
     "enclosure": 0.731,
     "diff": "puzzles/suriname.json",
-    "diffStraight": "puzzles/suriname.json",
-    "diffOrganic": "puzzles/suriname-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/suriname-straight.json",
+    "diffOrganic": "puzzles/suriname.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 83,
@@ -2035,9 +2035,9 @@
     ],
     "enclosure": 0.714,
     "diff": "puzzles/brunei.json",
-    "diffStraight": "puzzles/brunei.json",
-    "diffOrganic": "puzzles/brunei-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/brunei-straight.json",
+    "diffOrganic": "puzzles/brunei.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 85,
@@ -2058,9 +2058,9 @@
     ],
     "enclosure": 0.705,
     "diff": "puzzles/latvia.json",
-    "diffStraight": "puzzles/latvia.json",
-    "diffOrganic": "puzzles/latvia-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/latvia-straight.json",
+    "diffOrganic": "puzzles/latvia.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 86,
@@ -2185,9 +2185,9 @@
     ],
     "enclosure": 0.681,
     "diff": "puzzles/peru.json",
-    "diffStraight": "puzzles/peru.json",
-    "diffOrganic": "puzzles/peru-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/peru-straight.json",
+    "diffOrganic": "puzzles/peru.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 90,
@@ -2206,9 +2206,9 @@
     ],
     "enclosure": 0.669,
     "diff": "puzzles/liberia.json",
-    "diffStraight": "puzzles/liberia.json",
-    "diffOrganic": "puzzles/liberia-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/liberia-straight.json",
+    "diffOrganic": "puzzles/liberia.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 91,
@@ -2229,9 +2229,9 @@
     ],
     "enclosure": 0.662,
     "diff": "puzzles/albania.json",
-    "diffStraight": "puzzles/albania.json",
-    "diffOrganic": "puzzles/albania-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/albania-straight.json",
+    "diffOrganic": "puzzles/albania.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 92,
@@ -2246,9 +2246,9 @@
     ],
     "enclosure": 0.66,
     "diff": "puzzles/gambia.json",
-    "diffStraight": "puzzles/gambia.json",
-    "diffOrganic": "puzzles/gambia-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/gambia-straight.json",
+    "diffOrganic": "puzzles/gambia.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 93,
@@ -2265,9 +2265,9 @@
     ],
     "enclosure": 0.649,
     "diff": "puzzles/lebanon.json",
-    "diffStraight": "puzzles/lebanon.json",
-    "diffOrganic": "puzzles/lebanon-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/lebanon-straight.json",
+    "diffOrganic": "puzzles/lebanon.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 94,
@@ -2286,9 +2286,9 @@
     ],
     "enclosure": 0.631,
     "diff": "puzzles/djibouti.json",
-    "diffStraight": "puzzles/djibouti.json",
-    "diffOrganic": "puzzles/djibouti-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/djibouti-straight.json",
+    "diffOrganic": "puzzles/djibouti.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 95,
@@ -2307,9 +2307,9 @@
     ],
     "enclosure": 0.631,
     "diff": "puzzles/somaliland.json",
-    "diffStraight": "puzzles/somaliland.json",
-    "diffOrganic": "puzzles/somaliland-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/somaliland-straight.json",
+    "diffOrganic": "puzzles/somaliland.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 96,
@@ -2392,9 +2392,9 @@
     ],
     "enclosure": 0.625,
     "diff": "puzzles/gabon.json",
-    "diffStraight": "puzzles/gabon.json",
-    "diffOrganic": "puzzles/gabon-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/gabon-straight.json",
+    "diffOrganic": "puzzles/gabon.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 99,
@@ -2449,9 +2449,9 @@
     ],
     "enclosure": 0.604,
     "diff": "puzzles/mozambique.json",
-    "diffStraight": "puzzles/mozambique.json",
-    "diffOrganic": "puzzles/mozambique-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/mozambique-straight.json",
+    "diffOrganic": "puzzles/mozambique.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 101,
@@ -2466,9 +2466,9 @@
     ],
     "enclosure": 0.602,
     "diff": "puzzles/monaco.json",
-    "diffStraight": "puzzles/monaco.json",
-    "diffOrganic": "puzzles/monaco-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/monaco-straight.json",
+    "diffOrganic": "puzzles/monaco.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 102,
@@ -2518,9 +2518,9 @@
     ],
     "enclosure": 0.595,
     "diff": "puzzles/south-africa.json",
-    "diffStraight": "puzzles/south-africa.json",
-    "diffOrganic": "puzzles/south-africa-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/south-africa-straight.json",
+    "diffOrganic": "puzzles/south-africa.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 104,
@@ -2563,9 +2563,9 @@
     ],
     "enclosure": 0.586,
     "diff": "puzzles/equatorial-guinea.json",
-    "diffStraight": "puzzles/equatorial-guinea.json",
-    "diffOrganic": "puzzles/equatorial-guinea-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/equatorial-guinea-straight.json",
+    "diffOrganic": "puzzles/equatorial-guinea.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 106,
@@ -2584,9 +2584,9 @@
     ],
     "enclosure": 0.583,
     "diff": "puzzles/finland.json",
-    "diffStraight": "puzzles/finland.json",
-    "diffOrganic": "puzzles/finland-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/finland-straight.json",
+    "diffOrganic": "puzzles/finland.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 107,
@@ -2603,9 +2603,9 @@
     ],
     "enclosure": 0.571,
     "diff": "puzzles/sierra-leone.json",
-    "diffStraight": "puzzles/sierra-leone.json",
-    "diffOrganic": "puzzles/sierra-leone-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/sierra-leone-straight.json",
+    "diffOrganic": "puzzles/sierra-leone.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 108,
@@ -2624,9 +2624,9 @@
     ],
     "enclosure": 0.57,
     "diff": "puzzles/eritrea.json",
-    "diffStraight": "puzzles/eritrea.json",
-    "diffOrganic": "puzzles/eritrea-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/eritrea-straight.json",
+    "diffOrganic": "puzzles/eritrea.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 109,
@@ -2643,9 +2643,9 @@
     ],
     "enclosure": 0.568,
     "diff": "puzzles/bangladesh.json",
-    "diffStraight": "puzzles/bangladesh.json",
-    "diffOrganic": "puzzles/bangladesh-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/bangladesh-straight.json",
+    "diffOrganic": "puzzles/bangladesh.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 110,
@@ -2662,9 +2662,9 @@
     ],
     "enclosure": 0.567,
     "diff": "puzzles/uruguay.json",
-    "diffStraight": "puzzles/uruguay.json",
-    "diffOrganic": "puzzles/uruguay-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/uruguay-straight.json",
+    "diffOrganic": "puzzles/uruguay.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 111,
@@ -2681,9 +2681,9 @@
     ],
     "enclosure": 0.566,
     "diff": "puzzles/kuwait.json",
-    "diffStraight": "puzzles/kuwait.json",
-    "diffOrganic": "puzzles/kuwait-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/kuwait-straight.json",
+    "diffOrganic": "puzzles/kuwait.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 112,
@@ -2729,9 +2729,9 @@
     ],
     "enclosure": 0.55,
     "diff": "puzzles/el-salvador.json",
-    "diffStraight": "puzzles/el-salvador.json",
-    "diffOrganic": "puzzles/el-salvador-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/el-salvador-straight.json",
+    "diffOrganic": "puzzles/el-salvador.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 114,
@@ -2796,9 +2796,9 @@
     ],
     "enclosure": 0.529,
     "diff": "puzzles/tunisia.json",
-    "diffStraight": "puzzles/tunisia.json",
-    "diffOrganic": "puzzles/tunisia-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/tunisia-straight.json",
+    "diffOrganic": "puzzles/tunisia.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 117,
@@ -2837,9 +2837,9 @@
     ],
     "enclosure": 0.524,
     "diff": "puzzles/united-arab-emirates.json",
-    "diffStraight": "puzzles/united-arab-emirates.json",
-    "diffOrganic": "puzzles/united-arab-emirates-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/united-arab-emirates-straight.json",
+    "diffOrganic": "puzzles/united-arab-emirates.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 119,
@@ -2856,9 +2856,9 @@
     ],
     "enclosure": 0.52,
     "diff": "puzzles/morocco.json",
-    "diffStraight": "puzzles/morocco.json",
-    "diffOrganic": "puzzles/morocco-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/morocco-straight.json",
+    "diffOrganic": "puzzles/morocco.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 120,
@@ -2877,9 +2877,9 @@
     ],
     "enclosure": 0.502,
     "diff": "puzzles/vietnam.json",
-    "diffStraight": "puzzles/vietnam.json",
-    "diffOrganic": "puzzles/vietnam-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/vietnam-straight.json",
+    "diffOrganic": "puzzles/vietnam.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 121,
@@ -2932,9 +2932,9 @@
     ],
     "enclosure": 0.478,
     "diff": "puzzles/nicaragua.json",
-    "diffStraight": "puzzles/nicaragua.json",
-    "diffOrganic": "puzzles/nicaragua-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/nicaragua-straight.json",
+    "diffOrganic": "puzzles/nicaragua.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 123,
@@ -3001,9 +3001,9 @@
     ],
     "enclosure": 0.459,
     "diff": "puzzles/ecuador.json",
-    "diffStraight": "puzzles/ecuador.json",
-    "diffOrganic": "puzzles/ecuador-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/ecuador-straight.json",
+    "diffOrganic": "puzzles/ecuador.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 126,
@@ -3022,9 +3022,9 @@
     ],
     "enclosure": 0.457,
     "diff": "puzzles/north-korea.json",
-    "diffStraight": "puzzles/north-korea.json",
-    "diffOrganic": "puzzles/north-korea-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/north-korea-straight.json",
+    "diffOrganic": "puzzles/north-korea.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 127,
@@ -3043,9 +3043,9 @@
     ],
     "enclosure": 0.457,
     "diff": "puzzles/somalia.json",
-    "diffStraight": "puzzles/somalia.json",
-    "diffOrganic": "puzzles/somalia-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/somalia-straight.json",
+    "diffOrganic": "puzzles/somalia.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 128,
@@ -3062,9 +3062,9 @@
     ],
     "enclosure": 0.45,
     "diff": "puzzles/belize.json",
-    "diffStraight": "puzzles/belize.json",
-    "diffOrganic": "puzzles/belize-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/belize-straight.json",
+    "diffOrganic": "puzzles/belize.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 129,
@@ -3081,9 +3081,9 @@
     ],
     "enclosure": 0.44,
     "diff": "puzzles/guinea-bissau.json",
-    "diffStraight": "puzzles/guinea-bissau.json",
-    "diffOrganic": "puzzles/guinea-bissau-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/guinea-bissau-straight.json",
+    "diffOrganic": "puzzles/guinea-bissau.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 130,
@@ -3098,9 +3098,9 @@
     ],
     "enclosure": 0.438,
     "diff": "puzzles/macao-s-a-r.json",
-    "diffStraight": "puzzles/macao-s-a-r.json",
-    "diffOrganic": "puzzles/macao-s-a-r-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/macao-s-a-r-straight.json",
+    "diffOrganic": "puzzles/macao-s-a-r.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 131,
@@ -3119,9 +3119,9 @@
     ],
     "enclosure": 0.431,
     "diff": "puzzles/oman.json",
-    "diffStraight": "puzzles/oman.json",
-    "diffOrganic": "puzzles/oman-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/oman-straight.json",
+    "diffOrganic": "puzzles/oman.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 132,
@@ -3139,9 +3139,9 @@
     ],
     "enclosure": 0.419,
     "diff": "puzzles/yemen.json",
-    "diffStraight": "puzzles/yemen.json",
-    "diffOrganic": "puzzles/yemen-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/yemen-straight.json",
+    "diffOrganic": "puzzles/yemen.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 133,
@@ -3199,9 +3199,9 @@
     ],
     "enclosure": 0.405,
     "diff": "puzzles/netherlands.json",
-    "diffStraight": "puzzles/netherlands.json",
-    "diffOrganic": "puzzles/netherlands-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/netherlands-straight.json",
+    "diffOrganic": "puzzles/netherlands.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 135,
@@ -3218,9 +3218,9 @@
     ],
     "enclosure": 0.399,
     "diff": "puzzles/sweden.json",
-    "diffStraight": "puzzles/sweden.json",
-    "diffOrganic": "puzzles/sweden-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/sweden-straight.json",
+    "diffOrganic": "puzzles/sweden.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 136,
@@ -3235,9 +3235,9 @@
     ],
     "enclosure": 0.398,
     "diff": "puzzles/sint-maarten.json",
-    "diffStraight": "puzzles/sint-maarten.json",
-    "diffOrganic": "puzzles/sint-maarten-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/sint-maarten-straight.json",
+    "diffOrganic": "puzzles/sint-maarten.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 137,
@@ -3252,9 +3252,9 @@
     ],
     "enclosure": 0.394,
     "diff": "puzzles/saint-martin.json",
-    "diffStraight": "puzzles/saint-martin.json",
-    "diffOrganic": "puzzles/saint-martin-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/saint-martin-straight.json",
+    "diffOrganic": "puzzles/saint-martin.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 138,
@@ -3269,9 +3269,9 @@
     ],
     "enclosure": 0.367,
     "diff": "puzzles/portugal.json",
-    "diffStraight": "puzzles/portugal.json",
-    "diffOrganic": "puzzles/portugal-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/portugal-straight.json",
+    "diffOrganic": "puzzles/portugal.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 139,
@@ -3286,9 +3286,9 @@
     ],
     "enclosure": 0.352,
     "diff": "puzzles/cyprus.json",
-    "diffStraight": "puzzles/cyprus.json",
-    "diffOrganic": "puzzles/cyprus-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/cyprus-straight.json",
+    "diffOrganic": "puzzles/cyprus.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 140,
@@ -3307,9 +3307,9 @@
     ],
     "enclosure": 0.344,
     "diff": "puzzles/malaysia.json",
-    "diffStraight": "puzzles/malaysia.json",
-    "diffOrganic": "puzzles/malaysia-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/malaysia-straight.json",
+    "diffOrganic": "puzzles/malaysia.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 141,
@@ -3326,9 +3326,9 @@
     ],
     "enclosure": 0.334,
     "diff": "puzzles/costa-rica.json",
-    "diffStraight": "puzzles/costa-rica.json",
-    "diffOrganic": "puzzles/costa-rica-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/costa-rica-straight.json",
+    "diffOrganic": "puzzles/costa-rica.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 142,
@@ -3343,9 +3343,9 @@
     ],
     "enclosure": 0.329,
     "diff": "puzzles/northern-cyprus.json",
-    "diffStraight": "puzzles/northern-cyprus.json",
-    "diffOrganic": "puzzles/northern-cyprus-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/northern-cyprus-straight.json",
+    "diffOrganic": "puzzles/northern-cyprus.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 143,
@@ -3394,9 +3394,9 @@
     ],
     "enclosure": 0.294,
     "diff": "puzzles/estonia.json",
-    "diffStraight": "puzzles/estonia.json",
-    "diffOrganic": "puzzles/estonia-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/estonia-straight.json",
+    "diffOrganic": "puzzles/estonia.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 145,
@@ -3416,9 +3416,9 @@
     ],
     "enclosure": 0.273,
     "diff": "puzzles/spain.json",
-    "diffStraight": "puzzles/spain.json",
-    "diffOrganic": "puzzles/spain-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/spain-straight.json",
+    "diffOrganic": "puzzles/spain.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 146,
@@ -3438,9 +3438,9 @@
     ],
     "enclosure": 0.253,
     "diff": "puzzles/chile.json",
-    "diffStraight": "puzzles/chile.json",
-    "diffOrganic": "puzzles/chile-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/chile-straight.json",
+    "diffOrganic": "puzzles/chile.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 147,
@@ -3459,9 +3459,9 @@
     ],
     "enclosure": 0.24,
     "diff": "puzzles/mexico.json",
-    "diffStraight": "puzzles/mexico.json",
-    "diffOrganic": "puzzles/mexico-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/mexico-straight.json",
+    "diffOrganic": "puzzles/mexico.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 148,
@@ -3502,9 +3502,9 @@
     ],
     "enclosure": 0.209,
     "diff": "puzzles/timor-leste.json",
-    "diffStraight": "puzzles/timor-leste.json",
-    "diffOrganic": "puzzles/timor-leste-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/timor-leste-straight.json",
+    "diffOrganic": "puzzles/timor-leste.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 150,
@@ -3523,9 +3523,9 @@
     ],
     "enclosure": 0.188,
     "diff": "puzzles/united-states-of-america.json",
-    "diffStraight": "puzzles/united-states-of-america.json",
-    "diffOrganic": "puzzles/united-states-of-america-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/united-states-of-america-straight.json",
+    "diffOrganic": "puzzles/united-states-of-america.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 151,
@@ -3540,9 +3540,9 @@
     ],
     "enclosure": 0.185,
     "diff": "puzzles/dominican-republic.json",
-    "diffStraight": "puzzles/dominican-republic.json",
-    "diffOrganic": "puzzles/dominican-republic-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/dominican-republic-straight.json",
+    "diffOrganic": "puzzles/dominican-republic.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 152,
@@ -3559,9 +3559,9 @@
     ],
     "enclosure": 0.185,
     "diff": "puzzles/panama.json",
-    "diffStraight": "puzzles/panama.json",
-    "diffOrganic": "puzzles/panama-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/panama-straight.json",
+    "diffOrganic": "puzzles/panama.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 153,
@@ -3622,9 +3622,9 @@
     ],
     "enclosure": 0.163,
     "diff": "puzzles/haiti.json",
-    "diffStraight": "puzzles/haiti.json",
-    "diffOrganic": "puzzles/haiti-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/haiti-straight.json",
+    "diffOrganic": "puzzles/haiti.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 155,
@@ -3639,9 +3639,9 @@
     ],
     "enclosure": 0.145,
     "diff": "puzzles/qatar.json",
-    "diffStraight": "puzzles/qatar.json",
-    "diffOrganic": "puzzles/qatar-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/qatar-straight.json",
+    "diffOrganic": "puzzles/qatar.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 156,
@@ -3656,9 +3656,9 @@
     ],
     "enclosure": 0.136,
     "diff": "puzzles/ireland.json",
-    "diffStraight": "puzzles/ireland.json",
-    "diffOrganic": "puzzles/ireland-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/ireland-straight.json",
+    "diffOrganic": "puzzles/ireland.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 157,
@@ -3673,9 +3673,9 @@
     ],
     "enclosure": 0.133,
     "diff": "puzzles/hong-kong-s-a-r.json",
-    "diffStraight": "puzzles/hong-kong-s-a-r.json",
-    "diffOrganic": "puzzles/hong-kong-s-a-r-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/hong-kong-s-a-r-straight.json",
+    "diffOrganic": "puzzles/hong-kong-s-a-r.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 158,
@@ -3719,9 +3719,9 @@
     ],
     "enclosure": 0.123,
     "diff": "puzzles/norway.json",
-    "diffStraight": "puzzles/norway.json",
-    "diffOrganic": "puzzles/norway-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/norway-straight.json",
+    "diffOrganic": "puzzles/norway.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 160,
@@ -3736,9 +3736,9 @@
     ],
     "enclosure": 0.092,
     "diff": "puzzles/south-korea.json",
-    "diffStraight": "puzzles/south-korea.json",
-    "diffOrganic": "puzzles/south-korea-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/south-korea-straight.json",
+    "diffOrganic": "puzzles/south-korea.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 161,
@@ -3754,9 +3754,9 @@
     ],
     "enclosure": 0.08,
     "diff": "puzzles/papua-new-guinea.json",
-    "diffStraight": "puzzles/papua-new-guinea.json",
-    "diffOrganic": "puzzles/papua-new-guinea-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/papua-new-guinea-straight.json",
+    "diffOrganic": "puzzles/papua-new-guinea.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 162,
@@ -3772,9 +3772,9 @@
     ],
     "enclosure": 0.057,
     "diff": "puzzles/canada.json",
-    "diffStraight": "puzzles/canada.json",
-    "diffOrganic": "puzzles/canada-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/canada-straight.json",
+    "diffOrganic": "puzzles/canada.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 163,
@@ -3793,9 +3793,9 @@
     ],
     "enclosure": 0.054,
     "diff": "puzzles/indonesia.json",
-    "diffStraight": "puzzles/indonesia.json",
-    "diffOrganic": "puzzles/indonesia-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/indonesia-straight.json",
+    "diffOrganic": "puzzles/indonesia.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 164,
@@ -3810,9 +3810,9 @@
     ],
     "enclosure": 0.043,
     "diff": "puzzles/united-kingdom.json",
-    "diffStraight": "puzzles/united-kingdom.json",
-    "diffOrganic": "puzzles/united-kingdom-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/united-kingdom-straight.json",
+    "diffOrganic": "puzzles/united-kingdom.json",
+    "defaultVariant": "organic"
   },
   {
     "id": 165,
@@ -3827,8 +3827,8 @@
     ],
     "enclosure": 0.036,
     "diff": "puzzles/denmark.json",
-    "diffStraight": "puzzles/denmark.json",
-    "diffOrganic": "puzzles/denmark-organic.json",
-    "defaultVariant": "straight"
+    "diffStraight": "puzzles/denmark-straight.json",
+    "diffOrganic": "puzzles/denmark.json",
+    "defaultVariant": "organic"
   }
 ]

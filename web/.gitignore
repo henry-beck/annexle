@@ -8,6 +8,6 @@ dist/
 # physically present — the Vercel/Netlify build can't run the Python/GEOS
 # pipeline, and a 30–40 min generation step is too slow for a deploy step.
 # `npm run sync-data` refreshes public/data/ from ../out/ after regenerating.
-# Every puzzle ships a straight and an organic seam variant; the 45
-# organic-default puzzles also ship a distorted variant (see ORGANIC_DEFAULT_SLUGS
-# in ../missing_country.py).
+# Every puzzle defaults to its organic seam variant and also ships the straight
+# seam variant as a dev-mode reference; 45 puzzles additionally ship a distorted
+# variant (the entries carrying diffDistorted in puzzles.json).
