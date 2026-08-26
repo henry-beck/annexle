@@ -498,7 +498,8 @@ def swallow(geoms, target_name, organic=True):
         expanded[name] = make_valid(unary_union([geoms[name], add])).buffer(0)
     healed = _heal_target_footprint(expanded, geoms[target_name])
     decluttered = _declutter_absorbers(healed, geoms)
-    return _clamp_to_land(decluttered, geoms, target_name)
+    clamped = _clamp_to_land(decluttered, geoms, target_name)
+    return _drop_needle_slivers(clamped, geoms)
 
 def _clamp_to_land(expanded, geoms, target_name):
     """Hard invariant: an absorber can ONLY be its own real land plus part of the
@@ -518,6 +519,49 @@ def _clamp_to_land(expanded, geoms, target_name):
         clamped = make_valid(g.intersection(allowed)).buffer(0)
         if not clamped.is_empty:
             out[name] = clamped
+    return out
+
+# A degenerate "needle" — a tiny, near-zero-WIDTH polygon part (nearly collinear
+# vertices) — carries negligible area but is poison to the D3 client: d3-geo's
+# spherical area integral mis-reads such an almost-degenerate ring as ~4*pi (the
+# whole sphere), so d3.geoArea sorts the feature to the bottom layer AND d3.geoPath
+# fills its COMPLEMENT — the absorber paints the entire ocean, still named right on
+# hover. The seam/warp booleans (ribbon symmetric-difference in _organic_seams,
+# and clamp/heal intersections) can shed these off an absorber's edge. Drop them.
+NEEDLE_MAX_KM2 = 1.0       # a detached part bigger than this is real land, kept
+NEEDLE_MIN_COMPACT = 0.10  # ...and a rounder one (a real islet) is kept; below = needle
+
+def _compactness(p):
+    """Isoperimetric quotient 4*pi*A/P^2: 1.0 for a disc, ->0 for a needle.
+    Unitless, so lon/lat degrees are fine here."""
+    per = p.length
+    return (4 * math.pi * p.area / (per * per)) if per > 1e-12 else 0.0
+
+def _drop_needle_slivers(expanded, geoms):
+    """Strip degenerate needle slivers from each absorber before emit. A part is
+    removed ONLY if it is detached from that country's real base land (so never a
+    real island), smaller than NEEDLE_MAX_KM2, AND less compact than
+    NEEDLE_MIN_COMPACT (so never a real, rounder islet) — i.e. unmistakably a
+    boolean/warp artifact. Its area is negligible and its removal leaves at most a
+    sub-pixel gap, versus the whole-ocean fill it would otherwise cause in D3."""
+    out = {}
+    for name, g in expanded.items():
+        base = geoms.get(name)
+        parts = polys_of(g)
+        keep = []
+        for p in parts:
+            detached = base is None or not p.intersects(base)
+            if (detached
+                    and geodesic_area_km2(p, main_only=False) < NEEDLE_MAX_KM2
+                    and _compactness(p) < NEEDLE_MIN_COMPACT):
+                continue  # drop needle
+            keep.append(p)
+        if len(keep) == len(parts):
+            out[name] = g            # nothing dropped: pass geometry through untouched
+            continue                 # (avoids a re-union that would churn coordinates)
+        u = unary_union(keep) if keep else None
+        if u is not None and not u.is_empty:
+            out[name] = u
     return out
 
 # tiny fragments of the target, detached from an absorber's real body and far
