@@ -10,7 +10,7 @@ import Tooltip from "./Tooltip.jsx";
 // hover hit-test (incl. the largest-area-first ordering for enclaves) stays
 // exact. The rotatable globe uses a separate canvas renderer (GlobeMap) because
 // rotation re-paths every frame, which SVG can't do smoothly for ~240 countries.
-export default function FlatMap({ fc, width, height }) {
+export default function FlatMap({ fc, width, height, colors = null }) {
   const svgRef = useRef(null);
   const [transform, setTransform] = useState(zoomIdentity);
   const [hover, setHover] = useState({ name: null, x: 0, y: 0 });
@@ -57,6 +57,9 @@ export default function FlatMap({ fc, width, height }) {
               data-name={s.name}
               d={s.d}
               className="country"
+              // dev distinct-country coloring: an explicit per-feature fill
+              // overrides the uniform .country fill; absent in production.
+              fill={colors ? colors.get(s.name) || "var(--land)" : undefined}
               onMouseEnter={() => setHover((h) => ({ ...h, name: s.name }))}
               onMouseMove={(e) => {
                 const r = svgRef.current.getBoundingClientRect();

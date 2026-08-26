@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import MissingCountryMap from "../map/MissingCountryMap.jsx";
+import ColoringView from "./ColoringView.jsx";
 import GuessPanel from "../game/GuessPanel.jsx";
 import { createStorage } from "../game/storage.js";
 import { listVariants } from "./variants.js";
@@ -30,6 +31,8 @@ export default function DevApp() {
   const [query, setQuery] = useState("");
   const [view, setView] = useState("flat"); // "flat" | "globe"
   const [variantKey, setVariantKey] = useState(null); // null -> puzzle's default
+  const [mode, setMode] = useState("map"); // "map" | "coloring"
+  const [palette, setPalette] = useState("okabe"); // "okabe" | "normal"
 
   useEffect(() => {
     let cancelled = false;
@@ -156,32 +159,66 @@ export default function DevApp() {
           <div style={{ display: "flex", gap: 20, alignItems: "flex-start", flexWrap: "wrap" }}>
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
               <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                {/* top-level mode: the ordinary map vs. the distinct-country
+                    coloring preview (always on the organic geometry). Kept
+                    separate from the straight/organic/distorted variant toggle. */}
                 <Toggle
-                  options={[["flat", "2D"], ["globe", "Globe"]]}
-                  value={view}
-                  onChange={setView}
+                  options={[["map", "Map"], ["coloring", "Coloring"]]}
+                  value={mode}
+                  onChange={setMode}
                 />
-                {/* Variant toggle: hidden while a puzzle has only one variant,
-                    appears automatically once a distorted diff is added. */}
-                {variants.length > 1 && (
-                  <Toggle
-                    options={variants.map((v) => [v.key, v.label])}
-                    value={effectiveKey}
-                    onChange={setVariantKey}
-                  />
+                {mode === "map" ? (
+                  <>
+                    <Toggle
+                      options={[["flat", "2D"], ["globe", "Globe"]]}
+                      value={view}
+                      onChange={setView}
+                    />
+                    {/* Variant toggle: hidden while a puzzle has only one
+                        variant, appears once a distorted diff is added. */}
+                    {variants.length > 1 && (
+                      <Toggle
+                        options={variants.map((v) => [v.key, v.label])}
+                        value={effectiveKey}
+                        onChange={setVariantKey}
+                      />
+                    )}
+                    <span style={{ fontSize: 12, color: "#64748b" }}>
+                      {entry.target} · {variant?.label}
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    <Toggle
+                      options={[["okabe", "Colorblind"], ["normal", "Normal"]]}
+                      value={palette}
+                      onChange={setPalette}
+                    />
+                    <span style={{ fontSize: 12, color: "#64748b" }}>
+                      {entry.target} · organic
+                    </span>
+                  </>
                 )}
-                <span style={{ fontSize: 12, color: "#64748b" }}>
-                  {entry.target} · {variant?.label}
-                </span>
               </div>
-              <MissingCountryMap
-                key={`${entry.slug}:${variant?.key}`}
-                slug={entry.slug}
-                diffUrl={variant?.diffUrl}
-                projectionType={globe ? "orthographic" : "naturalEarth1"}
-                width={760}
-                height={520}
-              />
+              {mode === "map" ? (
+                <MissingCountryMap
+                  key={`${entry.slug}:${variant?.key}`}
+                  slug={entry.slug}
+                  diffUrl={variant?.diffUrl}
+                  projectionType={globe ? "orthographic" : "naturalEarth1"}
+                  width={760}
+                  height={520}
+                />
+              ) : (
+                <ColoringView
+                  key={`color:${entry.slug}:${palette}`}
+                  slug={entry.slug}
+                  organicDiffUrl={`${DATA_ROOT}/${entry.diffOrganic || entry.diff}`}
+                  palette={palette}
+                  width={760}
+                  height={520}
+                />
+              )}
             </div>
             <GuessPanel
               // Key the game by slug so switching puzzles resets it; the
