@@ -2,6 +2,7 @@ import { lazy, Suspense, useState } from "react";
 import MissingCountryMap from "./map/MissingCountryMap.jsx";
 import GuessPanel from "./game/GuessPanel.jsx";
 import { useDailyPuzzle } from "./game/useDailyPuzzle.js";
+import { loadPref, savePref } from "./game/storage.js";
 
 // Dev-only QC surface. Gated by TWO locks: (1) import.meta.env.DEV, which Vite
 // hard-replaces with `false` in `vite build` so this whole branch is dead code,
@@ -30,6 +31,14 @@ function DailyGame() {
   const puzzle = useDailyPuzzle();
   const [view, setView] = useState("flat"); // "flat" | "globe"
   const globe = view === "globe";
+
+  // Distinct-country coloring is an opt-in accessibility/difficulty aid, free to
+  // all players and remembered across sessions (localStorage). `palette` picks
+  // the colorblind-safe (okabe) or normal hue set; it only matters when on.
+  const [colorize, setColorize] = useState(() => loadPref("colorize", false));
+  const [palette, setPalette] = useState(() => loadPref("palette", "okabe"));
+  const setColorizePref = (v) => { setColorize(v); savePref("colorize", v); };
+  const setPalettePref = (v) => { setPalette(v); savePref("palette", v); };
 
   return (
     <div
@@ -74,12 +83,29 @@ function DailyGame() {
       {puzzle.status === "ready" && (
         <div style={{ display: "flex", gap: 20, alignItems: "flex-start", flexWrap: "wrap" }}>
           <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-            <ViewToggle view={view} setView={setView} />
+            <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
+              <ViewToggle view={view} setView={setView} />
+              <Toggle
+                options={[["off", "Off"], ["on", "On"]]}
+                value={colorize ? "on" : "off"}
+                onChange={(v) => setColorizePref(v === "on")}
+                label="Colors"
+              />
+              {colorize && (
+                <Toggle
+                  options={[["normal", "Normal"], ["okabe", "Colorblind"]]}
+                  value={palette}
+                  onChange={setPalettePref}
+                />
+              )}
+            </div>
             <MissingCountryMap
               slug={puzzle.slug}
               projectionType={globe ? "orthographic" : "naturalEarth1"}
               width={840}
               height={560}
+              colorize={colorize}
+              palette={palette}
             />
           </div>
           <GuessPanel
@@ -119,6 +145,44 @@ function ViewToggle({ view, setView }) {
     <div style={{ display: "flex", width: "fit-content" }}>
       {opt("flat", "2D")}
       {opt("globe", "Globe")}
+    </div>
+  );
+}
+
+// Reusable segmented toggle. `options` is [value, label] pairs; `label` renders
+// a small caption before the control (e.g. "Colors").
+function Toggle({ options, value, onChange, label }) {
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+      {label && <span style={{ fontSize: 12, color: "#94a3b8" }}>{label}</span>}
+      <div style={{ display: "flex", width: "fit-content" }}>
+        {options.map(([val, lbl], i) => {
+          const active = value === val;
+          return (
+            <button
+              key={val}
+              onClick={() => onChange(val)}
+              aria-pressed={active}
+              style={{
+                padding: "5px 14px",
+                border: "1px solid #334155",
+                background: active ? "#334155" : "transparent",
+                color: active ? "#f8fafc" : "#94a3b8",
+                fontSize: 13,
+                cursor: "pointer",
+                borderRadius:
+                  i === 0
+                    ? "8px 0 0 8px"
+                    : i === options.length - 1
+                    ? "0 8px 8px 0"
+                    : 0,
+              }}
+            >
+              {lbl}
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
 }

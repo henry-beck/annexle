@@ -1,4 +1,6 @@
+import { useMemo } from "react";
 import { useSwallowedWorld } from "./useSwallowedWorld.js";
+import { colorMapFor } from "./coloring.js";
 import FlatMap from "./FlatMap.jsx";
 import GlobeMap from "./GlobeMap.jsx";
 
@@ -6,14 +8,26 @@ import GlobeMap from "./GlobeMap.jsx";
 // rotatable globe (canvas). Same GeoJSON; the two renderers differ because a
 // spinning globe re-paths every frame (canvas) while the flat map pans/zooms
 // with a cheap transform (SVG). See FlatMap / GlobeMap.
+//
+// `colorize` turns on the distinct-country coloring (no two bordering countries
+// share a color); `palette` picks the hue set ("okabe" colorblind-safe or
+// "normal"). The coloring is computed from the loaded FeatureCollection here —
+// where the geometry lives — and handed to whichever renderer is active.
 export default function MissingCountryMap({
   slug,
   diffUrl,
   projectionType = "naturalEarth1",
   width = 960,
   height = 600,
+  colorize = false,
+  palette = "okabe",
 }) {
   const { fc, loading, error } = useSwallowedWorld(slug, diffUrl);
+
+  const colors = useMemo(
+    () => (fc && colorize ? colorMapFor(fc, palette).map : null),
+    [fc, colorize, palette]
+  );
 
   if (loading) return <MapFrame width={width} height={height} note="loading map…" />;
   if (error)
@@ -22,9 +36,9 @@ export default function MissingCountryMap({
     );
 
   return projectionType === "orthographic" ? (
-    <GlobeMap fc={fc} width={width} height={height} />
+    <GlobeMap fc={fc} width={width} height={height} colors={colors} />
   ) : (
-    <FlatMap fc={fc} width={width} height={height} />
+    <FlatMap fc={fc} width={width} height={height} colors={colors} />
   );
 }
 
