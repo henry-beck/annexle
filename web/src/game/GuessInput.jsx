@@ -43,12 +43,13 @@ export default function GuessInput({ countries, used, onGuess, disabled }) {
           placeholder="Guess a country"
           style={{
             flex: 1,
+            minWidth: 0,
             padding: "8px 10px",
             borderRadius: 8,
             border: "1px solid #334155",
             background: "#0f172a",
             color: "#e2e8f0",
-            fontSize: 14,
+            fontSize: 16, // >=16px so iOS Safari doesn't auto-zoom the page on focus
             outline: "none",
           }}
         />

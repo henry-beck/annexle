@@ -5,6 +5,7 @@ import { drag as d3drag } from "d3-drag";
 import { zoom as d3zoom, zoomIdentity } from "d3-zoom";
 import { createProjection } from "./projection.js";
 import Tooltip from "./Tooltip.jsx";
+import TouchBanner from "./TouchBanner.jsx";
 
 const SPHERE = { type: "Sphere" };
 // Match index.css tokens (canvas needs concrete colours, not CSS vars).
@@ -24,9 +25,11 @@ const LIMB = "#1e3a5f";
 // name-tooltip behaviour as the flat map.
 export default function GlobeMap({ fc, width, height, colors = null }) {
   const canvasRef = useRef(null);
+  const containerRef = useRef(null);
   const [rotation, setRotation] = useState([0, -15]);
   const [globeK, setGlobeK] = useState(1);
   const [hover, setHover] = useState({ feature: null, name: null, x: 0, y: 0 });
+  const [touchName, setTouchName] = useState(null);
 
   const rotRef = useRef(rotation);
   rotRef.current = rotation;
@@ -136,39 +139,68 @@ export default function GlobeMap({ fc, width, height, colors = null }) {
     };
   }, [fc, width, height]);
 
-  // Hover: invert the cursor to lon/lat and find the country containing it.
-  // Skipped while dragging (that's a rotate gesture, not a hover).
+  // Pick the country at a canvas-local point: invert to lon/lat, then geoContains.
+  // Only picks on the globe disk — geoOrthographic.invert returns a limb lon/lat
+  // for points OUTSIDE the disk too, so without this the black space near the
+  // edge would report a country. Shared by mouse-hover and touch.
+  function pickAt(mx, my) {
+    const [tx, ty] = projection.translate();
+    const r = projection.scale(); // sphere radius in px for orthographic
+    if ((mx - tx) ** 2 + (my - ty) ** 2 > r * r) return null;
+    const ll = projection.invert([mx, my]);
+    if (!ll) return null;
+    for (const f of fc.features) if (geoContains(f, ll)) return f;
+    return null;
+  }
+
+  // Hover: skipped while dragging (that's a rotate gesture, not a hover).
   function handleMove(e) {
     if (draggingRef.current) return;
     const rect = canvasRef.current.getBoundingClientRect();
     const mx = e.clientX - rect.left;
     const my = e.clientY - rect.top;
-
-    // Only pick when the cursor is on the globe disk. geoOrthographic.invert
-    // returns a limb lon/lat for points OUTSIDE the disk too, so without this a
-    // hover over the black space near the edge would report a country.
-    const [tx, ty] = projection.translate();
-    const r = projection.scale(); // sphere radius in px for orthographic
-    const onGlobe = (mx - tx) ** 2 + (my - ty) ** 2 <= r * r;
-
-    let feature = null;
-    if (onGlobe) {
-      const ll = projection.invert([mx, my]);
-      if (ll) {
-        for (const f of fc.features) {
-          if (geoContains(f, ll)) {
-            feature = f;
-            break;
-          }
-        }
-      }
-    }
+    const feature = pickAt(mx, my);
     setHover({ feature, name: feature ? feature.properties.name : null, x: mx, y: my });
   }
 
+  // Touch name-readout: the country under the primary finger, reported live on
+  // start AND move — including DURING a rotate (unlike the mouse path, no drag
+  // guard, since the whole point is the live readout while panning). Native
+  // capture-phase listeners on the container, for the same reason as FlatMap:
+  // d3-drag/zoom on the canvas stop touch propagation, so a React-delegated
+  // handler would never see the event. Read-only — no preventDefault/
+  // stopPropagation — so d3-drag still rotates. `pickAt` closes over the current
+  // (rotating) projection, so it's read through a ref that's refreshed each
+  // render rather than captured once.
+  const pickRef = useRef(pickAt);
+  pickRef.current = pickAt;
+  useEffect(() => {
+    const node = containerRef.current;
+    if (!node) return;
+    const report = (e) => {
+      const t = e.touches && e.touches[0];
+      if (!t || !canvasRef.current) return;
+      const rect = canvasRef.current.getBoundingClientRect();
+      const feature = pickRef.current(t.clientX - rect.left, t.clientY - rect.top);
+      setTouchName(feature ? feature.properties.name : null);
+    };
+    const clear = () => setTouchName(null);
+    const opts = { capture: true, passive: true };
+    node.addEventListener("touchstart", report, opts);
+    node.addEventListener("touchmove", report, opts);
+    node.addEventListener("touchend", clear, opts);
+    node.addEventListener("touchcancel", clear, opts);
+    return () => {
+      node.removeEventListener("touchstart", report, opts);
+      node.removeEventListener("touchmove", report, opts);
+      node.removeEventListener("touchend", clear, opts);
+      node.removeEventListener("touchcancel", clear, opts);
+    };
+  }, []);
+
   const dpr = typeof window !== "undefined" ? window.devicePixelRatio || 1 : 1;
   return (
-    <div style={{ position: "relative", width, height }}>
+    <div ref={containerRef} style={{ position: "relative", width, height }}>
       <canvas
         ref={canvasRef}
         width={Math.round(width * dpr)}
@@ -180,11 +212,13 @@ export default function GlobeMap({ fc, width, height, colors = null }) {
           background: SPACE,
           cursor: "grab",
           borderRadius: 12,
+          touchAction: "none", // d3-drag/zoom own the gesture; don't let the browser scroll/zoom
         }}
         onMouseMove={handleMove}
         onMouseLeave={() => setHover((h) => ({ ...h, feature: null, name: null }))}
       />
       <Tooltip name={hover.name} x={hover.x} y={hover.y} />
+      <TouchBanner name={touchName} />
     </div>
   );
 }

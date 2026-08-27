@@ -17,7 +17,7 @@ export default function GuessPanel({ date, target, targetCentroid, countries, st
   const over = status !== "playing";
 
   return (
-    <div style={{ width: 320, display: "flex", flexDirection: "column", gap: 12 }}>
+    <div style={{ width: "100%", display: "flex", flexDirection: "column", gap: 12 }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
         <div style={{ fontSize: 13, color: "#94a3b8" }}>
           {over ? "Game over" : `Guess the missing country · ${remaining} left`}
