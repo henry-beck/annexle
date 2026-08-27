@@ -135,6 +135,30 @@ export function createStorage(ns) {
   return { loadProgress, saveProgress, loadStreak, currentStreak, recordResult };
 }
 
+// Global player preferences (not date-keyed): a display choice like distinct
+// coloring persists across every day and every session. Stored under
+// "missing-country:pref:*", a prefix that can't collide with progress/streak or
+// the dev store. Every access is wrapped so private mode / disabled storage just
+// falls back to the default instead of throwing.
+const PREF_PREFIX = "missing-country:pref:";
+
+export function loadPref(key, fallback) {
+  try {
+    const raw = localStorage.getItem(`${PREF_PREFIX}${key}`);
+    return raw == null ? fallback : JSON.parse(raw);
+  } catch {
+    return fallback;
+  }
+}
+
+export function savePref(key, value) {
+  try {
+    localStorage.setItem(`${PREF_PREFIX}${key}`, JSON.stringify(value));
+  } catch {
+    /* private mode / quota — non-fatal, choice just isn't remembered */
+  }
+}
+
 // The real daily-play store. Its methods are re-exported as module functions so
 // existing callers keep working unchanged.
 export const defaultStorage = createStorage("missing-country");

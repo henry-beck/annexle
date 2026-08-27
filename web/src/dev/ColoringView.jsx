@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useSwallowedWorld } from "../map/useSwallowedWorld.js";
 import FlatMap from "../map/FlatMap.jsx";
-import { colorMapFor } from "./coloring.js";
+import { colorMapFor } from "../map/coloring.js";
 
 // DEV-ONLY distinct-country coloring preview. Always renders the ORGANIC
 // variant geometry (the base being evaluated) with a graph coloring applied so

@@ -22,7 +22,7 @@ const LIMB = "#1e3a5f";
 // immediate mode, no DOM churn, comfortably 60fps. Hover uses projection.invert
 // + geoContains (spherical, so it's correct at any rotation), giving the same
 // name-tooltip behaviour as the flat map.
-export default function GlobeMap({ fc, width, height }) {
+export default function GlobeMap({ fc, width, height, colors = null }) {
   const canvasRef = useRef(null);
   const [rotation, setRotation] = useState([0, -15]);
   const [globeK, setGlobeK] = useState(1);
@@ -75,7 +75,8 @@ export default function GlobeMap({ fc, width, height }) {
     for (const f of fc.features) {
       ctx.beginPath();
       path(f);
-      ctx.fillStyle = LAND;
+      // distinct-country coloring when enabled, else the uniform land fill.
+      ctx.fillStyle = (colors && colors.get(f.properties.name)) || LAND;
       ctx.fill();
       ctx.stroke();
     }
@@ -86,7 +87,7 @@ export default function GlobeMap({ fc, width, height }) {
       ctx.fill();
       ctx.stroke();
     }
-  }, [projection, hover.feature, fc, width, height]);
+  }, [projection, hover.feature, fc, width, height, colors]);
 
   // Interaction: drag rotates, wheel zooms (separate behaviours so they coexist).
   useEffect(() => {
