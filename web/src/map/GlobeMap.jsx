@@ -92,7 +92,11 @@ export default function GlobeMap({ fc, width, height, colors = null }) {
     }
   }, [projection, hover.feature, fc, width, height, colors]);
 
-  // Interaction: drag rotates, wheel zooms (separate behaviours so they coexist).
+  // Interaction: ONE finger (or mouse) drag rotates; TWO fingers (or the wheel)
+  // zoom. Two separate d3 behaviours that coexist on touch: the zoom filter takes
+  // only wheel + multi-touch, so a single finger falls through to the drag; the
+  // drag skips rotation whenever a second finger is down, so a pinch zooms
+  // without also spinning the globe.
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -100,7 +104,9 @@ export default function GlobeMap({ fc, width, height, colors = null }) {
 
     const z = d3zoom()
       .scaleExtent([1, 12])
-      .filter((e) => e.type === "wheel")
+      // wheel (desktop) OR a 2+finger touch (pinch). d3-zoom's pan translate is
+      // ignored — only .k is used — so a pinch zooms without panning/rotating.
+      .filter((e) => e.type === "wheel" || (!!e.touches && e.touches.length >= 2))
       .on("zoom", (e) => setGlobeK(e.transform.k));
     sel.call(z);
     sel.call(z.transform, zoomIdentity);
@@ -109,13 +115,28 @@ export default function GlobeMap({ fc, width, height, colors = null }) {
     let startRot = null;
     let raf = null;
     let pending = null;
+    let pinching = false;
     const dragBehaviour = d3drag()
       .on("start", (e) => {
         draggingRef.current = true;
         start = [e.x, e.y];
         startRot = rotRef.current;
+        pinching = false;
       })
       .on("drag", (e) => {
+        // A second finger down = a pinch (d3-zoom owns the scale); don't rotate.
+        // When it lifts back to one finger, re-anchor from the current point so
+        // rotation resumes smoothly instead of jumping by the pinch's drift.
+        const touches = e.sourceEvent && e.sourceEvent.touches ? e.sourceEvent.touches.length : 1;
+        if (touches >= 2) {
+          pinching = true;
+          return;
+        }
+        if (pinching) {
+          pinching = false;
+          start = [e.x, e.y];
+          startRot = rotRef.current;
+        }
         const sens = 0.4 / kRef.current;
         const lambda = startRot[0] + (e.x - start[0]) * sens;
         const phi = Math.max(-90, Math.min(90, startRot[1] - (e.y - start[1]) * sens));
