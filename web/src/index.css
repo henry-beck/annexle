@@ -25,3 +25,8 @@ body { background: #0f172a; }
   vector-effect: non-scaling-stroke; /* keep borders thin at any zoom */
 }
 .country:hover { fill: var(--land-hover); }
+
+/* Autocomplete rows: highlight on hover (desktop) AND on press (touch), so a
+   tap gives feedback — :active fires on touch where :hover/mouseenter don't. */
+.suggestion:hover,
+.suggestion:active { background: #1e293b; }
