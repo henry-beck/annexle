@@ -56,3 +56,131 @@ lines plus a thin sliver toward the Mediterranean. Two separate issues:
 
 Best tackled alongside the xkcd distributed-distortion mode above, since both
 rewrite the border-drawing path.
+
+---
+
+# Feature roadmap (product backlog)
+
+Product/gameplay backlog, tiered by what gates it. Planning only — nothing here
+is built. The two geometry notes above (distortion, border naturalness) are
+orthogonal polish items and are not part of these tiers.
+
+## Launch blockers
+
+Needed before a public launch.
+
+- **How-to-play popup.** Opened via a **"?" icon in a corner**. Includes a
+  **visual before/after illustration** of a country being swallowed (real map
+  before → swallowed map after).
+- **Visual / branding.** White background, logo, and icons for the
+  options/toggles (replacing the current dark, text-labelled controls).
+- **Background timer.** Runs for stats; not necessarily displayed. A
+  data-collection primitive that feeds local stats.
+- **Local player stats.** Device/browser-local via `localStorage` — **not**
+  cross-device. Tracks: guesses-to-solve, all-time success rate, total solved,
+  current streak, longest streak.
+  - **Regression guard (explicit):** the existing `localStorage` persistence
+    (daily progress keyed by date, streak, and the `pref:*` display settings)
+    must keep working **unchanged** through all other launch-blocker work. Stats
+    extend that same storage layer; verify no regression to daily-progress
+    restore or streak counting as this and adjacent features land.
+- **Per-puzzle difficulty rating.** easy / medium / hard. (The pipeline already
+  computes an `enclosure` score per puzzle plus neighbor counts — a natural
+  basis for deriving this label, emitted into `puzzles.json`.)
+- **Progressive hint system.** **Replaces the current distance/direction
+  feedback entirely** — confirmed to ship at launch, not as a fast-follow. On
+  each wrong guess, reveal the next hint:
+  1. Arrow toward the general direction / continent.
+  2. Distance from all guesses so far, and going forward.
+  3. A history fact about the country.
+  4. A famous landmark.
+  5. Highlight one bordering country on the map.
+- **Post-solve country blurb.** After solving, show a short blurb about the
+  target country (history / fun facts), inspired by maptag.gg's post-solve info
+  panel. **Self-contained** — no external integration with maptag.gg itself.
+- **Design note — one shared content bank.** The hint system's history-fact
+  (hint 3) and landmark (hint 4) content and the post-solve blurb must draw from
+  **one shared per-country content bank**, not content built separately per
+  feature. Design the bank's schema once; both features consume it.
+- **Open question (unresolved) — content sourcing.** Who sources / writes the
+  per-country facts and landmarks for **~165 countries** (history fact,
+  landmark, and blurb)? Not yet decided. Flag this as the **likely pace-setting
+  dependency for launch**, separate from the code work — the code can be built
+  against a schema + stub data, but launch can't happen until the bank is filled.
+
+## Post-launch — requires backend
+
+Deferred: the site is currently **static / `localStorage`-only, with no server**.
+These need one built first.
+
+- **Cross-player stats.** Percentile and comparison to other players across all
+  stats.
+- **Leaderboard.** With name entry + profanity filtering.
+- **Multiplayer.**
+
+## Post-launch — self-contained
+
+No backend needed; can follow launch whenever.
+
+- **Archive mode** — play past puzzles; random-5-in-a-row shuffle.
+- **Multiple-countries-missing-at-once** mode.
+- **Regional practice mode** and alternate modes (e.g. include islands).
+- **Options banner / nav** — archive, US, regions, numbers/alphabet (TBD).
+- **Misc** — footer with info/copyright; incorrect-guess highlighting on the
+  map; per-country mini-games (flag guessing, etc.).
+
+---
+
+# Launch-blocker build sequence (proposed)
+
+Ordering the launch blockers by dependency. Two things drive the order: (1) the
+**shared content bank** must exist before both the content-hints and the blurb
+are built on it, and (2) the **hint system rewrites the guess→feedback→solve
+loop**, which the stats feature measures — so that loop should settle before
+stats is finalized.
+
+**Critical path is content, not code.** The open question (who writes ~165
+countries of facts/landmarks/blurbs) is the long pole. Kick off content
+authoring *first and in parallel* with everything below; the code can be built
+against the schema + stub data and swapped to real content when it lands.
+
+1. **Content bank — schema + sourcing kickoff.** Define the per-country record
+   (history fact, landmark, blurb; keyed by country code) and start the
+   authoring pipeline immediately. No gameplay code yet — this unblocks hints
+   3/4 and the blurb and is the pace-setter. Everything downstream can develop
+   against stubbed entries.
+2. **Difficulty rating.** Cheap and independent — derive easy/med/hard from the
+   existing `enclosure` + neighbor data in the pipeline and emit it into
+   `puzzles.json`. No content or gameplay-loop dependency; good early win and
+   available as context for stats/UI.
+3. **Progressive hint system — core loop first.** The largest gameplay change;
+   reworks the guess-feedback path (`useGameState` + `GuessPanel`), replacing
+   distance/direction. Build the staged-reveal framework and wire the hints that
+   need **no content bank** — 1 (direction, reuses `geo.js` bearing), 2
+   (distance, reuses `haversine`), and 5 (highlight a bordering country, uses
+   the `neighbors` already in `puzzles.json`). Land hints **3 and 4 as content
+   arrives**. Do this before finalizing stats, because it defines what a
+   "guess" and a "solve" are.
+4. **Background timer + local stats.** Build together on the existing
+   `localStorage` layer, against the now-settled guess/solve loop from step 3.
+   Timer is the data primitive; stats (guesses-to-solve, success rate, total
+   solved, current/longest streak) record off the finalized solve event. Run
+   the **persistence regression guard** here — confirm daily-progress restore
+   and streak counting still work unchanged.
+5. **Post-solve blurb.** Consumes the step-1 content bank; ships when blurb
+   content is written. Small once the bank exists — a panel shown on solve.
+6. **How-to-play popup + before/after illustration.** Build after the hint loop
+   (step 3) is final, so the instructions describe the actual shipped mechanics.
+   The before/after swallow illustration can be generated from the pipeline (a
+   real base map vs. its swallowed diff) rather than hand-drawn.
+7. **Visual / branding pass (white bg, logo, toggle icons).** The theme touches
+   every screen, so do it as one coherent pass **after** the feature set is
+   stable — otherwise UI gets rebuilt twice. Cheap insurance: introduce a color
+   **token layer early** (the current code hardcodes dark hex inline) so the
+   eventual light-theme swap is a token change, not a component rewrite.
+
+Rough parallelism: content authoring (step 1) runs the whole time; difficulty
+(2) is independent and can happen anytime; hints (3) → stats (4) is the main
+serial spine; blurb (5) trails the content; instructions (6) trail the hints;
+branding (7) is the closing pass. Launch readiness is gated by the content bank
+filling up, not by the code.
