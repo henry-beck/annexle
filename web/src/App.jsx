@@ -79,7 +79,7 @@ function DailyGame() {
         flexDirection: "column",
         alignItems: "center",
         gap: 12,
-        padding: 24,
+        padding: "clamp(12px, 4vw, 24px)", // tighter on small screens, full on desktop
         color: "#e2e8f0",
       }}
     >
@@ -174,7 +174,8 @@ function ViewToggle({ view, setView }) {
         onClick={() => setView(value)}
         aria-pressed={active}
         style={{
-          padding: "5px 14px",
+          minHeight: 40, // comfortable touch target
+          padding: "8px 14px",
           border: "1px solid #334155",
           background: active ? "#334155" : "transparent",
           color: active ? "#f8fafc" : "#94a3b8",
@@ -210,7 +211,8 @@ function Toggle({ options, value, onChange, label }) {
               onClick={() => onChange(val)}
               aria-pressed={active}
               style={{
-                padding: "5px 14px",
+                minHeight: 40, // comfortable touch target
+                padding: "8px 14px",
                 border: "1px solid #334155",
                 background: active ? "#334155" : "transparent",
                 color: active ? "#f8fafc" : "#94a3b8",

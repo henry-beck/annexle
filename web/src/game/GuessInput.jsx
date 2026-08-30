@@ -36,7 +36,13 @@ export default function GuessInput({ countries, used, onGuess, disabled }) {
             setInput(e.target.value);
             setOpen(true);
           }}
-          onFocus={() => setOpen(true)}
+          onFocus={() => {
+            setOpen(true);
+            // On a phone the on-screen keyboard covers the lower half; nudge the
+            // field toward the middle so the input and its dropdown stay visible
+            // above the keyboard. No-op on desktop (already in view).
+            inputRef.current?.scrollIntoView({ block: "center", behavior: "smooth" });
+          }}
           onKeyDown={(e) => {
             if (e.key === "Enter" && suggestions[0]) submit(suggestions[0].name);
           }}
@@ -44,7 +50,8 @@ export default function GuessInput({ countries, used, onGuess, disabled }) {
           style={{
             flex: 1,
             minWidth: 0,
-            padding: "8px 10px",
+            minHeight: 44, // comfortable touch target
+            padding: "11px 12px",
             borderRadius: 8,
             border: "1px solid #334155",
             background: "#0f172a",
@@ -57,12 +64,13 @@ export default function GuessInput({ countries, used, onGuess, disabled }) {
           onClick={() => suggestions[0] && submit(suggestions[0].name)}
           disabled={disabled || !suggestions[0]}
           style={{
-            padding: "8px 14px",
+            minHeight: 44, // comfortable touch target
+            padding: "11px 16px",
             borderRadius: 8,
             border: "none",
             background: suggestions[0] ? "#059669" : "#1e293b",
             color: "#f8fafc",
-            fontSize: 14,
+            fontSize: 16,
             cursor: suggestions[0] ? "pointer" : "default",
           }}
         >
@@ -85,20 +93,20 @@ export default function GuessInput({ countries, used, onGuess, disabled }) {
           {suggestions.map((s) => (
             <button
               key={s.name}
+              className="suggestion"
               onClick={() => submit(s.name)}
               style={{
                 display: "block",
                 width: "100%",
+                minHeight: 44, // comfortable touch target
                 textAlign: "left",
-                padding: "8px 10px",
+                padding: "12px 12px",
                 border: "none",
                 background: "transparent",
                 color: "#e2e8f0",
-                fontSize: 14,
+                fontSize: 16,
                 cursor: "pointer",
               }}
-              onMouseEnter={(e) => (e.currentTarget.style.background = "#1e293b")}
-              onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
             >
               {s.name}
             </button>
