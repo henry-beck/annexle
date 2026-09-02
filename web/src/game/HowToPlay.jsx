@@ -82,10 +82,8 @@ export default function HowToPlay({ open, onClose }) {
           </li>
           <li style={{ fontSize: 14, lineHeight: 1.5 }}>Guess which country is missing.</li>
           <li style={{ fontSize: 14, lineHeight: 1.5 }}>
-            Wrong guesses reveal hints: direction first, then distance — updating
-            with every guess — plus clues about the country itself as you go (a
-            history fact, a famous landmark, then a bordering country highlighted
-            on the map).
+            Each guess shows how far away and in which direction the real country
+            is from your guess.
           </li>
           <li style={{ fontSize: 14, lineHeight: 1.5 }}>
             You get {MAX_GUESSES} guesses per day.
