@@ -192,6 +192,7 @@ function DailyGame() {
           <div style={{ flex: "1 1 300px", minWidth: 0, maxWidth: 360 }}>
             <GuessPanel
               date={puzzle.date}
+              dayIndex={puzzle.dayIndex}
               countries={puzzle.countries}
               target={puzzle.target}
               targetCentroid={puzzle.targetCentroid}
