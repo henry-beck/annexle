@@ -1,6 +1,7 @@
 import { lazy, Suspense, useCallback, useRef, useState } from "react";
 import MissingCountryMap from "./map/MissingCountryMap.jsx";
 import GuessPanel from "./game/GuessPanel.jsx";
+import HowToPlay from "./game/HowToPlay.jsx";
 import { useDailyPuzzle } from "./game/useDailyPuzzle.js";
 import { loadPref, savePref } from "./game/storage.js";
 
@@ -71,9 +72,19 @@ function DailyGame() {
   const setColorizePref = (v) => { setColorize(v); savePref("colorize", v); };
   const setPalettePref = (v) => { setPalette(v); savePref("palette", v); };
 
+  // How-to-play: auto-open once per player (localStorage), reopenable via "?".
+  // Initialise straight from the stored flag so it shows on the very first
+  // render for a new player and never again after; mark seen immediately.
+  const [showHelp, setShowHelp] = useState(() => {
+    const seen = loadPref("help-seen", false);
+    if (!seen) savePref("help-seen", true);
+    return !seen;
+  });
+
   return (
     <div
       style={{
+        position: "relative",
         minHeight: "100%",
         display: "flex",
         flexDirection: "column",
@@ -83,6 +94,32 @@ function DailyGame() {
         color: "#e2e8f0",
       }}
     >
+      <button
+        onClick={() => setShowHelp(true)}
+        aria-label="How to play"
+        title="How to play"
+        style={{
+          position: "absolute",
+          top: "clamp(12px, 4vw, 24px)",
+          right: "clamp(12px, 4vw, 24px)",
+          width: 40,
+          height: 40,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          border: "1px solid #334155",
+          borderRadius: "50%",
+          background: "transparent",
+          color: "#94a3b8",
+          fontSize: 18,
+          fontWeight: 700,
+          cursor: "pointer",
+          zIndex: 10,
+        }}
+      >
+        ?
+      </button>
+
       <div style={{ textAlign: "center" }}>
         <h1 style={{ margin: "0 0 4px", fontSize: 22 }}>Annexle</h1>
         <p style={{ margin: 0, fontSize: 13, color: "#94a3b8" }}>
@@ -162,6 +199,8 @@ function DailyGame() {
           </div>
         </div>
       )}
+
+      <HowToPlay open={showHelp} onClose={() => setShowHelp(false)} />
     </div>
   );
 }
