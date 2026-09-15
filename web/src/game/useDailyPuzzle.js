@@ -32,10 +32,17 @@ export function useDailyPuzzle() {
         if (!r.ok) throw new Error(`countries.json: HTTP ${r.status}`);
         return r.json();
       }),
+      // puzzles.json carries the per-puzzle hint circles (keyed by slug); the
+      // continent (reveal 1) is on the country record from countries.json.
+      fetch(`${DATA_ROOT}/puzzles.json`).then((r) => {
+        if (!r.ok) throw new Error(`puzzles.json: HTTP ${r.status}`);
+        return r.json();
+      }),
     ])
-      .then(([manifest, countries]) => {
+      .then(([manifest, countries, puzzles]) => {
         if (cancelled) return;
         const byName = new Map(countries.map((c) => [c.name, c]));
+        const bySlug = new Map(puzzles.map((p) => [p.slug, p]));
         const params = new URLSearchParams(window.location.search);
 
         // resolve the date (today UTC, or ?date= override)
@@ -60,6 +67,7 @@ export function useDailyPuzzle() {
           ({ slug, target } = manifest.entries[dayIndex]);
         }
 
+        const puzzleEntry = bySlug.get(slug) || null;
         setState({
           status: "ready",
           slug,
@@ -68,6 +76,9 @@ export function useDailyPuzzle() {
           date: dateStr || new Date().toISOString().slice(0, 10),
           targetCentroid: target ? byName.get(target) || null : null,
           countries,
+          // Shrinking-circle hint data for the resolved puzzle.
+          circles: puzzleEntry?.circles ?? null,
+          continent: target ? byName.get(target)?.continent ?? null : null,
         });
       })
       .catch((error) => {

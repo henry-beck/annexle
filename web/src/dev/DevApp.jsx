@@ -1,7 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import MissingCountryMap from "../map/MissingCountryMap.jsx";
+import HintBanner from "../map/HintBanner.jsx";
 import ColoringView from "./ColoringView.jsx";
 import GuessPanel from "../game/GuessPanel.jsx";
+import { useGameState } from "../game/useGameState.js";
+import { revealFor } from "../game/reveal.js";
 import { createStorage } from "../game/storage.js";
 import { listVariants } from "./variants.js";
 
@@ -61,8 +64,6 @@ export default function DevApp() {
 
   const puzzles = data.status === "ready" ? data.puzzles : [];
   const countries = data.status === "ready" ? data.countries : [];
-  const byName = useMemo(() => new Map(countries.map((c) => [c.name, c])), [countries]);
-
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return puzzles;
@@ -77,26 +78,24 @@ export default function DevApp() {
   const variant = variants.find((v) => v.key === effectiveKey) || variants[0] || null;
   const globe = view === "globe";
 
-  // Reveal flow (preview of the live hint sequence):
-  //   reveal 0     = Off (nothing)
-  //   reveal 1     = continent name as text only (no circle, no shading)
-  //   reveals 2..5 = the 4 shrinking circles (entry.circles[0..3])
-  // Russia is a hardcoded special case: every reveal shows a fixed text line,
-  // never a continent or circle. This is Russia-only, not a general rule.
-  const isRussia = entry?.target === "Russia";
+  // Reveal preview: a manual stepper (Off/1..N) drives the SAME revealFor()
+  // logic the live game uses — reveal 1 = continent text, 2..N = shrinking
+  // circles, Russia = fixed text. This is a QC stepper, independent of the
+  // dev GuessPanel below (which is a separate isolated playthrough).
   const nReveals = entry && Array.isArray(entry.circles) ? 1 + entry.circles.length : 0;
-  const revealCircle =
-    entry && !isRussia && reveal >= 2 && Array.isArray(entry.circles)
-      ? entry.circles[reveal - 2]
-      : null;
-  const revealText =
-    !entry || reveal === 0
-      ? null
-      : isRussia
-      ? "It’s literally Russia"
-      : reveal === 1
-      ? `Continent: ${entry.continent || "—"}`
-      : null;
+  const { circle: revealCircle, text: revealText } = revealFor(
+    { target: entry?.target, continent: entry?.continent, circles: entry?.circles },
+    entry ? reveal : 0
+  );
+
+  // Isolated dev playthrough. `date` is `dev-<slug>` so switching puzzles resets
+  // it via useGameState's date effect; scoped to the dev store, never real play.
+  const game = useGameState({
+    date: `dev-${entry?.slug ?? "none"}`,
+    target: entry?.target,
+    countries,
+    storage: devStorage,
+  });
 
   if (data.status === "loading") return <Shell><Muted>Loading dev index…</Muted></Shell>;
   if (data.status === "error")
@@ -249,29 +248,7 @@ export default function DevApp() {
                     height={520}
                     circle={revealCircle}
                   />
-                  {/* Text-only reveal (continent, or the Russia special case):
-                      shown as a banner over the map since it isn't a circle. */}
-                  {revealText && (
-                    <div
-                      style={{
-                        position: "absolute",
-                        top: 12,
-                        left: "50%",
-                        transform: "translateX(-50%)",
-                        padding: "8px 16px",
-                        borderRadius: 999,
-                        background: "rgba(15,23,42,0.92)",
-                        border: "1px solid #334155",
-                        color: "#f8fafc",
-                        fontSize: 15,
-                        fontWeight: 600,
-                        pointerEvents: "none",
-                        whiteSpace: "nowrap",
-                      }}
-                    >
-                      {revealText}
-                    </div>
-                  )}
+                  <HintBanner text={revealText} />
                 </div>
               ) : (
                 <ColoringView
@@ -285,14 +262,15 @@ export default function DevApp() {
               )}
             </div>
             <GuessPanel
-              // Key the game by slug so switching puzzles resets it; the
-              // "date" is the slug (dev has no calendar), scoped to the dev store.
-              key={entry.slug}
               date={`dev-${entry.slug}`}
               countries={countries}
               target={entry.target}
-              targetCentroid={byName.get(entry.target) || null}
-              storage={devStorage}
+              attempts={game.attempts}
+              status={game.status}
+              remaining={game.remaining}
+              streak={game.streak}
+              submitGuess={game.submitGuess}
+              submitSkip={game.submitSkip}
             />
           </div>
         )}

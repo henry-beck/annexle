@@ -82,11 +82,12 @@ export default function HowToPlay({ open, onClose }) {
           </li>
           <li style={{ fontSize: 14, lineHeight: 1.5 }}>Guess which country is missing.</li>
           <li style={{ fontSize: 14, lineHeight: 1.5 }}>
-            Each guess shows how far away and in which direction the real country
-            is from your guess.
+            Every miss (or Skip) reveals more: first the continent, then a circle
+            around the answer that shrinks with each attempt.
           </li>
           <li style={{ fontSize: 14, lineHeight: 1.5 }}>
-            You get {MAX_GUESSES} guesses per day.
+            You get {MAX_GUESSES} attempts per day — stuck? Skip to reveal the next
+            hint at the cost of an attempt.
           </li>
         </ol>
       </div>

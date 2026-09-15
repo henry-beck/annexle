@@ -1,8 +1,11 @@
 import { lazy, Suspense, useCallback, useRef, useState } from "react";
 import MissingCountryMap from "./map/MissingCountryMap.jsx";
+import HintBanner from "./map/HintBanner.jsx";
 import GuessPanel from "./game/GuessPanel.jsx";
 import HowToPlay from "./game/HowToPlay.jsx";
 import { useDailyPuzzle } from "./game/useDailyPuzzle.js";
+import { useGameState } from "./game/useGameState.js";
+import { revealFor } from "./game/reveal.js";
 import { loadPref, savePref } from "./game/storage.js";
 
 // Dev-only QC surface. Gated by TWO locks: (1) import.meta.env.DEV, which Vite
@@ -58,6 +61,19 @@ function DailyGame() {
   const puzzle = useDailyPuzzle();
   const [view, setView] = useState("flat"); // "flat" | "globe"
   const globe = view === "globe";
+
+  // Game brain is lifted here (not in GuessPanel) so the map can react to the
+  // same reveal level: each wrong guess / skip unlocks the next hint, shown on
+  // the map as the continent name (reveal 1) then the shrinking circles.
+  const game = useGameState({
+    date: puzzle.date,
+    target: puzzle.target,
+    countries: puzzle.countries || [],
+  });
+  const { circle: hintCircle, text: hintText } = revealFor(
+    { target: puzzle.target, continent: puzzle.continent, circles: puzzle.circles },
+    game.revealLevel
+  );
 
   // Responsive map: fill the column, capped at the original size on desktop.
   const [mapColRef, colW] = useMeasuredWidth();
@@ -180,14 +196,18 @@ function DailyGame() {
                 />
               )}
             </div>
-            <MissingCountryMap
-              slug={puzzle.slug}
-              projectionType={globe ? "orthographic" : "naturalEarth1"}
-              width={mapW}
-              height={mapH}
-              colorize={colorize}
-              palette={palette}
-            />
+            <div style={{ position: "relative", width: mapW, height: mapH }}>
+              <MissingCountryMap
+                slug={puzzle.slug}
+                projectionType={globe ? "orthographic" : "naturalEarth1"}
+                width={mapW}
+                height={mapH}
+                colorize={colorize}
+                palette={palette}
+                circle={hintCircle}
+              />
+              <HintBanner text={hintText} />
+            </div>
           </div>
           <div style={{ flex: "1 1 300px", minWidth: 0, maxWidth: 360 }}>
             <GuessPanel
@@ -195,7 +215,12 @@ function DailyGame() {
               dayIndex={puzzle.dayIndex}
               countries={puzzle.countries}
               target={puzzle.target}
-              targetCentroid={puzzle.targetCentroid}
+              attempts={game.attempts}
+              status={game.status}
+              remaining={game.remaining}
+              streak={game.streak}
+              submitGuess={game.submitGuess}
+              submitSkip={game.submitSkip}
             />
           </div>
         </div>
