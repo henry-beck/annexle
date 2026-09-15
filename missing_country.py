@@ -1179,8 +1179,15 @@ def cmd_build_distorted(geoms, codes, targets):
 
 # ------------------------------------------------------------------------- main
 if __name__ == "__main__":
-    geoms, codes = load()
     cmd = sys.argv[1] if len(sys.argv) > 1 else "candidates"
+    # build-circles patches the already-emitted puzzles.json with the shrinking-
+    # circle guess-hint sequences (verified strictly-inside). It needs only the
+    # centroids + slugs, not the GEOS stack, so it runs before load().
+    if cmd == "build-circles":
+        import circle_hints
+        circle_hints.patch_index(f"{OUT}/puzzles.json", f"{OUT}/countries.json")
+        sys.exit(0)
+    geoms, codes = load()
     if cmd == "candidates":
         cmd_candidates(geoms, codes)
     elif cmd == "adjacency":

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { geoPath, geoArea } from "d3-geo";
+import { geoPath, geoArea, geoCircle } from "d3-geo";
 import { select } from "d3-selection";
 import { zoom as d3zoom, zoomIdentity } from "d3-zoom";
 import { createProjection } from "./projection.js";
@@ -11,7 +11,7 @@ import TouchBanner from "./TouchBanner.jsx";
 // hover hit-test (incl. the largest-area-first ordering for enclaves) stays
 // exact. The rotatable globe uses a separate canvas renderer (GlobeMap) because
 // rotation re-paths every frame, which SVG can't do smoothly for ~240 countries.
-export default function FlatMap({ fc, width, height, colors = null }) {
+export default function FlatMap({ fc, width, height, colors = null, circle = null }) {
   const svgRef = useRef(null);
   const containerRef = useRef(null);
   const [transform, setTransform] = useState(zoomIdentity);
@@ -68,6 +68,24 @@ export default function FlatMap({ fc, width, height, colors = null }) {
     [fc, pathGen]
   );
 
+  // Shrinking-circle hint: the search region for the current reveal. `circle` is
+  // [lng, lat, radiusDeg] (exactly d3.geoCircle args). We draw two things, both
+  // pointer-events:none so pan/zoom/hover stay live everywhere:
+  //   - a "donut" that shades the world OUTSIDE the circle: one path of Sphere +
+  //     the circle polygon, filled fill-rule:evenodd so the circle punches a hole;
+  //   - the circle outline itself.
+  // geoCircle is a true spherical small-circle, so it projects correctly here
+  // (naturalEarth1) and on the globe from the same [lng,lat,radius] data.
+  const circlePaths = useMemo(() => {
+    if (!circle) return null;
+    const [lng, lat, radiusDeg] = circle;
+    const poly = geoCircle().center([lng, lat]).radius(radiusDeg)();
+    const circleD = pathGen(poly);
+    if (!circleD) return null;
+    const sphereD = pathGen({ type: "Sphere" });
+    return { shadeD: sphereD + circleD, outlineD: circleD };
+  }, [circle, pathGen]);
+
   useEffect(() => {
     if (!svgRef.current) return;
     const behaviour = d3zoom()
@@ -116,6 +134,23 @@ export default function FlatMap({ fc, width, height, colors = null }) {
               }
             />
           ))}
+          {circlePaths && (
+            <>
+              <path
+                d={circlePaths.shadeD}
+                fillRule="evenodd"
+                fill="rgba(2,6,23,0.55)"
+                pointerEvents="none"
+              />
+              <path
+                d={circlePaths.outlineD}
+                fill="none"
+                stroke="#f8fafc"
+                strokeWidth={1.5 / transform.k}
+                pointerEvents="none"
+              />
+            </>
+          )}
         </g>
       </svg>
       <Tooltip name={hover.name} x={hover.x} y={hover.y} />

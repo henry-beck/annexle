@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { geoPath, geoGraticule10, geoContains } from "d3-geo";
+import { geoPath, geoGraticule10, geoContains, geoCircle } from "d3-geo";
 import { select } from "d3-selection";
 import { drag as d3drag } from "d3-drag";
 import { zoom as d3zoom, zoomIdentity } from "d3-zoom";
@@ -23,7 +23,7 @@ const LIMB = "#1e3a5f";
 // immediate mode, no DOM churn, comfortably 60fps. Hover uses projection.invert
 // + geoContains (spherical, so it's correct at any rotation), giving the same
 // name-tooltip behaviour as the flat map.
-export default function GlobeMap({ fc, width, height, colors = null }) {
+export default function GlobeMap({ fc, width, height, colors = null, circle = null }) {
   const canvasRef = useRef(null);
   const containerRef = useRef(null);
   const [rotation, setRotation] = useState([0, -15]);
@@ -90,7 +90,28 @@ export default function GlobeMap({ fc, width, height, colors = null }) {
       ctx.fill();
       ctx.stroke();
     }
-  }, [projection, hover.feature, fc, width, height, colors]);
+
+    // Shrinking-circle hint. `circle` is [lng, lat, radiusDeg] — a true spherical
+    // small-circle via geoCircle, so it clips against the globe's limb correctly
+    // as it rotates. Shade the visible sphere OUTSIDE it (Sphere + circle in one
+    // Path2D, filled evenodd so the circle is a hole), then stroke the outline.
+    if (circle) {
+      const [lng, lat, radiusDeg] = circle;
+      const poly = geoCircle().center([lng, lat]).radius(radiusDeg)();
+      const region = new Path2D();
+      const rp = geoPath(projection, region);
+      rp(SPHERE);
+      rp(poly);
+      ctx.fillStyle = "rgba(2,6,23,0.55)";
+      ctx.fill(region, "evenodd");
+
+      const outline = new Path2D();
+      geoPath(projection, outline)(poly);
+      ctx.lineWidth = 1.5;
+      ctx.strokeStyle = "#f8fafc";
+      ctx.stroke(outline);
+    }
+  }, [projection, hover.feature, fc, width, height, colors, circle]);
 
   // Interaction: ONE finger (or mouse) drag rotates; TWO fingers (or the wheel)
   // zoom. Two separate d3 behaviours that coexist on touch: the zoom filter takes

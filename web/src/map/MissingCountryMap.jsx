@@ -21,6 +21,7 @@ export default function MissingCountryMap({
   height = 600,
   colorize = false,
   palette = "okabe",
+  circle = null,
 }) {
   const { fc, loading, error } = useSwallowedWorld(slug, diffUrl);
 
@@ -36,9 +37,9 @@ export default function MissingCountryMap({
     );
 
   return projectionType === "orthographic" ? (
-    <GlobeMap fc={fc} width={width} height={height} colors={colors} />
+    <GlobeMap fc={fc} width={width} height={height} colors={colors} circle={circle} />
   ) : (
-    <FlatMap fc={fc} width={width} height={height} colors={colors} />
+    <FlatMap fc={fc} width={width} height={height} colors={colors} circle={circle} />
   );
 }
 

@@ -33,6 +33,7 @@ export default function DevApp() {
   const [variantKey, setVariantKey] = useState(null); // null -> puzzle's default
   const [mode, setMode] = useState("map"); // "map" | "coloring"
   const [palette, setPalette] = useState("okabe"); // "okabe" | "normal"
+  const [reveal, setReveal] = useState(0); // 0 = off, 1..6 = which hint circle to show
 
   useEffect(() => {
     let cancelled = false;
@@ -129,6 +130,7 @@ export default function DevApp() {
                 onClick={() => {
                   setSlug(p.slug);
                   setVariantKey(null); // fall back to the new puzzle's default variant
+                  setReveal(0); // reset the hint-circle stepper for the new puzzle
                 }}
                 style={{
                   display: "block",
@@ -183,8 +185,22 @@ export default function DevApp() {
                         onChange={setVariantKey}
                       />
                     )}
+                    {/* Shrinking-circle hint preview: step through the 6 pre-baked
+                        reveals (Off = none). Each shows entry.circles[i-1] on the
+                        map so we can feel how the region narrows before it replaces
+                        the live distance/direction feedback. */}
+                    {Array.isArray(entry.circles) && (
+                      <Toggle
+                        options={[["0", "Off"], ...entry.circles.map((_, i) => [String(i + 1), String(i + 1)])]}
+                        value={String(reveal)}
+                        onChange={(v) => setReveal(Number(v))}
+                      />
+                    )}
                     <span style={{ fontSize: 12, color: "#64748b" }}>
                       {entry.target} · {variant?.label}
+                      {reveal > 0 && Array.isArray(entry.circles) && (
+                        <> · circle {reveal}: r={entry.circles[reveal - 1][2]}°</>
+                      )}
                     </span>
                   </>
                 ) : (
@@ -208,6 +224,7 @@ export default function DevApp() {
                   projectionType={globe ? "orthographic" : "naturalEarth1"}
                   width={760}
                   height={520}
+                  circle={reveal > 0 && Array.isArray(entry.circles) ? entry.circles[reveal - 1] : null}
                 />
               ) : (
                 <ColoringView
