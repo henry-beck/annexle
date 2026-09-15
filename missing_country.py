@@ -32,6 +32,8 @@ Usage
     python missing_country.py build "Nepal" ...   # build specific puzzles
     python missing_country.py build-auto 30       # auto-pick 30 good puzzles
     python missing_country.py build-daily [DATE]  # build today's (or DATE's) deterministic puzzle
+    python missing_country.py build-continents    # patch reveal-1 continent labels into the emitted index
+    python missing_country.py build-circles       # patch shrinking-circle hint sequences into the emitted index
 
 Outputs land in ./out/ :
     out/adjacency.json         every country's neighbors + geodesic area (km^2)
@@ -100,6 +102,14 @@ def load():
         geoms[name] = g
         codes[name] = p.get(CODE_FIELD, "")
     return geoms, codes
+
+def load_continents():
+    """{display name -> Natural Earth CONTINENT}, keyed the same as load(). The
+    first guess-hint reveal (reveal 1) shows this as text; it's carried on every
+    country + puzzle. Delegated to continent_hints (pure stdlib) so the pipeline
+    and the standalone `build-continents` patch share one source of truth."""
+    import continent_hints
+    return continent_hints.load_continents(DATA, NAME_FIELD, RENAME)
 
 # ------------------------------------------------------------- neighbor lookup
 def find_neighbors(geoms, name):
@@ -817,6 +827,7 @@ def build_puzzles(geoms, codes, targets):
         with open(path, "w") as fh:
             json.dump(obj, fh, separators=(",", ":"), ensure_ascii=False)
 
+    continents = load_continents()  # reveal-1 label, carried on every entry
     puzzles = []
     for i, name in enumerate(targets):
         if name not in geoms:
@@ -843,6 +854,7 @@ def build_puzzles(geoms, codes, targets):
             "slug": s,
             "target": name,
             "targetCode": codes.get(name, ""),
+            "continent": continents.get(name, ""),
             "neighbors": nbrs,
             "absorbers": sorted(organic),
             "enclosure": round(enclosure(geoms, name, nbrs), 3),
@@ -863,7 +875,8 @@ def build_puzzles(geoms, codes, targets):
             continue
         lat, lng = main_centroid(g)
         countries.append({"name": name, "code": codes.get(name, ""),
-                          "lat": round(lat, 2), "lng": round(lng, 2)})
+                          "lat": round(lat, 2), "lng": round(lng, 2),
+                          "continent": continents.get(name, "")})
     countries.sort(key=lambda c: c["name"])
     with open(f"{OUT}/countries.json", "w") as fh:
         json.dump(countries, fh, indent=2, ensure_ascii=False)
@@ -1186,6 +1199,14 @@ if __name__ == "__main__":
     if cmd == "build-circles":
         import circle_hints
         circle_hints.patch_index(f"{OUT}/puzzles.json", f"{OUT}/countries.json")
+        sys.exit(0)
+    # build-continents adds the reveal-1 continent label to the emitted index.
+    # Reads only the geojson properties, not the GEOS stack, so it runs before
+    # load() -- same rationale as build-circles.
+    if cmd == "build-continents":
+        import continent_hints
+        continent_hints.patch_index(f"{OUT}/puzzles.json", f"{OUT}/countries.json",
+                                    DATA, NAME_FIELD, RENAME)
         sys.exit(0)
     geoms, codes = load()
     if cmd == "candidates":

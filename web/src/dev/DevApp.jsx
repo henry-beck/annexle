@@ -77,6 +77,27 @@ export default function DevApp() {
   const variant = variants.find((v) => v.key === effectiveKey) || variants[0] || null;
   const globe = view === "globe";
 
+  // Reveal flow (preview of the live hint sequence):
+  //   reveal 0     = Off (nothing)
+  //   reveal 1     = continent name as text only (no circle, no shading)
+  //   reveals 2..5 = the 4 shrinking circles (entry.circles[0..3])
+  // Russia is a hardcoded special case: every reveal shows a fixed text line,
+  // never a continent or circle. This is Russia-only, not a general rule.
+  const isRussia = entry?.target === "Russia";
+  const nReveals = entry && Array.isArray(entry.circles) ? 1 + entry.circles.length : 0;
+  const revealCircle =
+    entry && !isRussia && reveal >= 2 && Array.isArray(entry.circles)
+      ? entry.circles[reveal - 2]
+      : null;
+  const revealText =
+    !entry || reveal === 0
+      ? null
+      : isRussia
+      ? "It’s literally Russia"
+      : reveal === 1
+      ? `Continent: ${entry.continent || "—"}`
+      : null;
+
   if (data.status === "loading") return <Shell><Muted>Loading dev index…</Muted></Shell>;
   if (data.status === "error")
     return (
@@ -185,22 +206,23 @@ export default function DevApp() {
                         onChange={setVariantKey}
                       />
                     )}
-                    {/* Shrinking-circle hint preview: step through the 6 pre-baked
-                        reveals (Off = none). Each shows entry.circles[i-1] on the
-                        map so we can feel how the region narrows before it replaces
-                        the live distance/direction feedback. */}
-                    {Array.isArray(entry.circles) && (
+                    {/* Hint-reveal preview: step through the pre-baked sequence
+                        (Off = none). Reveal 1 is the continent text; reveals 2..5
+                        are the shrinking circles. Lets us feel how it narrows
+                        before it replaces the live distance/direction feedback. */}
+                    {nReveals > 0 && (
                       <Toggle
-                        options={[["0", "Off"], ...entry.circles.map((_, i) => [String(i + 1), String(i + 1)])]}
+                        options={[
+                          ["0", "Off"],
+                          ...Array.from({ length: nReveals }, (_, i) => [String(i + 1), String(i + 1)]),
+                        ]}
                         value={String(reveal)}
                         onChange={(v) => setReveal(Number(v))}
                       />
                     )}
                     <span style={{ fontSize: 12, color: "#64748b" }}>
                       {entry.target} · {variant?.label}
-                      {reveal > 0 && Array.isArray(entry.circles) && (
-                        <> · circle {reveal}: r={entry.circles[reveal - 1][2]}°</>
-                      )}
+                      {revealCircle && <> · circle r={revealCircle[2]}°</>}
                     </span>
                   </>
                 ) : (
@@ -217,15 +239,40 @@ export default function DevApp() {
                 )}
               </div>
               {mode === "map" ? (
-                <MissingCountryMap
-                  key={`${entry.slug}:${variant?.key}`}
-                  slug={entry.slug}
-                  diffUrl={variant?.diffUrl}
-                  projectionType={globe ? "orthographic" : "naturalEarth1"}
-                  width={760}
-                  height={520}
-                  circle={reveal > 0 && Array.isArray(entry.circles) ? entry.circles[reveal - 1] : null}
-                />
+                <div style={{ position: "relative", width: 760, height: 520 }}>
+                  <MissingCountryMap
+                    key={`${entry.slug}:${variant?.key}`}
+                    slug={entry.slug}
+                    diffUrl={variant?.diffUrl}
+                    projectionType={globe ? "orthographic" : "naturalEarth1"}
+                    width={760}
+                    height={520}
+                    circle={revealCircle}
+                  />
+                  {/* Text-only reveal (continent, or the Russia special case):
+                      shown as a banner over the map since it isn't a circle. */}
+                  {revealText && (
+                    <div
+                      style={{
+                        position: "absolute",
+                        top: 12,
+                        left: "50%",
+                        transform: "translateX(-50%)",
+                        padding: "8px 16px",
+                        borderRadius: 999,
+                        background: "rgba(15,23,42,0.92)",
+                        border: "1px solid #334155",
+                        color: "#f8fafc",
+                        fontSize: 15,
+                        fontWeight: 600,
+                        pointerEvents: "none",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {revealText}
+                    </div>
+                  )}
+                </div>
               ) : (
                 <ColoringView
                   key={`color:${entry.slug}:${palette}`}

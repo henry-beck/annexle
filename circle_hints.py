@@ -1,11 +1,13 @@
 """Shrinking-circle guess-hint sequences.
 
-Pre-baked per puzzle: a deterministic sequence of 6 geodesic circles (small-
-circles on the sphere), one revealed per attempt, that narrow the search toward
-the target. The circle CENTER is offset from the true centroid — far early,
-converging to 0 by the final reveal — so a player can't shortcut by reading the
-center until the end. The offset is a fraction (<1) of the radius, so the target
-is strictly inside every circle BY CONSTRUCTION (margin = (1-f)*radius).
+Pre-baked per puzzle: a deterministic sequence of 4 geodesic circles (small-
+circles on the sphere) shown on reveals 2-5 (reveal 1 is the continent-name
+text; see continent_hints.py), one revealed per attempt, that narrow the search
+toward the target. The circle CENTER is offset from the true centroid — far
+early, converging to 0 by the final reveal — so a player can't shortcut by
+reading the center until the end. The offset is a fraction (<1) of the radius,
+so the target is strictly inside every circle BY CONSTRUCTION
+(margin = (1-f)*radius).
 
 Pure stdlib on purpose: circles depend only on the target centroid, the puzzle
 slug (deterministic seed, same sha256 discipline as the organic seams), and a
@@ -17,11 +19,11 @@ geoCircle().center([lng,lat]).radius(radiusDeg).
 """
 import hashlib, math, json, sys
 
-N = 6
-R_MAX, R_MIN = 22.0, 4.0                                  # angular radius, degrees
+N = 4
+R_MAX, R_MIN = 38.0, 4.0                                  # angular radius, degrees
 _ratio = (R_MIN / R_MAX) ** (1 / (N - 1))                 # geometric decay
-RADII = [round(R_MAX * _ratio ** i, 4) for i in range(N)]  # 22 -> 4 over 6 reveals
-OFFSET_FRAC = [0.75, 0.60, 0.45, 0.30, 0.15, 0.0]          # offset / radius, linear -> 0
+RADII = [round(R_MAX * _ratio ** i, 4) for i in range(N)]  # 38 -> 4 over 4 reveals
+OFFSET_FRAC = [0.70, 0.45, 0.22, 0.0]                      # offset / radius, -> 0
 MARGIN_EPS = 0.05                                          # deg slack for the strict-inside assert
 
 def _bearing(slug, i):
